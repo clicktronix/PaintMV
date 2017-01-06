@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 namespace PaintMV.Shapes
 {
     [Serializable]
-    class Line : Shape
+    internal class Line : Shape
     {
         public Line(Point startOrigin, Point endOrigin, int width, int height, Color chosenColor, int shapeSize)
         {
@@ -20,7 +20,6 @@ namespace PaintMV.Shapes
         public override void Draw(Graphics g)
         {
             g.DrawLine(new Pen(ChosenColor, ShapeSize), StartOrigin, EndOrigin);
-           
         }
 
         public override bool ContainsPoint(Point p)
@@ -34,6 +33,11 @@ namespace PaintMV.Shapes
                 return true;
             }
             return false;
+        }
+
+        public override Shape Clone()
+        {
+            return new Line(StartOrigin, EndOrigin, Width, Height, ChosenColor, ShapeSize);
         }
     }
 }

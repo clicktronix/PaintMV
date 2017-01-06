@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 namespace PaintMV.Shapes
 {
     [Serializable]
-    class Triangle : Shape
+    internal class Triangle : Shape
     {
         public Triangle(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape)
         {
@@ -42,7 +42,7 @@ namespace PaintMV.Shapes
 
         public override bool ContainsPoint(Point p)
         {
-            Point[] trianglePoints = new Point[] {
+            Point[] trianglePoints = {
                 new Point(StartOrigin.X + Width + 7, StartOrigin.Y + Height + 7), 
                 new Point(StartOrigin.X + Width / 2, StartOrigin.Y - 7),
                 new Point(StartOrigin.X - 7, StartOrigin.Y + Height + 7),
@@ -57,6 +57,11 @@ namespace PaintMV.Shapes
                 return true;
             }
             return false;
+        }
+
+        public override Shape Clone()
+        {
+            return new Triangle(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape);
         }
     }
 }

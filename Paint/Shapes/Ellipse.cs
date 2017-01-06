@@ -5,12 +5,11 @@ using System.Drawing.Drawing2D;
 namespace PaintMV.Shapes
 {
     [Serializable]
-    class Ellipse : Shape
+    internal class Ellipse : Shape
     {
         public Point MoveOriginStart { get; }
 
         public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape)
-
         {
             StartOrigin = startOrigin;
             Width = width;
@@ -45,6 +44,11 @@ namespace PaintMV.Shapes
                 return true;
             }
             return false;
+        }
+
+        public override Shape Clone()
+        {
+            return new Ellipse(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape);
         }
     }
 }
