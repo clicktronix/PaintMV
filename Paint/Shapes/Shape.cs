@@ -15,7 +15,7 @@ namespace PaintMV.Shapes
         public bool FilledShape { get; set; }
 
         public abstract void Draw(Graphics g);
+        public abstract Shape Clone();
         public abstract bool ContainsPoint(Point p);
-
     }
 }

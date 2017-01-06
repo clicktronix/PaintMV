@@ -4,7 +4,7 @@ using System.Drawing;
 namespace PaintMV.Shapes
 {
     [Serializable]
-    class Rectangle : Shape
+    internal class Rectangle : Shape
     {
         public Rectangle(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape)
         {
@@ -39,6 +39,11 @@ namespace PaintMV.Shapes
                 return true;
             }
             return false;
+        }
+
+        public override Shape Clone()
+        {
+            return new Rectangle(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape);
         }
     }
 }
