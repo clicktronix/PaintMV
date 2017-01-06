@@ -6,16 +6,16 @@ namespace PaintMV
 {
     class RectSelection
     {
-        private PictureBox mPictureBox;
-        public Rectangle rect;
-        public bool allowDeformingDuringMovement = false;
-        private bool mIsClick = false;
-        private bool mMove = false;
-        private int oldX;
-        private int oldY;
-        private int sizeNodeRect = 5;
-        private Bitmap mBmp = null;
-        private PosSizableRect nodeSelected = PosSizableRect.None;
+        private PictureBox _mPictureBox;
+        public Rectangle Rect;
+        public bool AllowDeformingDuringMovement = false;
+        private bool _mIsClick = false;
+        private bool _mMove = false;
+        private int _oldX;
+        private int _oldY;
+        private int _sizeNodeRect = 5;
+        private Bitmap _mBmp = null;
+        private PosSizableRect _nodeSelected = PosSizableRect.None;
         
         private enum PosSizableRect
         {
@@ -28,18 +28,17 @@ namespace PaintMV
             RightBottom,
             BottomMiddle,
             None
-
         }
 
         public RectSelection(Rectangle r)
         {
-            rect = r;
-            mIsClick = false;
+            Rect = r;
+            _mIsClick = false;
         }
 
         public void Draw(Graphics g)
         {
-            g.DrawRectangle(new Pen(Color.Red), rect);
+            g.DrawRectangle(new Pen(Color.Red), Rect);
 
             foreach (PosSizableRect pos in Enum.GetValues(typeof(PosSizableRect)))
             {
@@ -59,21 +58,21 @@ namespace PaintMV
 
         public void SetBitmapFile(string filename)
         {
-            this.mBmp = new Bitmap(filename);
+            this._mBmp = new Bitmap(filename);
         }
 
         public void SetBitmap(Bitmap bmp)
         {
-            this.mBmp = bmp;
+            this._mBmp = bmp;
         }
 
         public void SetPictureBox(PictureBox p)
         {
-            this.mPictureBox = p;
-            mPictureBox.MouseDown += new MouseEventHandler(mPictureBox_MouseDown);
-            mPictureBox.MouseUp += new MouseEventHandler(mPictureBox_MouseUp);
-            mPictureBox.MouseMove += new MouseEventHandler(mPictureBox_MouseMove);
-            mPictureBox.Paint += new PaintEventHandler(mPictureBox_Paint);
+            this._mPictureBox = p;
+            _mPictureBox.MouseDown += new MouseEventHandler(mPictureBox_MouseDown);
+            _mPictureBox.MouseUp += new MouseEventHandler(mPictureBox_MouseUp);
+            _mPictureBox.MouseMove += new MouseEventHandler(mPictureBox_MouseMove);
+            _mPictureBox.Paint += new PaintEventHandler(mPictureBox_Paint);
         }
 
         private void mPictureBox_Paint(object sender, PaintEventArgs e)
@@ -90,124 +89,124 @@ namespace PaintMV
 
         private void mPictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            mIsClick = true;
+            _mIsClick = true;
 
-            nodeSelected = PosSizableRect.None;
-            nodeSelected = GetNodeSelectable(e.Location);
+            _nodeSelected = PosSizableRect.None;
+            _nodeSelected = GetNodeSelectable(e.Location);
 
-            if (rect.Contains(new Point(e.X, e.Y)))
+            if (Rect.Contains(new Point(e.X, e.Y)))
             {
-                mMove = true;
+                _mMove = true;
             }
-            oldX = e.X;
-            oldY = e.Y;
+            _oldX = e.X;
+            _oldY = e.Y;
         }
 
         private void mPictureBox_MouseUp(object sender, MouseEventArgs e)
         {
-            mIsClick = false;
-            mMove = false;
+            _mIsClick = false;
+            _mMove = false;
         }
 
         private void mPictureBox_MouseMove(object sender, MouseEventArgs e)
         {
             ChangeCursor(e.Location);
-            if (mIsClick == false)
+            if (_mIsClick == false)
             {
                 return;
             }
             
-            Rectangle backupRect = rect;
+            Rectangle backupRect = Rect;
 
-            switch (nodeSelected)
+            switch (_nodeSelected)
             {
                 case PosSizableRect.LeftUp:
-                    rect.X += e.X - oldX;
-                    rect.Width -= e.X - oldX;
-                    rect.Y += e.Y - oldY;
-                    rect.Height -= e.Y - oldY;
+                    Rect.X += e.X - _oldX;
+                    Rect.Width -= e.X - _oldX;
+                    Rect.Y += e.Y - _oldY;
+                    Rect.Height -= e.Y - _oldY;
                     break;
                 case PosSizableRect.LeftMiddle:
-                    rect.X += e.X - oldX;
-                    rect.Width -= e.X - oldX;
+                    Rect.X += e.X - _oldX;
+                    Rect.Width -= e.X - _oldX;
                     break;
                 case PosSizableRect.LeftBottom:
-                    rect.Width -= e.X - oldX;
-                    rect.X += e.X - oldX;
-                    rect.Height += e.Y - oldY;
+                    Rect.Width -= e.X - _oldX;
+                    Rect.X += e.X - _oldX;
+                    Rect.Height += e.Y - _oldY;
                     break;
                 case PosSizableRect.BottomMiddle:
-                    rect.Height += e.Y - oldY;
+                    Rect.Height += e.Y - _oldY;
                     break;
                 case PosSizableRect.RightUp:
-                    rect.Width += e.X - oldX;
-                    rect.Y += e.Y - oldY;
-                    rect.Height -= e.Y - oldY;
+                    Rect.Width += e.X - _oldX;
+                    Rect.Y += e.Y - _oldY;
+                    Rect.Height -= e.Y - _oldY;
                     break;
                 case PosSizableRect.RightBottom:
-                    rect.Width += e.X - oldX;
-                    rect.Height += e.Y - oldY;
+                    Rect.Width += e.X - _oldX;
+                    Rect.Height += e.Y - _oldY;
                     break;
                 case PosSizableRect.RightMiddle:
-                    rect.Width += e.X - oldX;
+                    Rect.Width += e.X - _oldX;
                     break;
 
                 case PosSizableRect.UpMiddle:
-                    rect.Y += e.Y - oldY;
-                    rect.Height -= e.Y - oldY;
+                    Rect.Y += e.Y - _oldY;
+                    Rect.Height -= e.Y - _oldY;
                     break;
 
                 default:
-                    if (mMove)
+                    if (_mMove)
                     {
-                        rect.X = rect.X + e.X - oldX;
-                        rect.Y = rect.Y + e.Y - oldY;
-                        mPictureBox.Cursor = Cursors.SizeAll;
+                        Rect.X = Rect.X + e.X - _oldX;
+                        Rect.Y = Rect.Y + e.Y - _oldY;
+                        _mPictureBox.Cursor = Cursors.SizeAll;
                     }
                     break;
             }
-            oldX = e.X;
-            oldY = e.Y;
+            _oldX = e.X;
+            _oldY = e.Y;
 
-            if (rect.Width < 5 || rect.Height < 5)
+            if (Rect.Width < 5 || Rect.Height < 5)
             {
-                rect = backupRect;
+                Rect = backupRect;
             }
 
             TestIfRectInsideArea();
 
-            mPictureBox.Invalidate();
+            _mPictureBox.Invalidate();
         }
 
         private void TestIfRectInsideArea()
         {
             // Test if rectangle still inside the area.
-            if (rect.X < 0) rect.X = 0;
-            if (rect.Y < 0) rect.Y = 0;
-            if (rect.Width <= 0) rect.Width = 1;
-            if (rect.Height <= 0) rect.Height = 1;
+            if (Rect.X < 0) Rect.X = 0;
+            if (Rect.Y < 0) Rect.Y = 0;
+            if (Rect.Width <= 0) Rect.Width = 1;
+            if (Rect.Height <= 0) Rect.Height = 1;
 
-            if (rect.X + rect.Width > mPictureBox.Width)
+            if (Rect.X + Rect.Width > _mPictureBox.Width)
             {
-                rect.Width = mPictureBox.Width - rect.X - 1; // -1 to be still show 
-                if (allowDeformingDuringMovement == false)
+                Rect.Width = _mPictureBox.Width - Rect.X - 1; // -1 to be still show 
+                if (AllowDeformingDuringMovement == false)
                 {
-                    mIsClick = false;
+                    _mIsClick = false;
                 }
             }
-            if (rect.Y + rect.Height > mPictureBox.Height)
+            if (Rect.Y + Rect.Height > _mPictureBox.Height)
             {
-                rect.Height = mPictureBox.Height - rect.Y - 1;// -1 to be still show 
-                if (allowDeformingDuringMovement == false)
+                Rect.Height = _mPictureBox.Height - Rect.Y - 1;// -1 to be still show 
+                if (AllowDeformingDuringMovement == false)
                 {
-                    mIsClick = false;
+                    _mIsClick = false;
                 }
             }
         }
 
         private Rectangle CreateRectSizableNode(int x, int y)
         {
-            return new Rectangle(x - sizeNodeRect / 2, y - sizeNodeRect / 2, sizeNodeRect, sizeNodeRect);
+            return new Rectangle(x - _sizeNodeRect / 2, y - _sizeNodeRect / 2, _sizeNodeRect, _sizeNodeRect);
         }
 
         private Rectangle GetRect(PosSizableRect p)
@@ -215,28 +214,28 @@ namespace PaintMV
             switch (p)
             {
                 case PosSizableRect.LeftUp:
-                    return CreateRectSizableNode(rect.X, rect.Y);
+                    return CreateRectSizableNode(Rect.X, Rect.Y);
 
                 case PosSizableRect.LeftMiddle:
-                    return CreateRectSizableNode(rect.X, rect.Y + rect.Height / 2);
+                    return CreateRectSizableNode(Rect.X, Rect.Y + Rect.Height / 2);
 
                 case PosSizableRect.LeftBottom:
-                    return CreateRectSizableNode(rect.X, rect.Y + rect.Height);
+                    return CreateRectSizableNode(Rect.X, Rect.Y + Rect.Height);
 
                 case PosSizableRect.BottomMiddle:
-                    return CreateRectSizableNode(rect.X + rect.Width / 2, rect.Y + rect.Height);
+                    return CreateRectSizableNode(Rect.X + Rect.Width / 2, Rect.Y + Rect.Height);
 
                 case PosSizableRect.RightUp:
-                    return CreateRectSizableNode(rect.X + rect.Width, rect.Y);
+                    return CreateRectSizableNode(Rect.X + Rect.Width, Rect.Y);
 
                 case PosSizableRect.RightBottom:
-                    return CreateRectSizableNode(rect.X + rect.Width, rect.Y + rect.Height);
+                    return CreateRectSizableNode(Rect.X + Rect.Width, Rect.Y + Rect.Height);
 
                 case PosSizableRect.RightMiddle:
-                    return CreateRectSizableNode(rect.X + rect.Width, rect.Y + rect.Height / 2);
+                    return CreateRectSizableNode(Rect.X + Rect.Width, Rect.Y + Rect.Height / 2);
 
                 case PosSizableRect.UpMiddle:
-                    return CreateRectSizableNode(rect.X + rect.Width / 2, rect.Y);
+                    return CreateRectSizableNode(Rect.X + Rect.Width / 2, Rect.Y);
                 default:
                     return new Rectangle();
             }
@@ -256,14 +255,9 @@ namespace PaintMV
 
         private void ChangeCursor(Point p)
         {
-            mPictureBox.Cursor = GetCursor(GetNodeSelectable(p));
+            _mPictureBox.Cursor = GetCursor(GetNodeSelectable(p));
         }
 
-        /// <summary>
-        /// Get cursor for the handle
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
         private Cursor GetCursor(PosSizableRect p)
         {
             switch (p)

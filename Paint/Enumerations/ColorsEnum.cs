@@ -1,4 +1,4 @@
-﻿namespace PaintMV
+﻿namespace PaintMV.Enumerations
 {
     public enum ColorsEnum
     {

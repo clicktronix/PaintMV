@@ -1,4 +1,4 @@
-﻿namespace PaintMV
+﻿namespace PaintMV.GUI
 {
     partial class FrmPaint
     {
@@ -49,17 +49,20 @@
             this.menuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuUndo = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuRedo = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCopy = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCut = new System.Windows.Forms.ToolStripMenuItem();
             this.saveDialog = new System.Windows.Forms.SaveFileDialog();
             this.openDialog = new System.Windows.Forms.OpenFileDialog();
             this.btnSelection = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnSelect = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.chBoxFill = new System.Windows.Forms.CheckBox();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuUndo = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuRedo = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).BeginInit();
             this.grpColor.SuspendLayout();
             this.menuOptions.SuspendLayout();
@@ -182,7 +185,7 @@
             this.grpColor.Controls.Add(this.btnBlue);
             this.grpColor.Controls.Add(this.btnBlack);
             this.grpColor.Controls.Add(this.btnDefaultColor);
-            this.grpColor.Location = new System.Drawing.Point(10, 331);
+            this.grpColor.Location = new System.Drawing.Point(10, 361);
             this.grpColor.Name = "grpColor";
             this.grpColor.Size = new System.Drawing.Size(90, 222);
             this.grpColor.TabIndex = 13;
@@ -279,23 +282,61 @@
             // menuNew
             // 
             this.menuNew.Name = "menuNew";
-            this.menuNew.Size = new System.Drawing.Size(152, 22);
+            this.menuNew.Size = new System.Drawing.Size(103, 22);
             this.menuNew.Text = "New";
             this.menuNew.Click += new System.EventHandler(this.menuNew_Click);
             // 
             // menuOpen
             // 
             this.menuOpen.Name = "menuOpen";
-            this.menuOpen.Size = new System.Drawing.Size(152, 22);
+            this.menuOpen.Size = new System.Drawing.Size(103, 22);
             this.menuOpen.Text = "Open";
             this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
             // 
             // menuSave
             // 
             this.menuSave.Name = "menuSave";
-            this.menuSave.Size = new System.Drawing.Size(152, 22);
+            this.menuSave.Size = new System.Drawing.Size(103, 22);
             this.menuSave.Text = "Save";
             this.menuSave.Click += new System.EventHandler(this.menuSave_Click);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuUndo,
+            this.menuRedo,
+            this.menuCopy,
+            this.menuCut});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // menuUndo
+            // 
+            this.menuUndo.Name = "menuUndo";
+            this.menuUndo.Size = new System.Drawing.Size(152, 22);
+            this.menuUndo.Text = "Undo";
+            this.menuUndo.Click += new System.EventHandler(this.menuUndo_Click);
+            // 
+            // menuRedo
+            // 
+            this.menuRedo.Name = "menuRedo";
+            this.menuRedo.Size = new System.Drawing.Size(152, 22);
+            this.menuRedo.Text = "Redo";
+            this.menuRedo.Click += new System.EventHandler(this.menuRedo_Click);
+            // 
+            // menuCopy
+            // 
+            this.menuCopy.Name = "menuCopy";
+            this.menuCopy.Size = new System.Drawing.Size(152, 22);
+            this.menuCopy.Text = "Copy";
+            this.menuCopy.Click += new System.EventHandler(this.menuCopy_Click);
+            // 
+            // menuCut
+            // 
+            this.menuCut.Name = "menuCut";
+            this.menuCut.Size = new System.Drawing.Size(152, 22);
+            this.menuCut.Text = "Cut";
             // 
             // openDialog
             // 
@@ -325,13 +366,23 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnSelect);
             this.groupBox2.Controls.Add(this.btnSelection);
             this.groupBox2.Location = new System.Drawing.Point(10, 200);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(90, 65);
+            this.groupBox2.Size = new System.Drawing.Size(90, 95);
             this.groupBox2.TabIndex = 20;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Selection";
+            // 
+            // btnSelect
+            // 
+            this.btnSelect.Location = new System.Drawing.Point(18, 56);
+            this.btnSelect.Name = "btnSelect";
+            this.btnSelect.Size = new System.Drawing.Size(50, 33);
+            this.btnSelect.TabIndex = 5;
+            this.btnSelect.Text = "RecSel";
+            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
             // groupBox3
             // 
@@ -346,7 +397,7 @@
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.chBoxFill);
-            this.groupBox4.Location = new System.Drawing.Point(10, 271);
+            this.groupBox4.Location = new System.Drawing.Point(10, 301);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(90, 54);
             this.groupBox4.TabIndex = 22;
@@ -363,30 +414,7 @@
             this.chBoxFill.Text = "Fill shape";
             this.chBoxFill.UseVisualStyleBackColor = true;
             // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuUndo,
-            this.menuRedo});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // menuUndo
-            // 
-            this.menuUndo.Name = "menuUndo";
-            this.menuUndo.Size = new System.Drawing.Size(152, 22);
-            this.menuUndo.Text = "Undo";
-            this.menuUndo.Click += new System.EventHandler(this.menuUndo_Click);
-            // 
-            // menuRedo
-            // 
-            this.menuRedo.Name = "menuRedo";
-            this.menuRedo.Size = new System.Drawing.Size(152, 22);
-            this.menuRedo.Text = "Redo";
-            this.menuRedo.Click += new System.EventHandler(this.menuRedo_Click);
-            // 
-            // frmPaint
+            // FrmPaint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -450,6 +478,9 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuUndo;
         private System.Windows.Forms.ToolStripMenuItem menuRedo;
+        private System.Windows.Forms.ToolStripMenuItem menuCopy;
+        private System.Windows.Forms.ToolStripMenuItem menuCut;
+        private System.Windows.Forms.Button btnSelect;
     }
 }
 
