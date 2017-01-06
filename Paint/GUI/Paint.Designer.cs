@@ -317,28 +317,33 @@
             // menuUndo
             // 
             this.menuUndo.Name = "menuUndo";
-            this.menuUndo.Size = new System.Drawing.Size(103, 22);
+            this.menuUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            this.menuUndo.Size = new System.Drawing.Size(174, 22);
             this.menuUndo.Text = "Undo";
             this.menuUndo.Click += new System.EventHandler(this.menuUndo_Click);
             // 
             // menuRedo
             // 
             this.menuRedo.Name = "menuRedo";
-            this.menuRedo.Size = new System.Drawing.Size(103, 22);
+            this.menuRedo.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.Z)));
+            this.menuRedo.Size = new System.Drawing.Size(174, 22);
             this.menuRedo.Text = "Redo";
             this.menuRedo.Click += new System.EventHandler(this.menuRedo_Click);
             // 
             // menuCopy
             // 
             this.menuCopy.Name = "menuCopy";
-            this.menuCopy.Size = new System.Drawing.Size(103, 22);
+            this.menuCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.menuCopy.Size = new System.Drawing.Size(174, 22);
             this.menuCopy.Text = "Copy";
             this.menuCopy.Click += new System.EventHandler(this.menuCopy_Click);
             // 
             // menuCut
             // 
             this.menuCut.Name = "menuCut";
-            this.menuCut.Size = new System.Drawing.Size(103, 22);
+            this.menuCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.menuCut.Size = new System.Drawing.Size(174, 22);
             this.menuCut.Text = "Cut";
             this.menuCut.Click += new System.EventHandler(this.menuCut_Click);
             // 
