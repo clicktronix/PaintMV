@@ -337,6 +337,7 @@
             this.menuCut.Name = "menuCut";
             this.menuCut.Size = new System.Drawing.Size(152, 22);
             this.menuCut.Text = "Cut";
+            this.menuCut.Click += new System.EventHandler(this.menuCut_Click);
             // 
             // openDialog
             // 

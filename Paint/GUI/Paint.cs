@@ -800,6 +800,16 @@ namespace PaintMV.GUI
             _pnlGraphic.Invalidate();
         }
 
+        private void menuCut_Click(object sender, EventArgs e)
+        {
+            if (_isShapeWasSelected && _indexOfSelectedShape != null)
+            {
+                _doc.AllShapes.Remove(_doc.AllShapes[_indexOfSelectedShape.Value]);
+                _isShapeWasSelected = false;
+            }
+            _pnlGraphic.Invalidate();
+        }
+
         private void TestIfRectInsideArea()
         {
             Debug.Assert(_indexOfSelectedShape != null, "Фигура не выбрана!");
