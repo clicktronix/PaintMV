@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace PaintMV
+namespace PaintMV.GUI
 {
     sealed class MyPanel : Panel
     {

@@ -1,70 +1,89 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
+using PaintMV.Controls;
 using PaintMV.Enumerations;
 using PaintMV.Shapes;
-using Rectangle = System.Drawing.Rectangle;
 
 namespace PaintMV.GUI
 {
     public partial class FrmPaint : Form
     {
-        private bool _paintMode = false;
+        private bool _paintMode;
         private int _shapeWidth, _shapeHeight;
         private int _shapeSize = 1;
-        private bool _hasShapes = false;
+        private bool _hasShapes;
 
-        private bool _fillShape = false;
-        private ShapesEnum _shapesEnum;
+        private bool _fillShape;
         private ColorsEnum _color = ColorsEnum.Black;
         private Color _chosenColor;
 
-        private int _sizeNodeRect = 7;
-        private bool _mIsClick = false;
-        private bool _selectionMode = false;
-        private bool _isShapeWasSelected = false;
-        private bool _mMove = false;
-        private ResizePosition _nodeSelected = ResizePosition.None;
-        private int? _indexOfSelectedShape;
+        private bool _mIsClick;
+        private bool _selectionMode;
+        private bool _isShapeWasSelected;
 
         private Point _startPoint;
         private Point _endPoint;
-        private ShapesList _doc;
         private readonly ShapesList _redo;
         private Shape _figure;
-        private readonly Panel _pnlGraphic;
-        private bool _loadedFile = false;
-        private bool _buttonDeletePressed = false;
+        private bool _loadedFile;
+        private bool _buttonDeletePressed;
+        private ShapesEnum _shapesEnum;
+
+        public ShapeSelectionByPoint ShapeSelectionByPoint { get; }
+        public LineSelectionByPoint LineSelectionByPoint { get; }
+        public int SizeNodeRect { set; get; } = 7;
+        public int? IndexOfSelectedShape { set; get; }
+        public ShapesList Doc { set; get; }
+        public Panel PnlGraphic { get; }
+        public ResizePosition ResizePosition { get; }
+        public bool MMove { set; get; }
+        public static int PanelWidth { get; set; } = 700;
+        public static int PanelHeight { get; set; } = 500;
 
         public FrmPaint()
         {
             InitializeComponent();
-            _doc = new ShapesList();
+
+            Doc = new ShapesList();
             _redo = new ShapesList();
-            _pnlGraphic = new MyPanel();
-            Controls.Add(_pnlGraphic);
+            PnlGraphic = new MyPanel();
+            Controls.Add(PnlGraphic);
             btnEllipse.BackColor = Color.White;
 
-            _pnlGraphic.BackColor = Color.White;
-            _pnlGraphic.Location = new Point(108, 32);
-            _pnlGraphic.Name = "pnlGraphic";
-            _pnlGraphic.Size = new Size(715, 520);
-            _pnlGraphic.TabIndex = 2;
-            _pnlGraphic.Paint += pnlGraphic_Paint;
-            _pnlGraphic.MouseClick += pnlGraphic_MouseClick;
-            _pnlGraphic.MouseDown += pnlGraphic_MouseDown;
-            _pnlGraphic.MouseMove += pnlGraphic_MouseMove;
-            _pnlGraphic.MouseUp += pnlGraphic_MouseUp;
+            PnlGraphic.BackColor = Color.White;
+            PnlGraphic.Location = new Point(108, 32);
+            PnlGraphic.Name = "pnlGraphic";
+            PnlGraphic.Size = new Size(PanelWidth, PanelHeight);
+            PnlGraphic.TabIndex = 2;
+            PnlGraphic.Paint += pnlGraphic_Paint;
+            PnlGraphic.MouseDown += pnlGraphic_MouseDown;
+            PnlGraphic.MouseMove += pnlGraphic_MouseMove;
+            PnlGraphic.MouseUp += pnlGraphic_MouseUp;
+            ShapeSelectionByPoint = new ShapeSelectionByPoint(this);
+            LineSelectionByPoint = new LineSelectionByPoint(this);
+            ResizePosition = new ResizePosition(this);
+        }
+
+        public Point StartPoint
+        {
+            set { _startPoint = value; }
+            get { return _startPoint; }
+        }
+
+        public Point EndPoint
+        {
+            set { _endPoint = value; }
+            get { return _endPoint; }
         }
 
         private void pnlGraphic_Paint(object sender, PaintEventArgs e)
         {
-            if (_hasShapes && _doc.AllShapes != null)
+            if (_hasShapes && Doc.AllShapes != null)
             {
-                foreach (Shape shape in _doc.AllShapes)
+                foreach (Shape shape in Doc.AllShapes)
                 {
                     shape.Draw(e.Graphics);
                 }
@@ -72,8 +91,8 @@ namespace PaintMV.GUI
 
             if (_loadedFile || _buttonDeletePressed || _selectionMode)
             {
-                if (_doc.AllShapes != null)
-                    foreach (Shape shape in _doc.AllShapes)
+                if (Doc.AllShapes != null)
+                    foreach (Shape shape in Doc.AllShapes)
                     {
                         shape.Draw(e.Graphics);
                     }
@@ -83,15 +102,15 @@ namespace PaintMV.GUI
             {
                 if (_shapesEnum == ShapesEnum.Line)
                 {
-                    if (_doc.AllShapes != null)
-                        if (_indexOfSelectedShape != null)
-                            MakeSelectionOfLine(_doc.AllShapes[_indexOfSelectedShape.Value], e.Graphics);
+                    if (Doc.AllShapes != null)
+                        if (IndexOfSelectedShape != null)
+                            LineSelectionByPoint.MakeSelectionOfLine(Doc.AllShapes[IndexOfSelectedShape.Value], e.Graphics);
                 }
                 else
                 {
-                    if (_doc.AllShapes != null)
-                        if (_indexOfSelectedShape != null)
-                            MakeSelectionOfShape(_doc.AllShapes[_indexOfSelectedShape.Value], e.Graphics);
+                    if (Doc.AllShapes != null)
+                        if (IndexOfSelectedShape != null)
+                            ShapeSelectionByPoint.MakeSelectionOfShape(Doc.AllShapes[IndexOfSelectedShape.Value], e.Graphics);
                 }
             }
             if (_paintMode)
@@ -104,41 +123,41 @@ namespace PaintMV.GUI
         {
             _mIsClick = true;
 
-            if (_selectionMode && _doc.AllShapes.Count == 0)
+            if (_selectionMode && Doc.AllShapes.Count == 0)
             {
                 MessageBox.Show(@"Нет фигур для выбора!");
             }
-            else if (_selectionMode && _doc.AllShapes.Count != 0)
+            else if (_selectionMode && Doc.AllShapes.Count != 0)
             {
-                for (int i = _doc.AllShapes.Count - 1; i >= 0; i--)
+                for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
                 {
-                    if (_doc.AllShapes[i].ContainsPoint(e.Location))
+                    if (Doc.AllShapes[i].ContainsPoint(e.Location))
                     {
                         _isShapeWasSelected = true;
-                        Shape tempShape = _doc.AllShapes[i];
-                        if (_doc.AllShapes.Count == 2 && tempShape != _doc.AllShapes[_doc.AllShapes.Count - 1])
+                        Shape tempShape = Doc.AllShapes[i];
+                        if (Doc.AllShapes.Count == 2 && tempShape != Doc.AllShapes[Doc.AllShapes.Count - 1])
                         {
-                            _doc.AllShapes[i] = _doc.AllShapes[i + 1];
-                            _doc.AllShapes[i + 1] = tempShape;
+                            Doc.AllShapes[i] = Doc.AllShapes[i + 1];
+                            Doc.AllShapes[i + 1] = tempShape;
                         }
-                        else if (_doc.AllShapes.Count > 2 && tempShape != _doc.AllShapes[_doc.AllShapes.Count - 1])
+                        else if (Doc.AllShapes.Count > 2 && tempShape != Doc.AllShapes[Doc.AllShapes.Count - 1])
                         {
-                            for (int j = i; j < _doc.AllShapes.Count - 1; j++)
+                            for (int j = i; j < Doc.AllShapes.Count - 1; j++)
                             {
-                                _doc.AllShapes[j] = _doc.AllShapes[j + 1];
+                                Doc.AllShapes[j] = Doc.AllShapes[j + 1];
                             }
-                            _doc.AllShapes[_doc.AllShapes.Count - 1] = tempShape;
+                            Doc.AllShapes[Doc.AllShapes.Count - 1] = tempShape;
                         }
-                        _indexOfSelectedShape = _doc.AllShapes.Count - 1;
-                        _mMove = true;
+                        IndexOfSelectedShape = Doc.AllShapes.Count - 1;
+                        MMove = true;
                         break;
                     }
                 }
-                if (_isShapeWasSelected && _indexOfSelectedShape != null)
+                if (_isShapeWasSelected && IndexOfSelectedShape != null)
                 {
-                    btnDefaultColor.BackColor = _doc.AllShapes[_indexOfSelectedShape.Value].ChosenColor;
-                    _nodeSelected = ResizePosition.None;
-                    _nodeSelected = GetNodeSelectable(e.Location);
+                    btnDefaultColor.BackColor = Doc.AllShapes[IndexOfSelectedShape.Value].ChosenColor;
+                    ShapeSelectionByPoint.NodeSelected = ShapeSelectionByPoint.ResizePosition.None;
+                    ShapeSelectionByPoint.NodeSelected = ShapeSelectionByPoint.GetNodeSelectable(e.Location);
                 }
             }
             else if (!_selectionMode)
@@ -148,18 +167,18 @@ namespace PaintMV.GUI
             _startPoint.X = e.X;
             _startPoint.Y = e.Y;
 
-            _pnlGraphic.Invalidate();
+            PnlGraphic.Invalidate();
         }
 
         private void ChangeColor(Color color)
         {
-            if (_isShapeWasSelected && _indexOfSelectedShape != null)
+            if (_isShapeWasSelected && IndexOfSelectedShape != null)
             {
-                _doc.AllShapes[_indexOfSelectedShape.Value].ChosenColor = color;
-                _doc.AllShapes[_indexOfSelectedShape.Value].FilledShape = chBoxFill.Checked == true;
-                _doc.AllShapes[_indexOfSelectedShape.Value].ShapeSize = (int)numSize.Value;
+                Doc.AllShapes[IndexOfSelectedShape.Value].ChosenColor = color;
+                Doc.AllShapes[IndexOfSelectedShape.Value].FilledShape = chBoxFill.Checked;
+                Doc.AllShapes[IndexOfSelectedShape.Value].ShapeSize = (int)numSize.Value;
             }
-            _pnlGraphic.Invalidate();
+            PnlGraphic.Invalidate();
         }
 
         private void pnlGraphic_MouseUp(object sender, MouseEventArgs e)
@@ -167,13 +186,13 @@ namespace PaintMV.GUI
             _paintMode = false;
             if (!_selectionMode && (e.X - _startPoint.X) != 0)
             {
-                _doc.AllShapes.Add(_figure);
+                Doc.AllShapes.Add(_figure);
                 _hasShapes = true;
             }
             _mIsClick = false;
-            _mMove = false;
+            MMove = false;
             _figure = null;
-            _pnlGraphic.Invalidate();
+            PnlGraphic.Invalidate();
         }
 
         private void pnlGraphic_MouseMove(object sender, MouseEventArgs e)
@@ -187,91 +206,12 @@ namespace PaintMV.GUI
                 _shapeSize = (int)numSize.Value;
                 var absShapeWidth = Math.Abs(_shapeWidth);
                 var absShapeHeight = Math.Abs(_shapeHeight);
-                Point tempStartPoint;
 
-                _fillShape = chBoxFill.Checked == true;
-
-                // check selected color
-                switch (_color)
-                {
-                    case ColorsEnum.Black:
-                        _chosenColor = Color.Black;
-                        break;
-                    case ColorsEnum.Yellow:
-                        _chosenColor = Color.Yellow;
-                        break;
-                    case ColorsEnum.Red:
-                        _chosenColor = Color.Red;
-                        break;
-                    case ColorsEnum.Blue:
-                        _chosenColor = Color.Blue;
-                        break;
-                    case ColorsEnum.White:
-                        _chosenColor = Color.White;
-                        break;
-                    case ColorsEnum.Green:
-                        _chosenColor = Color.Green;
-                        break;
-                    case ColorsEnum.Orange:
-                        _chosenColor = Color.Orange;
-                        break;
-                    case ColorsEnum.Purple:
-                        _chosenColor = Color.Violet;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                // check chosen shape
-                switch (_shapesEnum)
-                {
-                    case ShapesEnum.Ellipse:
-                    case ShapesEnum.Rectangle:
-                    case ShapesEnum.Triangle:
-                        if (_shapeWidth >= 0 || _shapeHeight >= 0)
-                        {
-                            if (_shapeWidth < 0 && _shapeHeight > 0)
-                            {
-                                tempStartPoint = new Point(_startPoint.X - absShapeWidth, _startPoint.Y);
-                            }
-                            else if (_shapeWidth > 0 && _shapeHeight < 0)
-                            {
-                                tempStartPoint = new Point(_startPoint.X, _startPoint.Y - absShapeHeight);
-                            }
-                            else
-                            {
-                                tempStartPoint = new Point(_startPoint.X, _startPoint.Y);
-                            }
-                        }
-                        else
-                        {
-                            tempStartPoint = new Point(_startPoint.X - absShapeWidth, _startPoint.Y - absShapeHeight);
-                        }
-                        if (_shapesEnum == ShapesEnum.Ellipse)
-                        {
-                            _figure = new Shapes.Ellipse(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor,
-                                _shapeSize, _fillShape);
-                        }
-                        if (_shapesEnum == ShapesEnum.Rectangle)
-                        {
-                            _figure = new Shapes.Rectangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape);
-                        }
-                        if (_shapesEnum == ShapesEnum.Triangle)
-                        {
-                            _figure = new Shapes.Triangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape);
-                        }
-                        break;
-                    case ShapesEnum.Line:
-                        tempStartPoint = _startPoint;
-                        var tempEndPoint = _endPoint;
-
-                        _figure = new Shapes.Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize);
-                        break;
-                    case ShapesEnum.None:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                _fillShape = chBoxFill.Checked;
+                
+                CheckChosenColor();
+                
+                CheckChosenShape(absShapeWidth, absShapeHeight);
             }
             else if (_selectionMode && _isShapeWasSelected)
             {
@@ -280,241 +220,112 @@ namespace PaintMV.GUI
                 {
                     return;
                 }
-                if (_indexOfSelectedShape != null)
+                if (IndexOfSelectedShape != null)
                 {
-                    Shape tempShape = _doc.AllShapes[_indexOfSelectedShape.Value];
+                    Shape tempShape = Doc.AllShapes[IndexOfSelectedShape.Value];
 
-                    switch (_nodeSelected)
-                    {
-                        case ResizePosition.LeftUp:
-                            tempShape.StartOrigin = new Point(tempShape.StartOrigin.X + e.X - _startPoint.X, tempShape.StartOrigin.Y);
-                            tempShape.Width -= e.X - _startPoint.X;
-                            tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _startPoint.Y);
-                            tempShape.Height -= e.Y - _startPoint.Y;
-                            break;
-                        case ResizePosition.LeftMiddle:
-                            tempShape.StartOrigin = new Point(tempShape.StartOrigin.X + e.X - _startPoint.X, tempShape.StartOrigin.Y);
-                            tempShape.Width -= (e.X - _startPoint.X);
-                            break;
-                        case ResizePosition.LeftBottom:
-                            tempShape.Width -= e.X - _startPoint.X;
-                            tempShape.StartOrigin = new Point(tempShape.StartOrigin.X + e.X - _startPoint.X, tempShape.StartOrigin.Y);
-                            tempShape.Height += e.Y - _startPoint.Y;
-                            break;
-                        case ResizePosition.BottomMiddle:
-                            tempShape.Height += e.Y - _startPoint.Y;
-                            break;
-                        case ResizePosition.RightUp:
-                            tempShape.Width += e.X - _startPoint.X;
-                            tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _startPoint.Y);
-                            tempShape.Height -= e.Y - _startPoint.Y;
-                            break;
-                        case ResizePosition.RightBottom:
-                            tempShape.Width += e.X - _startPoint.X;
-                            tempShape.Height += e.Y - _startPoint.Y;
-                            if (_shapesEnum == ShapesEnum.Line)
-                            {
-                                tempShape.EndOrigin = new Point(e.X - tempShape.EndOrigin.X + _startPoint.X, e.Y - tempShape.EndOrigin.Y + _endPoint.Y);
-                            }
-                            break;
-                        case ResizePosition.RightMiddle:
-                            tempShape.Width += e.X - _startPoint.X;
-                            break;
-                        case ResizePosition.UpMiddle:
-                            tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _startPoint.Y);
-                            tempShape.Height -= e.Y - _startPoint.Y;
-                            break;
-                        default:
-                            if (_mMove)
-                            {
-                                tempShape.StartOrigin = new Point(tempShape.StartOrigin.X + e.X - _startPoint.X, tempShape.StartOrigin.Y);
-                                tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _startPoint.Y);
-                                _pnlGraphic.Cursor = Cursors.SizeAll;
-                            }
-                            break;
-                    }
-                    int qwe = tempShape.Width - (e.X - _startPoint.X);
+                    ResizePosition.GetValueOfResizedPosition(e, tempShape);
                 }
-                int qwe2 = e.X - _startPoint.X;
-                int qwe3 = e.X;
-                int qwe4 = _startPoint.X;
 
                 _startPoint.X = e.X;
                 _startPoint.Y = e.Y;
             }
-            if (_hasShapes && _isShapeWasSelected)
-            {
-                TestIfRectInsideArea();
-            }
-            _pnlGraphic.Invalidate();
+            PnlGraphic.Invalidate();
         }
 
-        private void MakeSelectionOfShape(Shape shape, Graphics g)
+        private void CheckChosenColor()
         {
-            for (int i = 0; i < 8; i++)
+            switch (_color)
             {
-                g.DrawRectangle(new Pen(Color.Blue), GetRect(i, shape));
-            }
-
-            Pen tempPen = new Pen(Color.Blue);
-            tempPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-            g.DrawRectangle(tempPen, shape.StartOrigin.X - 3, shape.StartOrigin.Y - 3, shape.Width + 6, shape.Height + 6);
-        }
-
-        private Rectangle GetRect(int value, Shape shape)
-        {
-            int xValue = shape.StartOrigin.X;
-            int yValue = shape.StartOrigin.Y;
-
-            switch (value)
-            {
-                case 0:
-                    return new Rectangle(xValue - 3 - _sizeNodeRect/2, yValue - 3 - _sizeNodeRect/2, _sizeNodeRect, _sizeNodeRect);
-
-                case 1:
-                    return new Rectangle(xValue - 4 - _sizeNodeRect/2, yValue + shape.Height/2 - _sizeNodeRect/2, _sizeNodeRect, _sizeNodeRect);
-
-                case 2:
-                    return new Rectangle(xValue - 3 - _sizeNodeRect/2, yValue + 3 + shape.Height - _sizeNodeRect/2, _sizeNodeRect, _sizeNodeRect);
-
-                case 3:
-                    return new Rectangle(xValue + shape.Width/2 - _sizeNodeRect/2, yValue + 3 + shape.Height - _sizeNodeRect/2, _sizeNodeRect, _sizeNodeRect);
-
-                case 4:
-                    return new Rectangle(xValue + 3 + shape.Width - _sizeNodeRect/2, yValue - 3 - _sizeNodeRect/2, _sizeNodeRect, _sizeNodeRect);
-
-                case 5:
-                    return new Rectangle(xValue + 3 + shape.Width - _sizeNodeRect/2, yValue + 3 + shape.Height - _sizeNodeRect/2, _sizeNodeRect, _sizeNodeRect);
-
-                case 6:
-                    return new Rectangle(xValue + 3 + shape.Width - _sizeNodeRect/2, yValue + shape.Height/2 - _sizeNodeRect/2, _sizeNodeRect, _sizeNodeRect);
-
-                case 7:
-                    return new Rectangle(xValue + shape.Width/2 - _sizeNodeRect/2, yValue - 4 - _sizeNodeRect/2, _sizeNodeRect, _sizeNodeRect);
+                case ColorsEnum.Black:
+                    _chosenColor = Color.Black;
+                    break;
+                case ColorsEnum.Yellow:
+                    _chosenColor = Color.Yellow;
+                    break;
+                case ColorsEnum.Red:
+                    _chosenColor = Color.Red;
+                    break;
+                case ColorsEnum.Blue:
+                    _chosenColor = Color.Blue;
+                    break;
+                case ColorsEnum.White:
+                    _chosenColor = Color.White;
+                    break;
+                case ColorsEnum.Green:
+                    _chosenColor = Color.Green;
+                    break;
+                case ColorsEnum.Orange:
+                    _chosenColor = Color.Orange;
+                    break;
+                case ColorsEnum.Purple:
+                    _chosenColor = Color.Violet;
+                    break;
                 default:
-                    return new Rectangle();
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        private void MakeSelectionOfLine(Shape shape, Graphics g)
+        private void CheckChosenShape(int absShapeWidth, int absShapeHeight)
         {
-            int xValue = shape.StartOrigin.X;
-            int yValue = shape.StartOrigin.Y;
-
-            for (int i = 0; i < 2; i++)
+            Point tempStartPoint;
+            if (_shapesEnum == ShapesEnum.Ellipse || _shapesEnum == ShapesEnum.Rectangle ||
+                _shapesEnum == ShapesEnum.Triangle)
             {
-                if (i == 0)
+                if (_shapeWidth >= 0 || _shapeHeight >= 0)
                 {
-                    g.DrawEllipse(new Pen(Color.Blue), xValue - _sizeNodeRect/2, yValue - _sizeNodeRect/2, _sizeNodeRect, _sizeNodeRect);
+                    if (_shapeWidth < 0 && _shapeHeight > 0)
+                    {
+                        tempStartPoint = new Point(_startPoint.X - absShapeWidth, _startPoint.Y);
+                    }
+                    else if (_shapeWidth > 0 && _shapeHeight < 0)
+                    {
+                        tempStartPoint = new Point(_startPoint.X, _startPoint.Y - absShapeHeight);
+                    }
+                    else
+                    {
+                        tempStartPoint = new Point(_startPoint.X, _startPoint.Y);
+                    }
                 }
                 else
                 {
-                    g.DrawEllipse(new Pen(Color.Blue), shape.EndOrigin.X - 3, shape.EndOrigin.Y - 3, _sizeNodeRect, _sizeNodeRect);
+                    tempStartPoint = new Point(_startPoint.X - absShapeWidth, _startPoint.Y - absShapeHeight);
                 }
-            }
-            Pen tempPen = new Pen(Color.Blue);
-            tempPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-            g.DrawLine(tempPen, shape.StartOrigin.X, shape.StartOrigin.Y, shape.EndOrigin.X, shape.EndOrigin.Y);
-            _pnlGraphic.Invalidate();
-        }
-        
-        private ResizePosition GetNodeSelectable(Point p)
-        {
-            foreach (ResizePosition r in Enum.GetValues(typeof (ResizePosition)))
-            {
-                if (GetRectangle(r).Contains(p))
+                if (_shapesEnum == ShapesEnum.Ellipse)
                 {
-                    return r;
+                    _figure = new Ellipse(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape);
+                }
+                if (_shapesEnum == ShapesEnum.Rectangle)
+                {
+                    _figure = new Shapes.Rectangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor,
+                        _shapeSize, _fillShape);
+                }
+                if (_shapesEnum == ShapesEnum.Triangle)
+                {
+                    _figure = new Triangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape);
                 }
             }
-            return ResizePosition.None;
+            else if (_shapesEnum == ShapesEnum.Line)
+            {
+                tempStartPoint = _startPoint;
+                var tempEndPoint = _endPoint;
+                _figure = new Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize);
+            }
+            else if (_shapesEnum == ShapesEnum.None)
+            {
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void ChangeCursor(Point p)
         {
-            _pnlGraphic.Cursor = GetCursor(GetNodeSelectable(p));
+            PnlGraphic.Cursor = ShapeSelectionByPoint.GetCursor(ShapeSelectionByPoint.GetNodeSelectable(p));
         }
 
-        private Cursor GetCursor(ResizePosition p)
-        {
-            switch (p)
-            {
-                case ResizePosition.LeftUp:
-                    return Cursors.SizeNWSE;
-
-                case ResizePosition.LeftMiddle:
-                    return Cursors.SizeWE;
-
-                case ResizePosition.LeftBottom:
-                    return Cursors.SizeNESW;
-
-                case ResizePosition.BottomMiddle:
-                    return Cursors.SizeNS;
-
-                case ResizePosition.RightUp:
-                    return Cursors.SizeNESW;
-
-                case ResizePosition.RightBottom:
-                    return Cursors.SizeNWSE;
-
-                case ResizePosition.RightMiddle:
-                    return Cursors.SizeWE;
-
-                case ResizePosition.UpMiddle:
-                    return Cursors.SizeNS;
-                default:
-                    return Cursors.Default;
-            }
-        }
-
-        private Rectangle GetRectangle(ResizePosition value)
-        {
-            Debug.Assert(_indexOfSelectedShape != null, "Нет нарисованных фигур!");
-            Shape tempShape = _doc.AllShapes[_indexOfSelectedShape.Value];
-
-            switch (value)
-            {
-                case ResizePosition.LeftUp:
-                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y - 7, _sizeNodeRect, _sizeNodeRect);
-
-                case ResizePosition.LeftMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + tempShape.Height/2, _sizeNodeRect, _sizeNodeRect);
-
-                case ResizePosition.LeftBottom:
-                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + 5 + tempShape.Height, _sizeNodeRect, _sizeNodeRect);
-
-                case ResizePosition.BottomMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y + 5 + tempShape.Height, _sizeNodeRect, _sizeNodeRect);
-
-                case ResizePosition.RightUp:
-                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y - 7, _sizeNodeRect, _sizeNodeRect);
-
-                case ResizePosition.RightBottom:
-                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + 5 + tempShape.Height, _sizeNodeRect, _sizeNodeRect);
-
-                case ResizePosition.RightMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + tempShape.Height/2, _sizeNodeRect, _sizeNodeRect);
-
-                case ResizePosition.UpMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y - 6, _sizeNodeRect, _sizeNodeRect);
-                default:
-                    return new Rectangle();
-            }
-        }
-
-        private enum ResizePosition
-        {
-            UpMiddle,
-            LeftMiddle,
-            LeftBottom,
-            LeftUp,
-            RightUp,
-            RightMiddle,
-            RightBottom,
-            BottomMiddle,
-            None
-        }
-
+        // set figure for painting
         private void btnRectangle_Click(object sender, EventArgs e)
         {
             string button = "rectangle";
@@ -610,7 +421,7 @@ namespace PaintMV.GUI
 
         private void menuOpen_Click(object sender, EventArgs e)
         {
-            if (_doc.AllShapes.Count > 0)
+            if (Doc.AllShapes.Count > 0)
             {
                 const string message = "Do you want to save changes?";
                 const string caption = "Paint";
@@ -635,26 +446,26 @@ namespace PaintMV.GUI
         private void OpenDialogForm()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Paint Files | *.pnt";
+            openFileDialog.Filter = @"Paint Files | *.pnt";
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 ShapesList newDoc = new ShapesList();
-                _doc = newDoc;
+                Doc = newDoc;
 
                 using (Stream file = openFileDialog.OpenFile())
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    _doc = (ShapesList) formatter.Deserialize(file);
+                    Doc = (ShapesList) formatter.Deserialize(file);
                 }
                 _loadedFile = true;
-                _pnlGraphic.Invalidate();
+                PnlGraphic.Invalidate();
             }
         }
 
         private void menuNew_Click(object sender, EventArgs e)
         {
-            if (_doc.AllShapes.Count > 0)
+            if (Doc.AllShapes.Count > 0)
             {
                 const string message = "Do you want to save changes?";
                 const string caption = "Save changes";
@@ -679,25 +490,29 @@ namespace PaintMV.GUI
         private void menuSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "Paint Files | *.pnt";
+            saveFileDialog.Filter = @"Paint Files | *.pnt";
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 using (Stream file = saveFileDialog.OpenFile())
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(file, _doc);
+                    formatter.Serialize(file, Doc);
                 }
             }
         }
 
         private void NewBlankPage()
         {
+            Form fileDialog = new NewFileForm();
+            fileDialog.Text = @"New picture";
+            fileDialog.ShowDialog();
+            PnlGraphic.Size = new Size(PanelWidth, PanelHeight);
             ShapesList newDoc = new ShapesList();
-            _doc = newDoc;
+            Doc = newDoc;
             _isShapeWasSelected = false;
-            _indexOfSelectedShape = null;
-            _pnlGraphic.Invalidate();
+            IndexOfSelectedShape = null;
+            PnlGraphic.Invalidate();
         }
 
         private void ChangeButtonColor(string button)
@@ -732,22 +547,18 @@ namespace PaintMV.GUI
             }
         }
 
-        private void pnlGraphic_MouseClick(object sender, MouseEventArgs e)
-        {
-        }
-
         private void frmPaint_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete && _isShapeWasSelected)
             {
-                if (_indexOfSelectedShape != null)
+                if (IndexOfSelectedShape != null)
                 {
-                    _doc.AllShapes.Remove(_doc.AllShapes[_indexOfSelectedShape.Value]);
+                    Doc.AllShapes.Remove(Doc.AllShapes[IndexOfSelectedShape.Value]);
                     _isShapeWasSelected = false;
                 }
-                _indexOfSelectedShape = null;
+                IndexOfSelectedShape = null;
                 _buttonDeletePressed = true;
-                _pnlGraphic.Invalidate();
+                PnlGraphic.Invalidate();
             }
         }
 
@@ -757,23 +568,23 @@ namespace PaintMV.GUI
             {
                 _selectionMode = false;
                 _isShapeWasSelected = false;
-                btnSelection.Text = "OFF";
+                btnSelection.Text = @"OFF";
             }
             else
             {
                 _selectionMode = true;
-                btnSelection.Text = "ON";
+                btnSelection.Text = @"ON";
             }
-            _pnlGraphic.Invalidate();
+            PnlGraphic.Invalidate();
         }
 
         private void menuUndo_Click(object sender, EventArgs e)
         {
-            if (_doc.AllShapes.Count < 1) return;
-            var obj = _doc.AllShapes[_doc.AllShapes.Count - 1];
-            _doc.AllShapes.Remove(obj);
+            if (Doc.AllShapes.Count < 1) return;
+            var obj = Doc.AllShapes[Doc.AllShapes.Count - 1];
+            Doc.AllShapes.Remove(obj);
             _redo.AllShapes.Add(obj);
-            _pnlGraphic.Invalidate();
+            PnlGraphic.Invalidate();
         }
 
         private void menuRedo_Click(object sender, EventArgs e)
@@ -781,8 +592,8 @@ namespace PaintMV.GUI
             if (_redo.AllShapes.Count < 1) return;
             var obj = _redo.AllShapes[_redo.AllShapes.Count - 1];
             _redo.AllShapes.Remove(obj);
-            _doc.AllShapes.Add(obj);
-            _pnlGraphic.Invalidate();
+            Doc.AllShapes.Add(obj);
+            PnlGraphic.Invalidate();
         }
 
         private void btnSelect_Click(object sender, EventArgs e)
@@ -792,57 +603,47 @@ namespace PaintMV.GUI
 
         private void menuCopy_Click(object sender, EventArgs e)
         {
-            if (_isShapeWasSelected && _indexOfSelectedShape != null)
+            if (_isShapeWasSelected && IndexOfSelectedShape != null)
             {
-                Shape copiedFigure = _doc.AllShapes[_indexOfSelectedShape.Value].Clone();
-                _doc.AllShapes.Add(copiedFigure);
+                Shape copiedFigure = Doc.AllShapes[IndexOfSelectedShape.Value].Clone();
+                Doc.AllShapes.Add(copiedFigure);
             }
-            _pnlGraphic.Invalidate();
+            PnlGraphic.Invalidate();
         }
 
         private void menuCut_Click(object sender, EventArgs e)
         {
-            if (_isShapeWasSelected && _indexOfSelectedShape != null)
+            if (_isShapeWasSelected && IndexOfSelectedShape != null)
             {
-                _doc.AllShapes.Remove(_doc.AllShapes[_indexOfSelectedShape.Value]);
+                var obj = Doc.AllShapes[IndexOfSelectedShape.Value];
+                Doc.AllShapes.Remove(obj);
+                _redo.AllShapes.Add(obj);
                 _isShapeWasSelected = false;
             }
-            _pnlGraphic.Invalidate();
+            PnlGraphic.Invalidate();
         }
 
-        private void TestIfRectInsideArea()
+        private void FrmPaint_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Debug.Assert(_indexOfSelectedShape != null, "Фигура не выбрана!");
-            Shape tempShape = _doc.AllShapes[_indexOfSelectedShape.Value];
-            Point staticPoint;
-            staticPoint = new Point();
-            staticPoint.X = _pnlGraphic.Width - tempShape.StartOrigin.X;
-            staticPoint.Y = tempShape.StartOrigin.Y;
+            if (Doc.AllShapes.Count > 0)
+            {
+                const string message = "Do you want to save changes?";
+                const string caption = "Save changes";
+                var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    menuSave_Click(sender, e);
+                }
+            }
+        }
 
-            if (tempShape.StartOrigin.X < 0) tempShape.StartOrigin = new Point(0, tempShape.StartOrigin.Y);
-            if (tempShape.StartOrigin.Y < 0) tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, 0);
-            if (tempShape.Width <= 1)
-            {
-                tempShape.Width = 1;
-                tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y);
-            }
-            if (tempShape.Height <= 1)
-            {
-                tempShape.Height = 1;
-                tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y);
-            }
-
-            if (tempShape.StartOrigin.X + tempShape.Width > _pnlGraphic.Width)
-            {
-                tempShape.StartOrigin = new Point(_pnlGraphic.Width - tempShape.Width, tempShape.StartOrigin.Y);
-                tempShape.Width = _pnlGraphic.Width - tempShape.StartOrigin.X;
-            }
-            if (tempShape.StartOrigin.Y + tempShape.Height > _pnlGraphic.Height)
-            {
-                tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, _pnlGraphic.Height - tempShape.Height);
-                tempShape.Height = _pnlGraphic.Height - tempShape.StartOrigin.Y;
-            }
-            _pnlGraphic.Invalidate();
+        private void menuClear_Click(object sender, EventArgs e)
+        {
+            ShapesList newDoc = new ShapesList();
+            Doc = newDoc;
+            _isShapeWasSelected = false;
+            IndexOfSelectedShape = null;
+            PnlGraphic.Invalidate();
         }
     }
 }
