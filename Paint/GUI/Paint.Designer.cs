@@ -54,6 +54,7 @@
             this.menuRedo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.menuCut = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuClear = new System.Windows.Forms.ToolStripMenuItem();
             this.saveDialog = new System.Windows.Forms.SaveFileDialog();
             this.openDialog = new System.Windows.Forms.OpenFileDialog();
             this.btnSelection = new System.Windows.Forms.Button();
@@ -263,10 +264,11 @@
             // 
             this.menuOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuFile,
-            this.editToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.menuClear});
             this.menuOptions.Location = new System.Drawing.Point(0, 0);
             this.menuOptions.Name = "menuOptions";
-            this.menuOptions.Size = new System.Drawing.Size(835, 24);
+            this.menuOptions.Size = new System.Drawing.Size(984, 24);
             this.menuOptions.TabIndex = 15;
             // 
             // menuFile
@@ -283,7 +285,7 @@
             // 
             this.menuNew.Name = "menuNew";
             this.menuNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.menuNew.Size = new System.Drawing.Size(152, 22);
+            this.menuNew.Size = new System.Drawing.Size(146, 22);
             this.menuNew.Text = "New";
             this.menuNew.Click += new System.EventHandler(this.menuNew_Click);
             // 
@@ -291,7 +293,7 @@
             // 
             this.menuOpen.Name = "menuOpen";
             this.menuOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.menuOpen.Size = new System.Drawing.Size(152, 22);
+            this.menuOpen.Size = new System.Drawing.Size(146, 22);
             this.menuOpen.Text = "Open";
             this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
             // 
@@ -299,7 +301,7 @@
             // 
             this.menuSave.Name = "menuSave";
             this.menuSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.menuSave.Size = new System.Drawing.Size(152, 22);
+            this.menuSave.Size = new System.Drawing.Size(146, 22);
             this.menuSave.Text = "Save";
             this.menuSave.Click += new System.EventHandler(this.menuSave_Click);
             // 
@@ -346,6 +348,13 @@
             this.menuCut.Size = new System.Drawing.Size(174, 22);
             this.menuCut.Text = "Cut";
             this.menuCut.Click += new System.EventHandler(this.menuCut_Click);
+            // 
+            // menuClear
+            // 
+            this.menuClear.Name = "menuClear";
+            this.menuClear.Size = new System.Drawing.Size(46, 20);
+            this.menuClear.Text = "Clear";
+            this.menuClear.Click += new System.EventHandler(this.menuClear_Click);
             // 
             // openDialog
             // 
@@ -427,7 +436,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(835, 586);
+            this.ClientSize = new System.Drawing.Size(984, 661);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -439,6 +448,7 @@
             this.MainMenuStrip = this.menuOptions;
             this.Name = "FrmPaint";
             this.Text = "Easy Paint";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmPaint_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).EndInit();
             this.grpColor.ResumeLayout(false);
@@ -490,6 +500,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuCopy;
         private System.Windows.Forms.ToolStripMenuItem menuCut;
         private System.Windows.Forms.Button btnSelect;
+        private System.Windows.Forms.ToolStripMenuItem menuClear;
     }
 }
 

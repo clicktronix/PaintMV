@@ -50,11 +50,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enumerations\ColorsEnum.cs" />
-    <Compile Include="MyPanel.cs">
+    <Compile Include="Controls\LineSelectionByPoint.cs" />
+    <Compile Include="Controls\ShapeSelectionByPoint.cs" />
+    <Compile Include="Controls\ResizePosition.cs" />
+    <Compile Include="GUI\MyPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Selection.cs" />
+    <Compile Include="Controls\Selection.cs" />
     <Compile Include="Enumerations\ShapesEnum.cs" />
+    <Compile Include="GUI\NewFileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\NewFileForm.Designer.cs">
+      <DependentUpon>NewFileForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Shapes\ShapesList.cs" />
     <Compile Include="GUI\Paint.cs">
       <SubType>Form</SubType>
@@ -69,6 +78,9 @@
     <Compile Include="Shapes\Rectangle.cs" />
     <Compile Include="Shapes\Shape.cs" />
     <Compile Include="Shapes\Triangle.cs" />
+    <EmbeddedResource Include="GUI\NewFileForm.resx">
+      <DependentUpon>NewFileForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\Paint.resx">
       <DependentUpon>Paint.cs</DependentUpon>
     </EmbeddedResource>
@@ -95,9 +107,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
