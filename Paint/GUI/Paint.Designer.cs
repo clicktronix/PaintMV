@@ -449,7 +449,8 @@
             this.Name = "FrmPaint";
             this.Text = "Easy Paint";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmPaint_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(frmPaint_KeyDown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(FrmPaint_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).EndInit();
             this.grpColor.ResumeLayout(false);
             this.menuOptions.ResumeLayout(false);

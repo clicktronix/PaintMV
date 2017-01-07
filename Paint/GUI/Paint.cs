@@ -40,12 +40,13 @@ namespace PaintMV.GUI
         public Panel PnlGraphic { get; }
         public ResizePosition ResizePosition { get; }
         public bool MMove { set; get; }
-        public static int PanelWidth { get; set; } = 500;
+        public static int PanelWidth { get; set; } = 700;
         public static int PanelHeight { get; set; } = 500;
 
         public FrmPaint()
         {
             InitializeComponent();
+
             Doc = new ShapesList();
             _redo = new ShapesList();
             PnlGraphic = new MyPanel();
@@ -77,8 +78,6 @@ namespace PaintMV.GUI
             set { _endPoint = value; }
             get { return _endPoint; }
         }
-
-        
 
         private void pnlGraphic_Paint(object sender, PaintEventArgs e)
         {
@@ -622,6 +621,20 @@ namespace PaintMV.GUI
                 _isShapeWasSelected = false;
             }
             PnlGraphic.Invalidate();
+        }
+
+        private void FrmPaint_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (Doc.AllShapes.Count > 0)
+            {
+                const string message = "Do you want to save changes?";
+                const string caption = "Save changes";
+                var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    menuSave_Click(sender, e);
+                }
+            }
         }
 
         private void menuClear_Click(object sender, EventArgs e)
