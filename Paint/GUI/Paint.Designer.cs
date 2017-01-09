@@ -49,6 +49,7 @@
             this.menuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveLike = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuUndo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRedo = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +61,7 @@
             this.btnSelection = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnSelect = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.chBoxFill = new System.Windows.Forms.CheckBox();
@@ -281,7 +282,8 @@
             this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuNew,
             this.menuOpen,
-            this.menuSave});
+            this.menuSave,
+            this.menuSaveLike});
             this.menuFile.Name = "menuFile";
             this.menuFile.Size = new System.Drawing.Size(37, 20);
             this.menuFile.Text = "File";
@@ -290,7 +292,7 @@
             // 
             this.menuNew.Name = "menuNew";
             this.menuNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.menuNew.Size = new System.Drawing.Size(146, 22);
+            this.menuNew.Size = new System.Drawing.Size(195, 22);
             this.menuNew.Text = "New";
             this.menuNew.Click += new System.EventHandler(this.menuNew_Click);
             // 
@@ -298,7 +300,7 @@
             // 
             this.menuOpen.Name = "menuOpen";
             this.menuOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.menuOpen.Size = new System.Drawing.Size(146, 22);
+            this.menuOpen.Size = new System.Drawing.Size(195, 22);
             this.menuOpen.Text = "Open";
             this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
             // 
@@ -306,9 +308,18 @@
             // 
             this.menuSave.Name = "menuSave";
             this.menuSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.menuSave.Size = new System.Drawing.Size(146, 22);
+            this.menuSave.Size = new System.Drawing.Size(195, 22);
             this.menuSave.Text = "Save";
             this.menuSave.Click += new System.EventHandler(this.menuSave_Click);
+            // 
+            // menuSaveLike
+            // 
+            this.menuSaveLike.Name = "menuSaveLike";
+            this.menuSaveLike.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.menuSaveLike.Size = new System.Drawing.Size(195, 22);
+            this.menuSaveLike.Text = "Save As...";
+            this.menuSaveLike.Click += new System.EventHandler(this.menuSaveLike_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -389,7 +400,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.btnSelect);
+            this.groupBox2.Controls.Add(this.btnUpdate);
             this.groupBox2.Controls.Add(this.btnSelection);
             this.groupBox2.Location = new System.Drawing.Point(12, 268);
             this.groupBox2.Name = "groupBox2";
@@ -398,14 +409,14 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Selection";
             // 
-            // btnSelect
+            // btnUpdate
             // 
-            this.btnSelect.Location = new System.Drawing.Point(18, 56);
-            this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(50, 33);
-            this.btnSelect.TabIndex = 5;
-            this.btnSelect.Text = "RecSel";
-            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
+            this.btnUpdate.Location = new System.Drawing.Point(18, 56);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(50, 33);
+            this.btnUpdate.TabIndex = 5;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // groupBox3
             // 
@@ -552,12 +563,13 @@
         private System.Windows.Forms.ToolStripMenuItem menuRedo;
         private System.Windows.Forms.ToolStripMenuItem menuCopy;
         private System.Windows.Forms.ToolStripMenuItem menuCut;
-        private System.Windows.Forms.Button btnSelect;
+        private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.ToolStripMenuItem menuClear;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.RadioButton radioDot;
         private System.Windows.Forms.RadioButton radioDash;
         private System.Windows.Forms.RadioButton radioSolid;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveLike;
     }
 }
 
