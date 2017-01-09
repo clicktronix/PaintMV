@@ -7,7 +7,7 @@ namespace PaintMV.Shapes
     [Serializable]
     internal class Triangle : Shape
     {
-        public Triangle(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape)
+        public Triangle(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape, DashStyle penStyle)
         {
             StartOrigin = startOrigin;
             Width = width;
@@ -15,6 +15,7 @@ namespace PaintMV.Shapes
             ChosenColor = chosenColor;
             ShapeSize = shapeSize;
             FilledShape = fillShape;
+            PenStyle = penStyle;
         }
 
         public override void Draw(Graphics g)
@@ -26,7 +27,8 @@ namespace PaintMV.Shapes
                 new Point(StartOrigin.X + Width, StartOrigin.Y + Height)
             };
 
-            Pen penColor = new Pen(ChosenColor, ShapeSize);
+            Pen pen = new Pen(ChosenColor, ShapeSize);
+            pen.DashStyle = PenStyle;
             if (FilledShape)
             {
                 SolidBrush tempBrush = new SolidBrush(ChosenColor);
@@ -34,9 +36,9 @@ namespace PaintMV.Shapes
             }
             else
             {
-                g.DrawLine(penColor, StartOrigin.X + Width, StartOrigin.Y + Height, StartOrigin.X + Width / 2, StartOrigin.Y);
-                g.DrawLine(penColor, StartOrigin.X + Width / 2, StartOrigin.Y, StartOrigin.X, StartOrigin.Y + Height);
-                g.DrawLine(penColor, StartOrigin.X, StartOrigin.Y + Height, StartOrigin.X + Width, StartOrigin.Y + Height);
+                g.DrawLine(pen, StartOrigin.X + Width, StartOrigin.Y + Height, StartOrigin.X + Width / 2, StartOrigin.Y);
+                g.DrawLine(pen, StartOrigin.X + Width / 2, StartOrigin.Y, StartOrigin.X, StartOrigin.Y + Height);
+                g.DrawLine(pen, StartOrigin.X, StartOrigin.Y + Height, StartOrigin.X + Width, StartOrigin.Y + Height);
             }
         }
 
@@ -61,7 +63,7 @@ namespace PaintMV.Shapes
 
         public override Shape Clone()
         {
-            return new Triangle(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape);
+            return new Triangle(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape, PenStyle);
         }
     }
 }

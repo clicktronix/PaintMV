@@ -9,7 +9,7 @@ namespace PaintMV.Shapes
     {
         public Point MoveOriginStart { get; }
 
-        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape)
+        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape, DashStyle penStyle)
         {
             StartOrigin = startOrigin;
             Width = width;
@@ -18,18 +18,21 @@ namespace PaintMV.Shapes
             ShapeSize = shapeSize;
             MoveOriginStart = startOrigin;
             FilledShape = fillShape;
+            PenStyle = penStyle;
         }
 
         public override void Draw(Graphics g)
         {
-            SolidBrush tempBrush = new SolidBrush(ChosenColor);
             if (FilledShape)
             {
+                SolidBrush tempBrush = new SolidBrush(ChosenColor);
                 g.FillEllipse(tempBrush, StartOrigin.X, StartOrigin.Y, Width, Height);
             }
             else
             {
-                g.DrawEllipse(new Pen(ChosenColor, ShapeSize), StartOrigin.X, StartOrigin.Y, Width, Height);
+                Pen pen = new Pen(ChosenColor, ShapeSize);
+                pen.DashStyle = PenStyle;
+                g.DrawEllipse(pen, StartOrigin.X, StartOrigin.Y, Width, Height);
             }
         }
 
@@ -48,7 +51,7 @@ namespace PaintMV.Shapes
 
         public override Shape Clone()
         {
-            return new Ellipse(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape);
+            return new Ellipse(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape, PenStyle);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
@@ -31,6 +32,7 @@ namespace PaintMV.GUI
         private bool _loadedFile;
         private bool _buttonDeletePressed;
         private ShapesEnum _shapesEnum;
+        private Pen _pen;
 
         public ShapeSelectionByPoint ShapeSelectionByPoint { get; }
         public LineSelectionByPoint LineSelectionByPoint { get; }
@@ -42,11 +44,11 @@ namespace PaintMV.GUI
         public bool MMove { set; get; }
         public static int PanelWidth { get; set; } = 700;
         public static int PanelHeight { get; set; } = 500;
+        public DashStyle PenStyle = DashStyle.Solid;
 
         public FrmPaint()
         {
             InitializeComponent();
-
             Doc = new ShapesList();
             _redo = new ShapesList();
             PnlGraphic = new MyPanel();
@@ -166,7 +168,6 @@ namespace PaintMV.GUI
             }
             _startPoint.X = e.X;
             _startPoint.Y = e.Y;
-
             PnlGraphic.Invalidate();
         }
 
@@ -177,6 +178,7 @@ namespace PaintMV.GUI
                 Doc.AllShapes[IndexOfSelectedShape.Value].ChosenColor = color;
                 Doc.AllShapes[IndexOfSelectedShape.Value].FilledShape = chBoxFill.Checked;
                 Doc.AllShapes[IndexOfSelectedShape.Value].ShapeSize = (int)numSize.Value;
+                Doc.AllShapes[IndexOfSelectedShape.Value].PenStyle = PenStyle;
             }
             PnlGraphic.Invalidate();
         }
@@ -266,9 +268,26 @@ namespace PaintMV.GUI
             }
         }
 
+        private void ChoseLineStyle()
+        {
+            if (radioSolid.Checked)
+            {
+                PenStyle = DashStyle.Solid;
+            }
+            else if (radioDash.Checked)
+            {
+                PenStyle = DashStyle.Dash;
+            }
+            else if (radioDot.Checked)
+            {
+                PenStyle = DashStyle.Dot;
+            }
+        }
+
         private void CheckChosenShape(int absShapeWidth, int absShapeHeight)
         {
             Point tempStartPoint;
+            ChoseLineStyle();
             if (_shapesEnum == ShapesEnum.Ellipse || _shapesEnum == ShapesEnum.Rectangle ||
                 _shapesEnum == ShapesEnum.Triangle)
             {
@@ -293,23 +312,23 @@ namespace PaintMV.GUI
                 }
                 if (_shapesEnum == ShapesEnum.Ellipse)
                 {
-                    _figure = new Ellipse(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape);
+                    _figure = new Ellipse(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape, PenStyle);
                 }
                 if (_shapesEnum == ShapesEnum.Rectangle)
                 {
                     _figure = new Shapes.Rectangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor,
-                        _shapeSize, _fillShape);
+                        _shapeSize, _fillShape, PenStyle);
                 }
                 if (_shapesEnum == ShapesEnum.Triangle)
                 {
-                    _figure = new Triangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape);
+                    _figure = new Triangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape, PenStyle);
                 }
             }
             else if (_shapesEnum == ShapesEnum.Line)
             {
                 tempStartPoint = _startPoint;
                 var tempEndPoint = _endPoint;
-                _figure = new Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize);
+                _figure = new Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, PenStyle);
             }
             else if (_shapesEnum == ShapesEnum.None)
             {

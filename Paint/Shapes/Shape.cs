@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace PaintMV.Shapes
 {
@@ -13,6 +14,7 @@ namespace PaintMV.Shapes
         public int ShapeSize { get; set; }
         public Color ChosenColor { get; set; }
         public bool FilledShape { get; set; }
+        public DashStyle PenStyle { get; set; }
 
         public abstract void Draw(Graphics g);
         public abstract Shape Clone();

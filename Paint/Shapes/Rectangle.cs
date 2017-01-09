@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace PaintMV.Shapes
 {
     [Serializable]
     internal class Rectangle : Shape
     {
-        public Rectangle(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape)
+        public Rectangle(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape, DashStyle penStyle)
         {
             StartOrigin = startOrigin;
             Width = width;
@@ -14,12 +15,13 @@ namespace PaintMV.Shapes
             ChosenColor = chosenColor;
             ShapeSize = shapeSize;
             FilledShape = fillShape;
+            PenStyle = penStyle;
         }
 
         public override void Draw(Graphics g)
         {
-            Pen penColor = new Pen(ChosenColor, ShapeSize);
-
+            Pen pen = new Pen(ChosenColor, ShapeSize);
+            pen.DashStyle = PenStyle;
             if (FilledShape)
             {
                 SolidBrush tempBrush = new SolidBrush(ChosenColor);
@@ -27,7 +29,7 @@ namespace PaintMV.Shapes
             }
             else
             {
-                g.DrawRectangle(penColor, StartOrigin.X, StartOrigin.Y, Width, Height);
+                g.DrawRectangle(pen, StartOrigin.X, StartOrigin.Y, Width, Height);
             }
          
         }
@@ -43,7 +45,7 @@ namespace PaintMV.Shapes
 
         public override Shape Clone()
         {
-            return new Rectangle(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape);
+            return new Rectangle(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape, PenStyle);
         }
     }
 }
