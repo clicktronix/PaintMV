@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
@@ -42,11 +44,11 @@ namespace PaintMV.GUI
         public bool MMove { set; get; }
         public static int PanelWidth { get; set; } = 700;
         public static int PanelHeight { get; set; } = 500;
+        public DashStyle PenStyle = DashStyle.Solid;
 
         public FrmPaint()
         {
             InitializeComponent();
-
             Doc = new ShapesList();
             _redo = new ShapesList();
             PnlGraphic = new MyPanel();
@@ -79,6 +81,19 @@ namespace PaintMV.GUI
             get { return _endPoint; }
         }
 
+        public ShapesEnum ShapesEnum
+        {
+            get
+            {
+                return _shapesEnum;
+            }
+
+            set
+            {
+                _shapesEnum = value;
+            }
+        }
+
         private void pnlGraphic_Paint(object sender, PaintEventArgs e)
         {
             if (_hasShapes && Doc.AllShapes != null)
@@ -100,7 +115,7 @@ namespace PaintMV.GUI
 
             if (_isShapeWasSelected)
             {
-                if (_shapesEnum == ShapesEnum.Line)
+                if (ShapesEnum == ShapesEnum.Line)
                 {
                     if (Doc.AllShapes != null)
                         if (IndexOfSelectedShape != null)
@@ -166,7 +181,6 @@ namespace PaintMV.GUI
             }
             _startPoint.X = e.X;
             _startPoint.Y = e.Y;
-
             PnlGraphic.Invalidate();
         }
 
@@ -176,7 +190,6 @@ namespace PaintMV.GUI
             {
                 Doc.AllShapes[IndexOfSelectedShape.Value].ChosenColor = color;
                 Doc.AllShapes[IndexOfSelectedShape.Value].FilledShape = chBoxFill.Checked;
-                Doc.AllShapes[IndexOfSelectedShape.Value].ShapeSize = (int)numSize.Value;
             }
             PnlGraphic.Invalidate();
         }
@@ -266,11 +279,28 @@ namespace PaintMV.GUI
             }
         }
 
+        private void ChoseLineStyle()
+        {
+            if (radioSolid.Checked)
+            {
+                PenStyle = DashStyle.Solid;
+            }
+            else if (radioDash.Checked)
+            {
+                PenStyle = DashStyle.Dash;
+            }
+            else if (radioDot.Checked)
+            {
+                PenStyle = DashStyle.Dot;
+            }
+        }
+
         private void CheckChosenShape(int absShapeWidth, int absShapeHeight)
         {
             Point tempStartPoint;
-            if (_shapesEnum == ShapesEnum.Ellipse || _shapesEnum == ShapesEnum.Rectangle ||
-                _shapesEnum == ShapesEnum.Triangle)
+            ChoseLineStyle();
+            if (ShapesEnum == ShapesEnum.Ellipse || ShapesEnum == ShapesEnum.Rectangle ||
+                ShapesEnum == ShapesEnum.Triangle)
             {
                 if (_shapeWidth >= 0 || _shapeHeight >= 0)
                 {
@@ -291,27 +321,27 @@ namespace PaintMV.GUI
                 {
                     tempStartPoint = new Point(_startPoint.X - absShapeWidth, _startPoint.Y - absShapeHeight);
                 }
-                if (_shapesEnum == ShapesEnum.Ellipse)
+                if (ShapesEnum == ShapesEnum.Ellipse)
                 {
-                    _figure = new Ellipse(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape);
+                    _figure = new Ellipse(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape, PenStyle);
                 }
-                if (_shapesEnum == ShapesEnum.Rectangle)
+                if (ShapesEnum == ShapesEnum.Rectangle)
                 {
                     _figure = new Shapes.Rectangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor,
-                        _shapeSize, _fillShape);
+                        _shapeSize, _fillShape, PenStyle);
                 }
-                if (_shapesEnum == ShapesEnum.Triangle)
+                if (ShapesEnum == ShapesEnum.Triangle)
                 {
-                    _figure = new Triangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape);
+                    _figure = new Triangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape, PenStyle);
                 }
             }
-            else if (_shapesEnum == ShapesEnum.Line)
+            else if (ShapesEnum == ShapesEnum.Line)
             {
                 tempStartPoint = _startPoint;
                 var tempEndPoint = _endPoint;
-                _figure = new Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize);
+                _figure = new Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, PenStyle);
             }
-            else if (_shapesEnum == ShapesEnum.None)
+            else if (ShapesEnum == ShapesEnum.None)
             {
             }
             else
@@ -329,7 +359,7 @@ namespace PaintMV.GUI
         private void btnRectangle_Click(object sender, EventArgs e)
         {
             string button = "rectangle";
-            _shapesEnum = ShapesEnum.Rectangle;
+            ShapesEnum = ShapesEnum.Rectangle;
             ChangeButtonColor(button);
             _selectionMode = true;
             btnSelection_Click(sender, e);
@@ -337,7 +367,7 @@ namespace PaintMV.GUI
 
         private void btnEllipse_Click(object sender, EventArgs e)
         {
-            _shapesEnum = ShapesEnum.Ellipse;
+            ShapesEnum = ShapesEnum.Ellipse;
             string button = "ellipse";
             ChangeButtonColor(button);
             _selectionMode = true;
@@ -346,7 +376,7 @@ namespace PaintMV.GUI
 
         private void btnLine_Click(object sender, EventArgs e)
         {
-            _shapesEnum = ShapesEnum.Line;
+            ShapesEnum = ShapesEnum.Line;
             string button = "line";
             ChangeButtonColor(button);
             _selectionMode = true;
@@ -355,7 +385,7 @@ namespace PaintMV.GUI
 
         private void btnTriangle_Click(object sender, EventArgs e)
         {
-            _shapesEnum = ShapesEnum.Triangle;
+            ShapesEnum = ShapesEnum.Triangle;
             string button = "triangle";
             ChangeButtonColor(button);
             _selectionMode = true;
@@ -491,13 +521,27 @@ namespace PaintMV.GUI
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = @"Paint Files | *.pnt";
-
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 using (Stream file = saveFileDialog.OpenFile())
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(file, Doc);
+                }
+            }
+        }
+
+        private void menuSaveLike_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = @"Paint Files (*.JPG)|*.JPG|Image Files(*.GIF)|*.GIF|Image Files(*.PNG)|*.PNG|All files (*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                using (Bitmap bitmap = new Bitmap(PnlGraphic.ClientSize.Width,
+                                  PnlGraphic.ClientSize.Height))
+                {
+                    PnlGraphic.DrawToBitmap(bitmap, PnlGraphic.ClientRectangle);
+                    bitmap.Save(saveFileDialog.FileName, ImageFormat.Jpeg);
                 }
             }
         }
@@ -596,9 +640,15 @@ namespace PaintMV.GUI
             PnlGraphic.Invalidate();
         }
 
-        private void btnSelect_Click(object sender, EventArgs e)
+        private void btnUpdate_Click(object sender, EventArgs e)
         {
-
+            if (_isShapeWasSelected && IndexOfSelectedShape != null)
+            {
+                ChoseLineStyle();
+                Doc.AllShapes[IndexOfSelectedShape.Value].ShapeSize = (int)numSize.Value;
+                Doc.AllShapes[IndexOfSelectedShape.Value].PenStyle = PenStyle;
+            }
+            PnlGraphic.Invalidate();
         }
 
         private void menuCopy_Click(object sender, EventArgs e)
@@ -636,7 +686,7 @@ namespace PaintMV.GUI
                 }
             }
         }
-
+        
         private void menuClear_Click(object sender, EventArgs e)
         {
             ShapesList newDoc = new ShapesList();

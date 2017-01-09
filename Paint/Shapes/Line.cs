@@ -7,7 +7,7 @@ namespace PaintMV.Shapes
     [Serializable]
     internal class Line : Shape
     {
-        public Line(Point startOrigin, Point endOrigin, int width, int height, Color chosenColor, int shapeSize)
+        public Line(Point startOrigin, Point endOrigin, int width, int height, Color chosenColor, int shapeSize, DashStyle penStyle)
         {
             StartOrigin = startOrigin;
             EndOrigin = endOrigin;
@@ -15,11 +15,14 @@ namespace PaintMV.Shapes
             Height = height;
             ChosenColor = chosenColor;
             ShapeSize = shapeSize;
+            PenStyle = penStyle;
         }
 
         public override void Draw(Graphics g)
         {
-            g.DrawLine(new Pen(ChosenColor, ShapeSize), StartOrigin, EndOrigin);
+            Pen pen = new Pen(ChosenColor, ShapeSize);
+            pen.DashStyle = PenStyle;
+            g.DrawLine(pen, StartOrigin, EndOrigin);
         }
 
         public override bool ContainsPoint(Point p)
@@ -37,7 +40,7 @@ namespace PaintMV.Shapes
 
         public override Shape Clone()
         {
-            return new Line(StartOrigin, EndOrigin, Width, Height, ChosenColor, ShapeSize);
+            return new Line(StartOrigin, EndOrigin, Width, Height, ChosenColor, ShapeSize, PenStyle);
         }
     }
 }

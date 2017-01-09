@@ -49,6 +49,7 @@
             this.menuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveLike = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuUndo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRedo = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,10 +61,14 @@
             this.btnSelection = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnSelect = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.chBoxFill = new System.Windows.Forms.CheckBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.radioDot = new System.Windows.Forms.RadioButton();
+            this.radioDash = new System.Windows.Forms.RadioButton();
+            this.radioSolid = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).BeginInit();
             this.grpColor.SuspendLayout();
             this.menuOptions.SuspendLayout();
@@ -71,6 +76,7 @@
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnEllipse
@@ -154,9 +160,9 @@
             // numSize
             // 
             this.numSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numSize.Location = new System.Drawing.Point(18, 19);
+            this.numSize.Location = new System.Drawing.Point(16, 19);
             this.numSize.Maximum = new decimal(new int[] {
-            6,
+            10,
             0,
             0,
             0});
@@ -186,7 +192,7 @@
             this.grpColor.Controls.Add(this.btnBlue);
             this.grpColor.Controls.Add(this.btnBlack);
             this.grpColor.Controls.Add(this.btnDefaultColor);
-            this.grpColor.Location = new System.Drawing.Point(10, 361);
+            this.grpColor.Location = new System.Drawing.Point(12, 427);
             this.grpColor.Name = "grpColor";
             this.grpColor.Size = new System.Drawing.Size(90, 222);
             this.grpColor.TabIndex = 13;
@@ -276,7 +282,8 @@
             this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuNew,
             this.menuOpen,
-            this.menuSave});
+            this.menuSave,
+            this.menuSaveLike});
             this.menuFile.Name = "menuFile";
             this.menuFile.Size = new System.Drawing.Size(37, 20);
             this.menuFile.Text = "File";
@@ -285,7 +292,7 @@
             // 
             this.menuNew.Name = "menuNew";
             this.menuNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.menuNew.Size = new System.Drawing.Size(146, 22);
+            this.menuNew.Size = new System.Drawing.Size(195, 22);
             this.menuNew.Text = "New";
             this.menuNew.Click += new System.EventHandler(this.menuNew_Click);
             // 
@@ -293,7 +300,7 @@
             // 
             this.menuOpen.Name = "menuOpen";
             this.menuOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.menuOpen.Size = new System.Drawing.Size(146, 22);
+            this.menuOpen.Size = new System.Drawing.Size(195, 22);
             this.menuOpen.Text = "Open";
             this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
             // 
@@ -301,9 +308,18 @@
             // 
             this.menuSave.Name = "menuSave";
             this.menuSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.menuSave.Size = new System.Drawing.Size(146, 22);
+            this.menuSave.Size = new System.Drawing.Size(195, 22);
             this.menuSave.Text = "Save";
             this.menuSave.Click += new System.EventHandler(this.menuSave_Click);
+            // 
+            // menuSaveLike
+            // 
+            this.menuSaveLike.Name = "menuSaveLike";
+            this.menuSaveLike.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.menuSaveLike.Size = new System.Drawing.Size(195, 22);
+            this.menuSaveLike.Text = "Save As...";
+            this.menuSaveLike.Click += new System.EventHandler(this.menuSaveLike_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -375,7 +391,7 @@
             this.groupBox1.Controls.Add(this.btnLine);
             this.groupBox1.Controls.Add(this.btnTriangle);
             this.groupBox1.Controls.Add(this.btnRectangle);
-            this.groupBox1.Location = new System.Drawing.Point(10, 27);
+            this.groupBox1.Location = new System.Drawing.Point(12, 27);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(90, 103);
             this.groupBox1.TabIndex = 19;
@@ -384,38 +400,38 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.btnSelect);
+            this.groupBox2.Controls.Add(this.btnUpdate);
             this.groupBox2.Controls.Add(this.btnSelection);
-            this.groupBox2.Location = new System.Drawing.Point(10, 200);
+            this.groupBox2.Location = new System.Drawing.Point(12, 268);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(90, 95);
             this.groupBox2.TabIndex = 20;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Selection";
             // 
-            // btnSelect
+            // btnUpdate
             // 
-            this.btnSelect.Location = new System.Drawing.Point(18, 56);
-            this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(50, 33);
-            this.btnSelect.TabIndex = 5;
-            this.btnSelect.Text = "RecSel";
-            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
+            this.btnUpdate.Location = new System.Drawing.Point(18, 56);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(50, 33);
+            this.btnUpdate.TabIndex = 5;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.numSize);
-            this.groupBox3.Location = new System.Drawing.Point(12, 136);
+            this.groupBox3.Location = new System.Drawing.Point(12, 132);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(90, 57);
+            this.groupBox3.Size = new System.Drawing.Size(90, 48);
             this.groupBox3.TabIndex = 21;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Size";
+            this.groupBox3.Text = "Line Size";
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.chBoxFill);
-            this.groupBox4.Location = new System.Drawing.Point(10, 301);
+            this.groupBox4.Location = new System.Drawing.Point(12, 369);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(90, 54);
             this.groupBox4.TabIndex = 22;
@@ -432,11 +448,56 @@
             this.chBoxFill.Text = "Fill shape";
             this.chBoxFill.UseVisualStyleBackColor = true;
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.radioDot);
+            this.groupBox5.Controls.Add(this.radioDash);
+            this.groupBox5.Controls.Add(this.radioSolid);
+            this.groupBox5.Location = new System.Drawing.Point(12, 184);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(90, 81);
+            this.groupBox5.TabIndex = 23;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Line Type";
+            // 
+            // radioDot
+            // 
+            this.radioDot.AutoSize = true;
+            this.radioDot.Location = new System.Drawing.Point(16, 58);
+            this.radioDot.Name = "radioDot";
+            this.radioDot.Size = new System.Drawing.Size(42, 17);
+            this.radioDot.TabIndex = 2;
+            this.radioDot.Text = "Dot";
+            this.radioDot.UseVisualStyleBackColor = true;
+            // 
+            // radioDash
+            // 
+            this.radioDash.AutoSize = true;
+            this.radioDash.Location = new System.Drawing.Point(16, 38);
+            this.radioDash.Name = "radioDash";
+            this.radioDash.Size = new System.Drawing.Size(50, 17);
+            this.radioDash.TabIndex = 1;
+            this.radioDash.Text = "Dash";
+            this.radioDash.UseVisualStyleBackColor = true;
+            // 
+            // radioSolid
+            // 
+            this.radioSolid.AutoSize = true;
+            this.radioSolid.Checked = true;
+            this.radioSolid.Location = new System.Drawing.Point(16, 19);
+            this.radioSolid.Name = "radioSolid";
+            this.radioSolid.Size = new System.Drawing.Size(48, 17);
+            this.radioSolid.TabIndex = 0;
+            this.radioSolid.TabStop = true;
+            this.radioSolid.Text = "Solid";
+            this.radioSolid.UseVisualStyleBackColor = true;
+            // 
             // FrmPaint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 661);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -449,8 +510,8 @@
             this.Name = "FrmPaint";
             this.Text = "Easy Paint";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(frmPaint_KeyDown);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(FrmPaint_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPaint_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmPaint_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).EndInit();
             this.grpColor.ResumeLayout(false);
             this.menuOptions.ResumeLayout(false);
@@ -460,6 +521,8 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -500,8 +563,13 @@
         private System.Windows.Forms.ToolStripMenuItem menuRedo;
         private System.Windows.Forms.ToolStripMenuItem menuCopy;
         private System.Windows.Forms.ToolStripMenuItem menuCut;
-        private System.Windows.Forms.Button btnSelect;
+        private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.ToolStripMenuItem menuClear;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RadioButton radioDot;
+        private System.Windows.Forms.RadioButton radioDash;
+        private System.Windows.Forms.RadioButton radioSolid;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveLike;
     }
 }
 
