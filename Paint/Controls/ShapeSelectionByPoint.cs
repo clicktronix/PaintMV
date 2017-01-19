@@ -17,7 +17,7 @@ namespace PaintMV.Controls
         public int Width { get; set; }
         public int Height { get; set; }
 
-        public ResizePosition NodeSelected { set; get; } = ResizePosition.None;
+        public Enumerations.ResizePosition NodeSelected { set; get; } = Enumerations.ResizePosition.None;
 
         public ShapeSelectionByPoint(FrmPaint frmPaint)
         {
@@ -71,96 +71,83 @@ namespace PaintMV.Controls
             }
         }
 
-        public ResizePosition GetNodeSelectable(Point p)
+        public Enumerations.ResizePosition GetNodeSelectable(Point p)
         {
-            foreach (ResizePosition r in Enum.GetValues(typeof (ResizePosition)))
+            foreach (Enumerations.ResizePosition r in Enum.GetValues(typeof (Enumerations.ResizePosition)))
             {
                 if (GetRectangle(r).Contains(p))
                 {
                     return r;
                 }
             }
-            return ResizePosition.None;
+            return Enumerations.ResizePosition.None;
         }
 
-        public Cursor GetCursor(ResizePosition p)
+        public Cursor GetCursor(Enumerations.ResizePosition p)
         {
             switch (p)
             {
-                case ResizePosition.LeftUp:
+                case Enumerations.ResizePosition.LeftUp:
                     return Cursors.SizeNWSE;
 
-                case ResizePosition.LeftMiddle:
+                case Enumerations.ResizePosition.LeftMiddle:
                     return Cursors.SizeWE;
 
-                case ResizePosition.LeftBottom:
+                case Enumerations.ResizePosition.LeftBottom:
                     return Cursors.SizeNESW;
 
-                case ResizePosition.BottomMiddle:
+                case Enumerations.ResizePosition.BottomMiddle:
                     return Cursors.SizeNS;
 
-                case ResizePosition.RightUp:
+                case Enumerations.ResizePosition.RightUp:
                     return Cursors.SizeNESW;
 
-                case ResizePosition.RightBottom:
+                case Enumerations.ResizePosition.RightBottom:
                     return Cursors.SizeNWSE;
 
-                case ResizePosition.RightMiddle:
+                case Enumerations.ResizePosition.RightMiddle:
                     return Cursors.SizeWE;
 
-                case ResizePosition.UpMiddle:
+                case Enumerations.ResizePosition.UpMiddle:
                     return Cursors.SizeNS;
                 default:
                     return Cursors.Default;
             }
         }
 
-        private Rectangle GetRectangle(ResizePosition value)
+        private Rectangle GetRectangle(Enumerations.ResizePosition value)
         {
             Debug.Assert(_frmPaint.IndexOfSelectedShape != null, "Нет нарисованных фигур!");
             Shape tempShape = _frmPaint.Doc.AllShapes[_frmPaint.IndexOfSelectedShape.Value];
 
             switch (value)
             {
-                case ResizePosition.LeftUp:
+                case Enumerations.ResizePosition.LeftUp:
                     return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y - 7, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
 
-                case ResizePosition.LeftMiddle:
+                case Enumerations.ResizePosition.LeftMiddle:
                     return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + tempShape.Height/2, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
 
-                case ResizePosition.LeftBottom:
+                case Enumerations.ResizePosition.LeftBottom:
                     return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + 5 + tempShape.Height, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
 
-                case ResizePosition.BottomMiddle:
+                case Enumerations.ResizePosition.BottomMiddle:
                     return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y + 5 + tempShape.Height, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
 
-                case ResizePosition.RightUp:
+                case Enumerations.ResizePosition.RightUp:
                     return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y - 7, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
 
-                case ResizePosition.RightBottom:
+                case Enumerations.ResizePosition.RightBottom:
                     return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + 5 + tempShape.Height, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
 
-                case ResizePosition.RightMiddle:
+                case Enumerations.ResizePosition.RightMiddle:
                     return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + tempShape.Height/2, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
 
-                case ResizePosition.UpMiddle:
+                case Enumerations.ResizePosition.UpMiddle:
                     return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y - 6, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
                 default:
                     return new Rectangle();
             }
-        }
-
-        public enum ResizePosition
-        {
-            UpMiddle,
-            LeftMiddle,
-            LeftBottom,
-            LeftUp,
-            RightUp,
-            RightMiddle,
-            RightBottom,
-            BottomMiddle,
-            None
         }
     }
 }

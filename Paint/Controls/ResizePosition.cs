@@ -18,37 +18,37 @@ namespace PaintMV.Controls
         {
             switch (_frmPaint.ShapeSelectionByPoint.NodeSelected)
             {
-                case ShapeSelectionByPoint.ResizePosition.LeftUp:
+                case Enumerations.ResizePosition.LeftUp:
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X + e.X - _frmPaint.StartPoint.X, tempShape.StartOrigin.Y);
                     tempShape.Width -= e.X - _frmPaint.StartPoint.X;
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _frmPaint.StartPoint.Y);
                     tempShape.Height -= e.Y - _frmPaint.StartPoint.Y;
                     break;
-                case ShapeSelectionByPoint.ResizePosition.LeftMiddle:
+                case Enumerations.ResizePosition.LeftMiddle:
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X + e.X - _frmPaint.StartPoint.X, tempShape.StartOrigin.Y);
                     tempShape.Width -= (e.X - _frmPaint.StartPoint.X);
                     break;
-                case ShapeSelectionByPoint.ResizePosition.LeftBottom:
+                case Enumerations.ResizePosition.LeftBottom:
                     tempShape.Width -= e.X - _frmPaint.StartPoint.X;
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X + e.X - _frmPaint.StartPoint.X, tempShape.StartOrigin.Y);
                     tempShape.Height += e.Y - _frmPaint.StartPoint.Y;
                     break;
-                case ShapeSelectionByPoint.ResizePosition.BottomMiddle:
+                case Enumerations.ResizePosition.BottomMiddle:
                     tempShape.Height += e.Y - _frmPaint.StartPoint.Y;
                     break;
-                case ShapeSelectionByPoint.ResizePosition.RightUp:
+                case Enumerations.ResizePosition.RightUp:
                     tempShape.Width += e.X - _frmPaint.StartPoint.X;
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _frmPaint.StartPoint.Y);
                     tempShape.Height -= e.Y - _frmPaint.StartPoint.Y;
                     break;
-                case ShapeSelectionByPoint.ResizePosition.RightBottom:
+                case Enumerations.ResizePosition.RightBottom:
                     tempShape.Width += e.X - _frmPaint.StartPoint.X;
                     tempShape.Height += e.Y - _frmPaint.StartPoint.Y;
                     break;
-                case ShapeSelectionByPoint.ResizePosition.RightMiddle:
+                case Enumerations.ResizePosition.RightMiddle:
                     tempShape.Width += e.X - _frmPaint.StartPoint.X;
                     break;
-                case ShapeSelectionByPoint.ResizePosition.UpMiddle:
+                case Enumerations.ResizePosition.UpMiddle:
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _frmPaint.StartPoint.Y);
                     tempShape.Height -= e.Y - _frmPaint.StartPoint.Y;
                     break;

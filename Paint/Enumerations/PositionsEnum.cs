@@ -1,6 +1,6 @@
 ﻿namespace PaintMV.Enumerations
 {
-    public enum PositionEnum
+    public enum ResizePosition
     {
         UpMiddle,
         LeftMiddle,
