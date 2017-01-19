@@ -22,7 +22,7 @@ namespace PaintMV.Controls
             {
                 if (i == 0)
                 {
-                    g.DrawEllipse(new Pen(Color.Blue), xValue - _frmPaint.SizeNodeRect/2, yValue - _frmPaint.SizeNodeRect/2, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
+                    g.DrawEllipse(new Pen(Color.Blue), xValue - _frmPaint.SizeNodeRect / 2, yValue - _frmPaint.SizeNodeRect / 2, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
                 }
                 else
                 {

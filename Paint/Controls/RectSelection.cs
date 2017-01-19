@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using PaintMV.GUI;
 
 namespace PaintMV.Controls
 {
-    class RectSelection
+    public class RectSelection
     {
-        private PictureBox _mPictureBox;
+        private readonly FrmPaint _frmPaint;
+
+        private FrmPaint _mPictureBox;
         public Rectangle Rect;
         public bool AllowDeformingDuringMovement = false;
-        private bool _mIsClick = false;
-        private bool _mMove = false;
+        private bool _mIsClick;
+        private bool _mMove;
         private int _oldX;
         private int _oldY;
         private int _sizeNodeRect = 5;
-        private Bitmap _mBmp = null;
+        //private Bitmap _mBmp = null;
         private PosSizableRect _nodeSelected = PosSizableRect.None;
         
-        private enum PosSizableRect
+        public enum PosSizableRect
         {
             UpMiddle,
             LeftMiddle,
@@ -30,10 +33,13 @@ namespace PaintMV.Controls
             None
         }
 
-        public RectSelection(Rectangle r)
+        public RectSelection(FrmPaint frmPaint)
         {
-            Rect = r;
-            _mIsClick = false;
+            _frmPaint = frmPaint;
+            _frmPaint.MouseDown += frmPaint_MouseDown;
+            _frmPaint.MouseUp += frmPaint_MouseUp;
+            _frmPaint.MouseMove += frmPaint_MouseMove;
+            _frmPaint.Paint += frmPaint_Paint;
         }
 
         public void Draw(Graphics g)
@@ -46,36 +52,7 @@ namespace PaintMV.Controls
             }
         }
 
-        public void Draw(Graphics g, Rectangle rectangle)
-        {
-            g.DrawRectangle(new Pen(Color.Red), rectangle);
-
-            foreach (PosSizableRect pos in Enum.GetValues(typeof(PosSizableRect)))
-            {
-                g.DrawRectangle(new Pen(Color.Blue), GetRect(pos));
-            }
-        }
-
-        public void SetBitmapFile(string filename)
-        {
-            this._mBmp = new Bitmap(filename);
-        }
-
-        public void SetBitmap(Bitmap bmp)
-        {
-            this._mBmp = bmp;
-        }
-
-        public void SetPictureBox(PictureBox p)
-        {
-            this._mPictureBox = p;
-            _mPictureBox.MouseDown += new MouseEventHandler(mPictureBox_MouseDown);
-            _mPictureBox.MouseUp += new MouseEventHandler(mPictureBox_MouseUp);
-            _mPictureBox.MouseMove += new MouseEventHandler(mPictureBox_MouseMove);
-            _mPictureBox.Paint += new PaintEventHandler(mPictureBox_Paint);
-        }
-
-        private void mPictureBox_Paint(object sender, PaintEventArgs e)
+        public void frmPaint_Paint(object sender, PaintEventArgs e)
         {
             try
             {
@@ -87,7 +64,7 @@ namespace PaintMV.Controls
             }
         }
 
-        private void mPictureBox_MouseDown(object sender, MouseEventArgs e)
+        private void frmPaint_MouseDown(object sender, MouseEventArgs e)
         {
             _mIsClick = true;
 
@@ -102,20 +79,20 @@ namespace PaintMV.Controls
             _oldY = e.Y;
         }
 
-        private void mPictureBox_MouseUp(object sender, MouseEventArgs e)
+        private void frmPaint_MouseUp(object sender, MouseEventArgs e)
         {
             _mIsClick = false;
             _mMove = false;
         }
 
-        private void mPictureBox_MouseMove(object sender, MouseEventArgs e)
+        private void frmPaint_MouseMove(object sender, MouseEventArgs e)
         {
-            ChangeCursor(e.Location);
+            ChangeCursor1(e.Location);
             if (_mIsClick == false)
             {
                 return;
             }
-            
+
             Rectangle backupRect = Rect;
 
             switch (_nodeSelected)
@@ -161,7 +138,7 @@ namespace PaintMV.Controls
                     {
                         Rect.X = Rect.X + e.X - _oldX;
                         Rect.Y = Rect.Y + e.Y - _oldY;
-                        _mPictureBox.Cursor = Cursors.SizeAll;
+                        _frmPaint.Cursor = Cursors.SizeAll;
                     }
                     break;
             }
@@ -175,7 +152,7 @@ namespace PaintMV.Controls
 
             TestIfRectInsideArea();
 
-            _mPictureBox.Invalidate();
+            _frmPaint.Invalidate();
         }
 
         private void TestIfRectInsideArea()
@@ -186,17 +163,17 @@ namespace PaintMV.Controls
             if (Rect.Width <= 0) Rect.Width = 1;
             if (Rect.Height <= 0) Rect.Height = 1;
 
-            if (Rect.X + Rect.Width > _mPictureBox.Width)
+            if (Rect.X + Rect.Width > _frmPaint.Width)
             {
-                Rect.Width = _mPictureBox.Width - Rect.X - 1; // -1 to be still show 
+                Rect.Width = _frmPaint.Width - Rect.X - 1;
                 if (AllowDeformingDuringMovement == false)
                 {
                     _mIsClick = false;
                 }
             }
-            if (Rect.Y + Rect.Height > _mPictureBox.Height)
+            if (Rect.Y + Rect.Height > _frmPaint.Height)
             {
-                Rect.Height = _mPictureBox.Height - Rect.Y - 1;// -1 to be still show 
+                Rect.Height = _frmPaint.Height - Rect.Y - 1;
                 if (AllowDeformingDuringMovement == false)
                 {
                     _mIsClick = false;
@@ -253,9 +230,9 @@ namespace PaintMV.Controls
             return PosSizableRect.None;
         }
 
-        private void ChangeCursor(Point p)
+        private void ChangeCursor1(Point p)
         {
-            _mPictureBox.Cursor = GetCursor(GetNodeSelectable(p));
+            _frmPaint.Cursor = GetCursor(GetNodeSelectable(p));
         }
 
         private Cursor GetCursor(PosSizableRect p)

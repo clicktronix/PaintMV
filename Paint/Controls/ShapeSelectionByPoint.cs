@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using PaintMV.GUI;
 using PaintMV.Shapes;
@@ -10,18 +11,17 @@ namespace PaintMV.Controls
 {
     public class ShapeSelectionByPoint
     {
-        private FrmPaint _frmPaint;
-        private ResizePosition _nodeSelected = ResizePosition.None;
+        private readonly FrmPaint _frmPaint;
+        public Point StartOrigin { get; set; }
+        public Point EndOrigin { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+
+        public ResizePosition NodeSelected { set; get; } = ResizePosition.None;
 
         public ShapeSelectionByPoint(FrmPaint frmPaint)
         {
             _frmPaint = frmPaint;
-        }
-
-        public ResizePosition NodeSelected
-        {
-            set { _nodeSelected = value; }
-            get { return _nodeSelected; }
         }
 
         public void MakeSelectionOfShape(Shape shape, Graphics g)
@@ -32,7 +32,7 @@ namespace PaintMV.Controls
             }
 
             Pen tempPen = new Pen(Color.Blue);
-            tempPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            tempPen.DashStyle = DashStyle.Dash;
             g.DrawRectangle(tempPen, shape.StartOrigin.X - 3, shape.StartOrigin.Y - 3, shape.Width + 6, shape.Height + 6);
         }
 
