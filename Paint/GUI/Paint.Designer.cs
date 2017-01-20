@@ -63,6 +63,8 @@
             this.radioSolid = new System.Windows.Forms.RadioButton();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.button1 = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).BeginInit();
             this.grpColor.SuspendLayout();
             this.menuOptions.SuspendLayout();
@@ -71,6 +73,8 @@
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnEllipse
@@ -78,7 +82,7 @@
             this.btnEllipse.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnEllipse.FlatAppearance.BorderSize = 0;
             this.btnEllipse.Image = ((System.Drawing.Image)(resources.GetObject("btnEllipse.Image")));
-            this.btnEllipse.Location = new System.Drawing.Point(6, 19);
+            this.btnEllipse.Location = new System.Drawing.Point(16, 19);
             this.btnEllipse.Name = "btnEllipse";
             this.btnEllipse.Size = new System.Drawing.Size(35, 35);
             this.btnEllipse.TabIndex = 1;
@@ -90,7 +94,7 @@
             this.btnRectangle.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnRectangle.FlatAppearance.BorderSize = 0;
             this.btnRectangle.Image = ((System.Drawing.Image)(resources.GetObject("btnRectangle.Image")));
-            this.btnRectangle.Location = new System.Drawing.Point(47, 19);
+            this.btnRectangle.Location = new System.Drawing.Point(66, 19);
             this.btnRectangle.Name = "btnRectangle";
             this.btnRectangle.Size = new System.Drawing.Size(35, 35);
             this.btnRectangle.TabIndex = 3;
@@ -100,7 +104,7 @@
             // btnDefaultColor
             // 
             this.btnDefaultColor.BackColor = System.Drawing.Color.Black;
-            this.btnDefaultColor.Location = new System.Drawing.Point(18, 19);
+            this.btnDefaultColor.Location = new System.Drawing.Point(32, 19);
             this.btnDefaultColor.Name = "btnDefaultColor";
             this.btnDefaultColor.Size = new System.Drawing.Size(50, 30);
             this.btnDefaultColor.TabIndex = 9;
@@ -110,7 +114,7 @@
             // numSize
             // 
             this.numSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numSize.Location = new System.Drawing.Point(16, 19);
+            this.numSize.Location = new System.Drawing.Point(34, 19);
             this.numSize.Maximum = new decimal(new int[] {
             10,
             0,
@@ -134,9 +138,9 @@
             // grpColor
             // 
             this.grpColor.Controls.Add(this.btnDefaultColor);
-            this.grpColor.Location = new System.Drawing.Point(12, 427);
+            this.grpColor.Location = new System.Drawing.Point(4, 502);
             this.grpColor.Name = "grpColor";
-            this.grpColor.Size = new System.Drawing.Size(90, 65);
+            this.grpColor.Size = new System.Drawing.Size(116, 65);
             this.grpColor.TabIndex = 13;
             this.grpColor.TabStop = false;
             this.grpColor.Text = "Set Color";
@@ -146,7 +150,7 @@
             this.btnTriangle.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnTriangle.FlatAppearance.BorderSize = 0;
             this.btnTriangle.Image = ((System.Drawing.Image)(resources.GetObject("btnTriangle.Image")));
-            this.btnTriangle.Location = new System.Drawing.Point(47, 60);
+            this.btnTriangle.Location = new System.Drawing.Point(66, 60);
             this.btnTriangle.Name = "btnTriangle";
             this.btnTriangle.Size = new System.Drawing.Size(35, 35);
             this.btnTriangle.TabIndex = 11;
@@ -158,7 +162,7 @@
             this.btnLine.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnLine.FlatAppearance.BorderSize = 0;
             this.btnLine.Image = ((System.Drawing.Image)(resources.GetObject("btnLine.Image")));
-            this.btnLine.Location = new System.Drawing.Point(6, 60);
+            this.btnLine.Location = new System.Drawing.Point(16, 60);
             this.btnLine.Name = "btnLine";
             this.btnLine.Size = new System.Drawing.Size(35, 35);
             this.btnLine.TabIndex = 14;
@@ -279,11 +283,11 @@
             // 
             // btnSelection
             // 
-            this.btnSelection.Location = new System.Drawing.Point(18, 19);
+            this.btnSelection.Location = new System.Drawing.Point(8, 19);
             this.btnSelection.Name = "btnSelection";
-            this.btnSelection.Size = new System.Drawing.Size(50, 33);
+            this.btnSelection.Size = new System.Drawing.Size(102, 28);
             this.btnSelection.TabIndex = 4;
-            this.btnSelection.Text = "OFF";
+            this.btnSelection.Text = "Move/Resize OFF";
             this.btnSelection.Click += new System.EventHandler(this.btnSelection_Click);
             // 
             // groupBox1
@@ -292,29 +296,28 @@
             this.groupBox1.Controls.Add(this.btnLine);
             this.groupBox1.Controls.Add(this.btnTriangle);
             this.groupBox1.Controls.Add(this.btnRectangle);
-            this.groupBox1.Location = new System.Drawing.Point(12, 27);
+            this.groupBox1.Location = new System.Drawing.Point(4, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(90, 103);
+            this.groupBox1.Size = new System.Drawing.Size(116, 103);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Shape";
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.btnUpdate);
             this.groupBox2.Controls.Add(this.btnSelection);
-            this.groupBox2.Location = new System.Drawing.Point(12, 268);
+            this.groupBox2.Location = new System.Drawing.Point(4, 268);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(90, 95);
+            this.groupBox2.Size = new System.Drawing.Size(116, 54);
             this.groupBox2.TabIndex = 20;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Selection";
+            this.groupBox2.Text = "Point Selection";
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(18, 56);
+            this.btnUpdate.Location = new System.Drawing.Point(8, 19);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(50, 33);
+            this.btnUpdate.Size = new System.Drawing.Size(102, 28);
             this.btnUpdate.TabIndex = 5;
             this.btnUpdate.Text = "Update";
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
@@ -322,9 +325,9 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.numSize);
-            this.groupBox3.Location = new System.Drawing.Point(12, 132);
+            this.groupBox3.Location = new System.Drawing.Point(4, 132);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(90, 48);
+            this.groupBox3.Size = new System.Drawing.Size(116, 48);
             this.groupBox3.TabIndex = 21;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Line Size";
@@ -332,9 +335,9 @@
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.chBoxFill);
-            this.groupBox4.Location = new System.Drawing.Point(12, 369);
+            this.groupBox4.Location = new System.Drawing.Point(4, 444);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(90, 54);
+            this.groupBox4.Size = new System.Drawing.Size(116, 54);
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Fill";
@@ -342,7 +345,7 @@
             // chBoxFill
             // 
             this.chBoxFill.AutoSize = true;
-            this.chBoxFill.Location = new System.Drawing.Point(12, 23);
+            this.chBoxFill.Location = new System.Drawing.Point(24, 19);
             this.chBoxFill.Name = "chBoxFill";
             this.chBoxFill.Size = new System.Drawing.Size(70, 17);
             this.chBoxFill.TabIndex = 0;
@@ -354,9 +357,9 @@
             this.groupBox5.Controls.Add(this.radioDot);
             this.groupBox5.Controls.Add(this.radioDash);
             this.groupBox5.Controls.Add(this.radioSolid);
-            this.groupBox5.Location = new System.Drawing.Point(12, 184);
+            this.groupBox5.Location = new System.Drawing.Point(4, 184);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(90, 81);
+            this.groupBox5.Size = new System.Drawing.Size(116, 81);
             this.groupBox5.TabIndex = 23;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Line Type";
@@ -364,7 +367,7 @@
             // radioDot
             // 
             this.radioDot.AutoSize = true;
-            this.radioDot.Location = new System.Drawing.Point(16, 58);
+            this.radioDot.Location = new System.Drawing.Point(34, 58);
             this.radioDot.Name = "radioDot";
             this.radioDot.Size = new System.Drawing.Size(42, 17);
             this.radioDot.TabIndex = 2;
@@ -374,7 +377,7 @@
             // radioDash
             // 
             this.radioDash.AutoSize = true;
-            this.radioDash.Location = new System.Drawing.Point(16, 38);
+            this.radioDash.Location = new System.Drawing.Point(34, 38);
             this.radioDash.Name = "radioDash";
             this.radioDash.Size = new System.Drawing.Size(50, 17);
             this.radioDash.TabIndex = 1;
@@ -385,7 +388,7 @@
             // 
             this.radioSolid.AutoSize = true;
             this.radioSolid.Checked = true;
-            this.radioSolid.Location = new System.Drawing.Point(16, 19);
+            this.radioSolid.Location = new System.Drawing.Point(34, 19);
             this.radioSolid.Name = "radioSolid";
             this.radioSolid.Size = new System.Drawing.Size(48, 17);
             this.radioSolid.TabIndex = 0;
@@ -395,20 +398,41 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(18, 498);
+            this.button1.Location = new System.Drawing.Point(8, 19);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(102, 28);
             this.button1.TabIndex = 24;
-            this.button1.Text = "Off";
+            this.button1.Text = "Select OFF";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.button1);
+            this.groupBox6.Location = new System.Drawing.Point(4, 328);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(116, 54);
+            this.groupBox6.TabIndex = 25;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Rect Selection";
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.btnUpdate);
+            this.groupBox7.Location = new System.Drawing.Point(4, 388);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(116, 54);
+            this.groupBox7.TabIndex = 26;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Upd Selection";
             // 
             // FrmPaint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(984, 661);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.groupBox7);
+            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -423,7 +447,6 @@
             this.Text = "PaintMV";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPaint_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmPaint_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).EndInit();
             this.grpColor.ResumeLayout(false);
             this.menuOptions.ResumeLayout(false);
@@ -435,6 +458,8 @@
             this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -476,6 +501,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuSaveLike;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.GroupBox groupBox7;
     }
 }
 

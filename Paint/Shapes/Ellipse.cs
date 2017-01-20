@@ -60,7 +60,7 @@ namespace PaintMV.Shapes
                 rect.Height = endPoint.Y - startPoint.Y;
                 rect.Width = endPoint.X - startPoint.X;
             }
-            else if ((endPoint.Y < startPoint.Y) && (endPoint.X < startPoint.X))
+            else if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
             {
                 rect.X = endPoint.X;
                 rect.Y = endPoint.Y;
