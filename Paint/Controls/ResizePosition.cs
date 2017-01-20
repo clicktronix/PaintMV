@@ -40,6 +40,8 @@ namespace PaintMV.Controls
                     tempShape.Width += e.X - _frmPaint.StartPoint.X;
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _frmPaint.StartPoint.Y);
                     tempShape.Height -= e.Y - _frmPaint.StartPoint.Y;
+                    //tempShape.EndOrigin = new Point(tempShape.EndOrigin.X, tempShape.EndOrigin.Y + e.Y - _frmPaint.EndPoint.Y);
+                    //tempShape.EndOrigin = new Point(tempShape.EndOrigin.X + e.X - _frmPaint.EndPoint.X, tempShape.EndOrigin.Y );
                     break;
                 case Enumerations.ResizePosition.RightBottom:
                     tempShape.Width += e.X - _frmPaint.StartPoint.X;
@@ -51,12 +53,15 @@ namespace PaintMV.Controls
                 case Enumerations.ResizePosition.UpMiddle:
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _frmPaint.StartPoint.Y);
                     tempShape.Height -= e.Y - _frmPaint.StartPoint.Y;
+                    tempShape.EndOrigin = new Point(tempShape.EndOrigin.X, tempShape.EndOrigin.Y + e.Y - _frmPaint.StartPoint.Y);
                     break;
                 default:
                     if (_frmPaint.MMove)
                     {
                         tempShape.StartOrigin = new Point(tempShape.StartOrigin.X + e.X - _frmPaint.StartPoint.X, tempShape.StartOrigin.Y);
                         tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _frmPaint.StartPoint.Y);
+                        tempShape.EndOrigin = new Point(tempShape.EndOrigin.X + e.X - _frmPaint.StartPoint.X, tempShape.EndOrigin.Y);
+                        tempShape.EndOrigin = new Point(tempShape.EndOrigin.X, tempShape.EndOrigin.Y + e.Y - _frmPaint.StartPoint.Y);
                         _frmPaint.PnlGraphic.Cursor = Cursors.SizeAll;
                     }
                     break;

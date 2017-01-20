@@ -15,6 +15,7 @@ namespace PaintMV.Shapes
         public Color ChosenColor { get; set; }
         public bool FilledShape { get; set; }
         public bool IsSelected { get; set; } = false;
+        public bool IsLine { get; set; } = false;
         public DashStyle PenStyle { get; set; }
 
         public abstract void Draw(Graphics g);

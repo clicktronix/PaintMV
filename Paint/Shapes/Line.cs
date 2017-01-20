@@ -7,7 +7,8 @@ namespace PaintMV.Shapes
     [Serializable]
     internal class Line : Shape
     {
-        public Line(Point startOrigin, Point endOrigin, int width, int height, Color chosenColor, int shapeSize, DashStyle penStyle, bool isSelected)
+        public Line(Point startOrigin, Point endOrigin, int width, int height, Color chosenColor, 
+            int shapeSize, DashStyle penStyle, bool isSelected, bool isLine)
         {
             StartOrigin = startOrigin;
             EndOrigin = endOrigin;
@@ -17,6 +18,7 @@ namespace PaintMV.Shapes
             ShapeSize = shapeSize;
             PenStyle = penStyle;
             IsSelected = isSelected;
+            IsLine = isLine;
         }
 
         public override void Draw(Graphics g)
@@ -96,7 +98,7 @@ namespace PaintMV.Shapes
 
         public override Shape Clone()
         {
-            return new Line(StartOrigin, EndOrigin, Width, Height, ChosenColor, ShapeSize, PenStyle, IsSelected);
+            return new Line(StartOrigin, EndOrigin, Width, Height, ChosenColor, ShapeSize, PenStyle, IsSelected, IsLine);
         }
     }
 }

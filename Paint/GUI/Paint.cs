@@ -14,6 +14,7 @@ namespace PaintMV.GUI
 {
     public partial class FrmPaint : Form
     {
+#region Properties 
         private bool _paintMode;
         private int _shapeWidth, _shapeHeight;
         private int _shapeSize = 1;
@@ -53,7 +54,9 @@ namespace PaintMV.GUI
             set { _endPoint = value; }
             get { return _endPoint; }
         }
+        #endregion
 
+#region Methods for drawing
         public FrmPaint()
         {
             InitializeComponent();
@@ -101,7 +104,7 @@ namespace PaintMV.GUI
                 {
                     if ((_selectionMode && Doc.AllShapes[i].GetShapeIsSelected()) || (Doc.AllShapes[i].GetShapeIsSelected() && _rectSelectionMode))
                     {
-                        if (ShapesEnum == ShapesEnum.Line)
+                        if (Doc.AllShapes[i].IsLine)
                         {
                             if (Doc.AllShapes == null) continue;
                             if (IndexOfSelectedShape != null) LineSelectionByPoint.MakeSelectionOfLine(Doc.AllShapes[i], e.Graphics);
@@ -149,7 +152,7 @@ namespace PaintMV.GUI
                             Doc.AllShapes[Doc.AllShapes.Count - 1] = tempShape;
                         }
                         IndexOfSelectedShape = Doc.AllShapes.Count - 1;
-                        if (!_rectSelectionMode)
+                        if (!_rectSelectionMode && Doc.AllShapes.Count > 1)
                         {
                             Doc.AllShapes[IndexOfSelectedShape.Value - 1].SetShapeIsSelected(false);
                         }
@@ -342,7 +345,7 @@ namespace PaintMV.GUI
             {
                 tempStartPoint = _startPoint;
                 Point tempEndPoint = _endPoint;
-                _figure = new Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, PenStyle, false);
+                _figure = new Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, PenStyle, false, true);
             }
             else if (ShapesEnum == ShapesEnum.None) { }
             else { throw new ArgumentOutOfRangeException(); }
@@ -360,7 +363,9 @@ namespace PaintMV.GUI
                 Doc.AllShapes[i].SetShapeIsSelected(false);
             }
         }
+        #endregion
 
+#region Control methods
         private void btnRectangle_Click(object sender, EventArgs e)
         {
             string button = "rectangle";
@@ -403,9 +408,6 @@ namespace PaintMV.GUI
 
         private void menuOpen_Click(object sender, EventArgs e)
         {
-            _selectionMode = false;
-            _rectSelectionMode = false;
-            UnselectAllFigures();
             if (Doc.AllShapes.Count > 0)
             {
                 const string message = "Do you want to save changes?";
@@ -447,8 +449,6 @@ namespace PaintMV.GUI
 
         private void menuNew_Click(object sender, EventArgs e)
         {
-            _selectionMode = false;
-            _rectSelectionMode = false;
             if (Doc.AllShapes.Count > 0)
             {
                 const string message = "Do you want to save changes?";
@@ -472,9 +472,6 @@ namespace PaintMV.GUI
 
         private void menuSave_Click(object sender, EventArgs e)
         {
-            _selectionMode = true;
-            _rectSelectionMode = false;
-            btnSelection_Click(sender, e);
             UnselectAllFigures();
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = @"Paint Files | *.pnt";
@@ -490,9 +487,6 @@ namespace PaintMV.GUI
 
         private void menuSaveLike_Click(object sender, EventArgs e)
         {
-            _selectionMode = true;
-            _rectSelectionMode = false;
-            btnSelection_Click(sender, e);
             UnselectAllFigures();
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = @"Paint Files (*.JPG)|*.JPG|Image Files(*.GIF)|*.GIF|Image Files(*.PNG)|*.PNG|All files (*.*)|*.*";
@@ -685,6 +679,9 @@ namespace PaintMV.GUI
 
         private void FrmPaint_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _selectionMode = false;
+            _rectSelectionMode = false;
+            UnselectAllFigures();
             if (Doc.AllShapes.Count > 0)
             {
                 const string message = "Do you want to save changes?";
@@ -756,5 +753,6 @@ namespace PaintMV.GUI
             }
             PnlGraphic.Invalidate();
         }
+#endregion
     }
 }
