@@ -1,12 +1,15 @@
 ﻿using System.Windows.Forms;
 
-namespace PaintMV
+namespace PaintMV.GUI
 {
+    /// <summary>
+    /// Drawing panel class
+    /// </summary>
     sealed class MyPanel : Panel
     {
         public MyPanel()
         {
-            this.DoubleBuffered = true;
+            DoubleBuffered = true;
         }
     }
 }

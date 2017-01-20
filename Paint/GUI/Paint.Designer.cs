@@ -1,4 +1,4 @@
-﻿namespace PaintMV
+﻿namespace PaintMV.GUI
 {
     partial class FrmPaint
     {
@@ -31,17 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPaint));
             this.btnEllipse = new System.Windows.Forms.Button();
             this.btnRectangle = new System.Windows.Forms.Button();
-            this.btnRed = new System.Windows.Forms.Button();
-            this.btnYellow = new System.Windows.Forms.Button();
-            this.btnBlack = new System.Windows.Forms.Button();
             this.btnDefaultColor = new System.Windows.Forms.Button();
-            this.btnBlue = new System.Windows.Forms.Button();
             this.numSize = new System.Windows.Forms.NumericUpDown();
             this.grpColor = new System.Windows.Forms.GroupBox();
-            this.btnOrange = new System.Windows.Forms.Button();
-            this.btnGreen = new System.Windows.Forms.Button();
-            this.btnWhite = new System.Windows.Forms.Button();
-            this.btnPurple = new System.Windows.Forms.Button();
             this.btnTriangle = new System.Windows.Forms.Button();
             this.btnLine = new System.Windows.Forms.Button();
             this.menuOptions = new System.Windows.Forms.MenuStrip();
@@ -49,17 +41,30 @@
             this.menuNew = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveLike = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuUndo = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuRedo = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCopy = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuCut = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuClear = new System.Windows.Forms.ToolStripMenuItem();
             this.saveDialog = new System.Windows.Forms.SaveFileDialog();
             this.openDialog = new System.Windows.Forms.OpenFileDialog();
             this.btnSelection = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnUpdate = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.chBoxFill = new System.Windows.Forms.CheckBox();
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuUndo = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuRedo = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.radioDot = new System.Windows.Forms.RadioButton();
+            this.radioDash = new System.Windows.Forms.RadioButton();
+            this.radioSolid = new System.Windows.Forms.RadioButton();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.button1 = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).BeginInit();
             this.grpColor.SuspendLayout();
             this.menuOptions.SuspendLayout();
@@ -67,6 +72,9 @@
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnEllipse
@@ -74,7 +82,7 @@
             this.btnEllipse.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnEllipse.FlatAppearance.BorderSize = 0;
             this.btnEllipse.Image = ((System.Drawing.Image)(resources.GetObject("btnEllipse.Image")));
-            this.btnEllipse.Location = new System.Drawing.Point(6, 19);
+            this.btnEllipse.Location = new System.Drawing.Point(16, 19);
             this.btnEllipse.Name = "btnEllipse";
             this.btnEllipse.Size = new System.Drawing.Size(35, 35);
             this.btnEllipse.TabIndex = 1;
@@ -86,73 +94,29 @@
             this.btnRectangle.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnRectangle.FlatAppearance.BorderSize = 0;
             this.btnRectangle.Image = ((System.Drawing.Image)(resources.GetObject("btnRectangle.Image")));
-            this.btnRectangle.Location = new System.Drawing.Point(47, 19);
+            this.btnRectangle.Location = new System.Drawing.Point(66, 19);
             this.btnRectangle.Name = "btnRectangle";
             this.btnRectangle.Size = new System.Drawing.Size(35, 35);
             this.btnRectangle.TabIndex = 3;
             this.btnRectangle.UseVisualStyleBackColor = true;
             this.btnRectangle.Click += new System.EventHandler(this.btnRectangle_Click);
             // 
-            // btnRed
-            // 
-            this.btnRed.BackColor = System.Drawing.Color.Red;
-            this.btnRed.Cursor = System.Windows.Forms.Cursors.Default;
-            this.btnRed.FlatAppearance.BorderColor = System.Drawing.Color.Red;
-            this.btnRed.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btnRed.Location = new System.Drawing.Point(5, 105);
-            this.btnRed.Name = "btnRed";
-            this.btnRed.Size = new System.Drawing.Size(32, 32);
-            this.btnRed.TabIndex = 6;
-            this.btnRed.UseVisualStyleBackColor = false;
-            this.btnRed.Click += new System.EventHandler(this.btnRed_Click);
-            // 
-            // btnYellow
-            // 
-            this.btnYellow.BackColor = System.Drawing.Color.Yellow;
-            this.btnYellow.Location = new System.Drawing.Point(6, 67);
-            this.btnYellow.Name = "btnYellow";
-            this.btnYellow.Size = new System.Drawing.Size(32, 32);
-            this.btnYellow.TabIndex = 7;
-            this.btnYellow.UseVisualStyleBackColor = false;
-            this.btnYellow.Click += new System.EventHandler(this.btnYellow_Click);
-            // 
-            // btnBlack
-            // 
-            this.btnBlack.BackColor = System.Drawing.Color.Black;
-            this.btnBlack.Location = new System.Drawing.Point(47, 28);
-            this.btnBlack.Name = "btnBlack";
-            this.btnBlack.Size = new System.Drawing.Size(32, 32);
-            this.btnBlack.TabIndex = 8;
-            this.btnBlack.UseVisualStyleBackColor = false;
-            this.btnBlack.Click += new System.EventHandler(this.btnBlack_Click);
-            // 
             // btnDefaultColor
             // 
             this.btnDefaultColor.BackColor = System.Drawing.Color.Black;
-            this.btnDefaultColor.Enabled = false;
-            this.btnDefaultColor.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnDefaultColor.Location = new System.Drawing.Point(30, 193);
+            this.btnDefaultColor.Location = new System.Drawing.Point(32, 19);
             this.btnDefaultColor.Name = "btnDefaultColor";
-            this.btnDefaultColor.Size = new System.Drawing.Size(24, 24);
+            this.btnDefaultColor.Size = new System.Drawing.Size(50, 30);
             this.btnDefaultColor.TabIndex = 9;
             this.btnDefaultColor.UseVisualStyleBackColor = false;
-            // 
-            // btnBlue
-            // 
-            this.btnBlue.BackColor = System.Drawing.Color.Blue;
-            this.btnBlue.Location = new System.Drawing.Point(47, 105);
-            this.btnBlue.Name = "btnBlue";
-            this.btnBlue.Size = new System.Drawing.Size(32, 32);
-            this.btnBlue.TabIndex = 10;
-            this.btnBlue.UseVisualStyleBackColor = false;
-            this.btnBlue.Click += new System.EventHandler(this.btnBlue_Click);
+            this.btnDefaultColor.Click += new System.EventHandler(this.btnDefaultColor_Click);
             // 
             // numSize
             // 
             this.numSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numSize.Location = new System.Drawing.Point(18, 19);
+            this.numSize.Location = new System.Drawing.Point(34, 19);
             this.numSize.Maximum = new decimal(new int[] {
-            6,
+            10,
             0,
             0,
             0});
@@ -173,71 +137,20 @@
             // 
             // grpColor
             // 
-            this.grpColor.Controls.Add(this.btnOrange);
-            this.grpColor.Controls.Add(this.btnGreen);
-            this.grpColor.Controls.Add(this.btnWhite);
-            this.grpColor.Controls.Add(this.btnYellow);
-            this.grpColor.Controls.Add(this.btnPurple);
-            this.grpColor.Controls.Add(this.btnRed);
-            this.grpColor.Controls.Add(this.btnBlue);
-            this.grpColor.Controls.Add(this.btnBlack);
             this.grpColor.Controls.Add(this.btnDefaultColor);
-            this.grpColor.Location = new System.Drawing.Point(10, 331);
+            this.grpColor.Location = new System.Drawing.Point(4, 502);
             this.grpColor.Name = "grpColor";
-            this.grpColor.Size = new System.Drawing.Size(90, 222);
+            this.grpColor.Size = new System.Drawing.Size(116, 65);
             this.grpColor.TabIndex = 13;
             this.grpColor.TabStop = false;
-            this.grpColor.Text = "Color";
-            // 
-            // btnOrange
-            // 
-            this.btnOrange.BackColor = System.Drawing.Color.Orange;
-            this.btnOrange.Cursor = System.Windows.Forms.Cursors.Default;
-            this.btnOrange.FlatAppearance.BorderColor = System.Drawing.Color.Red;
-            this.btnOrange.ForeColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btnOrange.Location = new System.Drawing.Point(5, 143);
-            this.btnOrange.Name = "btnOrange";
-            this.btnOrange.Size = new System.Drawing.Size(32, 32);
-            this.btnOrange.TabIndex = 11;
-            this.btnOrange.UseVisualStyleBackColor = false;
-            this.btnOrange.Click += new System.EventHandler(this.btnOrange_Click);
-            // 
-            // btnGreen
-            // 
-            this.btnGreen.BackColor = System.Drawing.Color.Green;
-            this.btnGreen.Location = new System.Drawing.Point(47, 67);
-            this.btnGreen.Name = "btnGreen";
-            this.btnGreen.Size = new System.Drawing.Size(32, 32);
-            this.btnGreen.TabIndex = 12;
-            this.btnGreen.UseVisualStyleBackColor = false;
-            this.btnGreen.Click += new System.EventHandler(this.btnGreen_Click);
-            // 
-            // btnWhite
-            // 
-            this.btnWhite.BackColor = System.Drawing.Color.White;
-            this.btnWhite.Location = new System.Drawing.Point(6, 28);
-            this.btnWhite.Name = "btnWhite";
-            this.btnWhite.Size = new System.Drawing.Size(32, 32);
-            this.btnWhite.TabIndex = 13;
-            this.btnWhite.UseVisualStyleBackColor = false;
-            this.btnWhite.Click += new System.EventHandler(this.btnWhite_Click);
-            // 
-            // btnPurple
-            // 
-            this.btnPurple.BackColor = System.Drawing.Color.Violet;
-            this.btnPurple.Location = new System.Drawing.Point(47, 144);
-            this.btnPurple.Name = "btnPurple";
-            this.btnPurple.Size = new System.Drawing.Size(32, 32);
-            this.btnPurple.TabIndex = 14;
-            this.btnPurple.UseVisualStyleBackColor = false;
-            this.btnPurple.Click += new System.EventHandler(this.btnPurple_Click);
+            this.grpColor.Text = "Set Color";
             // 
             // btnTriangle
             // 
             this.btnTriangle.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnTriangle.FlatAppearance.BorderSize = 0;
             this.btnTriangle.Image = ((System.Drawing.Image)(resources.GetObject("btnTriangle.Image")));
-            this.btnTriangle.Location = new System.Drawing.Point(47, 60);
+            this.btnTriangle.Location = new System.Drawing.Point(66, 60);
             this.btnTriangle.Name = "btnTriangle";
             this.btnTriangle.Size = new System.Drawing.Size(35, 35);
             this.btnTriangle.TabIndex = 11;
@@ -249,7 +162,7 @@
             this.btnLine.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.btnLine.FlatAppearance.BorderSize = 0;
             this.btnLine.Image = ((System.Drawing.Image)(resources.GetObject("btnLine.Image")));
-            this.btnLine.Location = new System.Drawing.Point(6, 60);
+            this.btnLine.Location = new System.Drawing.Point(16, 60);
             this.btnLine.Name = "btnLine";
             this.btnLine.Size = new System.Drawing.Size(35, 35);
             this.btnLine.TabIndex = 14;
@@ -260,10 +173,11 @@
             // 
             this.menuOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuFile,
-            this.editToolStripMenuItem});
+            this.editToolStripMenuItem,
+            this.menuClear});
             this.menuOptions.Location = new System.Drawing.Point(0, 0);
             this.menuOptions.Name = "menuOptions";
-            this.menuOptions.Size = new System.Drawing.Size(835, 24);
+            this.menuOptions.Size = new System.Drawing.Size(984, 24);
             this.menuOptions.TabIndex = 15;
             // 
             // menuFile
@@ -271,7 +185,8 @@
             this.menuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuNew,
             this.menuOpen,
-            this.menuSave});
+            this.menuSave,
+            this.menuSaveLike});
             this.menuFile.Name = "menuFile";
             this.menuFile.Size = new System.Drawing.Size(37, 20);
             this.menuFile.Text = "File";
@@ -279,23 +194,88 @@
             // menuNew
             // 
             this.menuNew.Name = "menuNew";
-            this.menuNew.Size = new System.Drawing.Size(152, 22);
+            this.menuNew.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.menuNew.Size = new System.Drawing.Size(195, 22);
             this.menuNew.Text = "New";
             this.menuNew.Click += new System.EventHandler(this.menuNew_Click);
             // 
             // menuOpen
             // 
             this.menuOpen.Name = "menuOpen";
-            this.menuOpen.Size = new System.Drawing.Size(152, 22);
+            this.menuOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.menuOpen.Size = new System.Drawing.Size(195, 22);
             this.menuOpen.Text = "Open";
             this.menuOpen.Click += new System.EventHandler(this.menuOpen_Click);
             // 
             // menuSave
             // 
             this.menuSave.Name = "menuSave";
-            this.menuSave.Size = new System.Drawing.Size(152, 22);
+            this.menuSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.menuSave.Size = new System.Drawing.Size(195, 22);
             this.menuSave.Text = "Save";
             this.menuSave.Click += new System.EventHandler(this.menuSave_Click);
+            // 
+            // menuSaveLike
+            // 
+            this.menuSaveLike.Name = "menuSaveLike";
+            this.menuSaveLike.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.menuSaveLike.Size = new System.Drawing.Size(195, 22);
+            this.menuSaveLike.Text = "Save As...";
+            this.menuSaveLike.Click += new System.EventHandler(this.menuSaveLike_Click);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuUndo,
+            this.menuRedo,
+            this.menuCopy,
+            this.menuCut});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // menuUndo
+            // 
+            this.menuUndo.Enabled = false;
+            this.menuUndo.Name = "menuUndo";
+            this.menuUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            this.menuUndo.Size = new System.Drawing.Size(174, 22);
+            this.menuUndo.Text = "Undo";
+            this.menuUndo.Click += new System.EventHandler(this.menuUndo_Click);
+            // 
+            // menuRedo
+            // 
+            this.menuRedo.Enabled = false;
+            this.menuRedo.Name = "menuRedo";
+            this.menuRedo.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.Z)));
+            this.menuRedo.Size = new System.Drawing.Size(174, 22);
+            this.menuRedo.Text = "Redo";
+            this.menuRedo.Click += new System.EventHandler(this.menuRedo_Click);
+            // 
+            // menuCopy
+            // 
+            this.menuCopy.Name = "menuCopy";
+            this.menuCopy.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.menuCopy.Size = new System.Drawing.Size(174, 22);
+            this.menuCopy.Text = "Copy";
+            this.menuCopy.Click += new System.EventHandler(this.menuCopy_Click);
+            // 
+            // menuCut
+            // 
+            this.menuCut.Name = "menuCut";
+            this.menuCut.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.menuCut.Size = new System.Drawing.Size(174, 22);
+            this.menuCut.Text = "Cut";
+            this.menuCut.Click += new System.EventHandler(this.menuCut_Click);
+            // 
+            // menuClear
+            // 
+            this.menuClear.Name = "menuClear";
+            this.menuClear.Size = new System.Drawing.Size(46, 20);
+            this.menuClear.Text = "Clear";
+            this.menuClear.Click += new System.EventHandler(this.menuClear_Click);
             // 
             // openDialog
             // 
@@ -303,11 +283,11 @@
             // 
             // btnSelection
             // 
-            this.btnSelection.Location = new System.Drawing.Point(18, 19);
+            this.btnSelection.Location = new System.Drawing.Point(8, 19);
             this.btnSelection.Name = "btnSelection";
-            this.btnSelection.Size = new System.Drawing.Size(50, 33);
+            this.btnSelection.Size = new System.Drawing.Size(102, 28);
             this.btnSelection.TabIndex = 4;
-            this.btnSelection.Text = "OFF";
+            this.btnSelection.Text = "Move/Resize OFF";
             this.btnSelection.Click += new System.EventHandler(this.btnSelection_Click);
             // 
             // groupBox1
@@ -316,9 +296,9 @@
             this.groupBox1.Controls.Add(this.btnLine);
             this.groupBox1.Controls.Add(this.btnTriangle);
             this.groupBox1.Controls.Add(this.btnRectangle);
-            this.groupBox1.Location = new System.Drawing.Point(10, 27);
+            this.groupBox1.Location = new System.Drawing.Point(4, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(90, 103);
+            this.groupBox1.Size = new System.Drawing.Size(116, 103);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Shape";
@@ -326,29 +306,38 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnSelection);
-            this.groupBox2.Location = new System.Drawing.Point(10, 200);
+            this.groupBox2.Location = new System.Drawing.Point(4, 268);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(90, 65);
+            this.groupBox2.Size = new System.Drawing.Size(116, 54);
             this.groupBox2.TabIndex = 20;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Selection";
+            this.groupBox2.Text = "Point Selection";
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Location = new System.Drawing.Point(8, 19);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(102, 28);
+            this.btnUpdate.TabIndex = 5;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.numSize);
-            this.groupBox3.Location = new System.Drawing.Point(12, 136);
+            this.groupBox3.Location = new System.Drawing.Point(4, 132);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(90, 57);
+            this.groupBox3.Size = new System.Drawing.Size(116, 48);
             this.groupBox3.TabIndex = 21;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Size";
+            this.groupBox3.Text = "Line Size";
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.chBoxFill);
-            this.groupBox4.Location = new System.Drawing.Point(10, 271);
+            this.groupBox4.Location = new System.Drawing.Point(4, 444);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(90, 54);
+            this.groupBox4.Size = new System.Drawing.Size(116, 54);
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Fill";
@@ -356,41 +345,95 @@
             // chBoxFill
             // 
             this.chBoxFill.AutoSize = true;
-            this.chBoxFill.Location = new System.Drawing.Point(12, 23);
+            this.chBoxFill.Location = new System.Drawing.Point(24, 19);
             this.chBoxFill.Name = "chBoxFill";
             this.chBoxFill.Size = new System.Drawing.Size(70, 17);
             this.chBoxFill.TabIndex = 0;
             this.chBoxFill.Text = "Fill shape";
             this.chBoxFill.UseVisualStyleBackColor = true;
             // 
-            // editToolStripMenuItem
+            // groupBox5
             // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuUndo,
-            this.menuRedo});
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "Edit";
+            this.groupBox5.Controls.Add(this.radioDot);
+            this.groupBox5.Controls.Add(this.radioDash);
+            this.groupBox5.Controls.Add(this.radioSolid);
+            this.groupBox5.Location = new System.Drawing.Point(4, 184);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(116, 81);
+            this.groupBox5.TabIndex = 23;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Line Type";
             // 
-            // menuUndo
+            // radioDot
             // 
-            this.menuUndo.Name = "menuUndo";
-            this.menuUndo.Size = new System.Drawing.Size(152, 22);
-            this.menuUndo.Text = "Undo";
-            this.menuUndo.Click += new System.EventHandler(this.menuUndo_Click);
+            this.radioDot.AutoSize = true;
+            this.radioDot.Location = new System.Drawing.Point(34, 58);
+            this.radioDot.Name = "radioDot";
+            this.radioDot.Size = new System.Drawing.Size(42, 17);
+            this.radioDot.TabIndex = 2;
+            this.radioDot.Text = "Dot";
+            this.radioDot.UseVisualStyleBackColor = true;
             // 
-            // menuRedo
+            // radioDash
             // 
-            this.menuRedo.Name = "menuRedo";
-            this.menuRedo.Size = new System.Drawing.Size(152, 22);
-            this.menuRedo.Text = "Redo";
-            this.menuRedo.Click += new System.EventHandler(this.menuRedo_Click);
+            this.radioDash.AutoSize = true;
+            this.radioDash.Location = new System.Drawing.Point(34, 38);
+            this.radioDash.Name = "radioDash";
+            this.radioDash.Size = new System.Drawing.Size(50, 17);
+            this.radioDash.TabIndex = 1;
+            this.radioDash.Text = "Dash";
+            this.radioDash.UseVisualStyleBackColor = true;
             // 
-            // frmPaint
+            // radioSolid
+            // 
+            this.radioSolid.AutoSize = true;
+            this.radioSolid.Checked = true;
+            this.radioSolid.Location = new System.Drawing.Point(34, 19);
+            this.radioSolid.Name = "radioSolid";
+            this.radioSolid.Size = new System.Drawing.Size(48, 17);
+            this.radioSolid.TabIndex = 0;
+            this.radioSolid.TabStop = true;
+            this.radioSolid.Text = "Solid";
+            this.radioSolid.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(8, 19);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(102, 28);
+            this.button1.TabIndex = 24;
+            this.button1.Text = "Select OFF";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.button1);
+            this.groupBox6.Location = new System.Drawing.Point(4, 328);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(116, 54);
+            this.groupBox6.TabIndex = 25;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Rect Selection";
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.btnUpdate);
+            this.groupBox7.Location = new System.Drawing.Point(4, 388);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(116, 54);
+            this.groupBox7.TabIndex = 26;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Upd Selection";
+            // 
+            // FrmPaint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(835, 586);
+            this.ClientSize = new System.Drawing.Size(984, 661);
+            this.Controls.Add(this.groupBox7);
+            this.Controls.Add(this.groupBox6);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -401,8 +444,9 @@
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuOptions;
             this.Name = "FrmPaint";
-            this.Text = "Easy Paint";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmPaint_KeyDown);
+            this.Text = "PaintMV";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPaint_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).EndInit();
             this.grpColor.ResumeLayout(false);
             this.menuOptions.ResumeLayout(false);
@@ -412,6 +456,10 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -421,11 +469,7 @@
 
         private System.Windows.Forms.Button btnEllipse;
         private System.Windows.Forms.Button btnRectangle;
-        private System.Windows.Forms.Button btnRed;
-        private System.Windows.Forms.Button btnYellow;
-        private System.Windows.Forms.Button btnBlack;
         private System.Windows.Forms.Button btnDefaultColor;
-        private System.Windows.Forms.Button btnBlue;
         private System.Windows.Forms.NumericUpDown numSize;
         private System.Windows.Forms.GroupBox grpColor;
         private System.Windows.Forms.Button btnTriangle;
@@ -443,13 +487,22 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox chBoxFill;
-        private System.Windows.Forms.Button btnOrange;
-        private System.Windows.Forms.Button btnGreen;
-        private System.Windows.Forms.Button btnWhite;
-        private System.Windows.Forms.Button btnPurple;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuUndo;
         private System.Windows.Forms.ToolStripMenuItem menuRedo;
+        private System.Windows.Forms.ToolStripMenuItem menuCopy;
+        private System.Windows.Forms.ToolStripMenuItem menuCut;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.ToolStripMenuItem menuClear;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RadioButton radioDot;
+        private System.Windows.Forms.RadioButton radioDash;
+        private System.Windows.Forms.RadioButton radioSolid;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveLike;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.GroupBox groupBox7;
     }
 }
 
