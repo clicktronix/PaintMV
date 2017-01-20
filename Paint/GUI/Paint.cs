@@ -110,8 +110,8 @@ namespace PaintMV.GUI
             {
                 for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
                 {
-                    //if ((_selectionMode && Doc.AllShapes[i].GetShapeIsSelected()) || (Doc.AllShapes[i].GetShapeIsSelected() && _rectSelectionMode))
-                    if ((Doc.AllShapes[i].GetShapeIsSelected() && _rectSelectionMode))
+                    if ((_selectionMode && Doc.AllShapes[i].GetShapeIsSelected()) || (Doc.AllShapes[i].GetShapeIsSelected() && _rectSelectionMode))
+                    //if ((Doc.AllShapes[i].GetShapeIsSelected() && _rectSelectionMode))
                     {
                         if (Doc.AllShapes[i].IsLine)
                         {
@@ -126,17 +126,17 @@ namespace PaintMV.GUI
                     }
                 }
             }
-            if (_selectionMode && Doc.AllShapes != null && (IndexOfSelectedShape != null && Doc.AllShapes[IndexOfSelectedShape.Value].GetShapeIsSelected()))
-            {
-                if (ShapesEnum == ShapesEnum.Line)
-                {
-                    if (Doc.AllShapes != null) if (IndexOfSelectedShape != null) LineSelection.MakeSelectionOfLine(Doc.AllShapes[IndexOfSelectedShape.Value], e.Graphics);
-                }
-                else
-                {
-                    if (Doc.AllShapes != null) if (IndexOfSelectedShape != null) ShapeSelection.MakeSelectionOfShape(Doc.AllShapes[IndexOfSelectedShape.Value], e.Graphics);
-                }
-            }
+            //if (_selectionMode && Doc.AllShapes != null && (IndexOfSelectedShape != null && Doc.AllShapes[IndexOfSelectedShape.Value].GetShapeIsSelected()))
+            //{
+            //    if (ShapesEnum == ShapesEnum.Line)
+            //    {
+            //        if (Doc.AllShapes != null) if (IndexOfSelectedShape != null) LineSelection.MakeSelectionOfLine(Doc.AllShapes[IndexOfSelectedShape.Value], e.Graphics);
+            //    }
+            //    else
+            //    {
+            //        if (Doc.AllShapes != null) if (IndexOfSelectedShape != null) ShapeSelection.MakeSelectionOfShape(Doc.AllShapes[IndexOfSelectedShape.Value], e.Graphics);
+            //    }
+            //}
             if (_paintMode)
             {
                 _figure?.Draw(e.Graphics);
@@ -270,6 +270,7 @@ namespace PaintMV.GUI
             }
             else if (_rectSelectionMode)
             {
+                
                 for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
                 {
                     if (Doc.AllShapes[i].ContainsSelectedFigure(_startPointOfSelect, _endPoint, _startPoint))
@@ -296,6 +297,7 @@ namespace PaintMV.GUI
                         MMove = true;
                     }
                 }
+                _startPoint = _endPoint;
             }
             for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
             {
