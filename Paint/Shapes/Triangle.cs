@@ -4,9 +4,23 @@ using System.Drawing.Drawing2D;
 
 namespace PaintMV.Shapes
 {
+    /// <summary>
+    /// Class creates an triangle shape
+    /// </summary>
     [Serializable]
     internal class Triangle : Shape
     {
+        /// <summary>
+        /// class constructor
+        /// </summary>
+        /// <param name="startOrigin"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="chosenColor"></param>
+        /// <param name="shapeSize"></param>
+        /// <param name="fillShape"></param>
+        /// <param name="penStyle"></param>
+        /// <param name="isSelected"></param>
         public Triangle(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape, DashStyle penStyle, bool isSelected)
         {
             StartOrigin = startOrigin;
@@ -19,6 +33,10 @@ namespace PaintMV.Shapes
             IsSelected = isSelected;
         }
 
+        /// <summary>
+        /// Drawing a triangle method
+        /// </summary>
+        /// <param name="g"></param>
         public override void Draw(Graphics g)
         {
             Point[] trianglePoints = new Point[] {
@@ -43,6 +61,11 @@ namespace PaintMV.Shapes
             }
         }
 
+        /// <summary>
+        /// Method of determining the figure clicked on or not
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public override bool ContainsPoint(Point p)
         {
             Point[] trianglePoints = {
@@ -61,7 +84,13 @@ namespace PaintMV.Shapes
             return false;
         }
 
-        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
+        /// <summary>
+        /// Method of determining whether the figure in the selected area or not
+        /// </summary>
+        /// <param name="startPoint"></param>
+        /// <param name="endPoint"></param>
+        /// <returns></returns>
+        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint, Point p)
         {
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
@@ -105,16 +134,28 @@ namespace PaintMV.Shapes
             return false;
         }
 
+        /// <summary>
+        /// Set flag IsSelected 
+        /// </summary>
+        /// <param name="isSelected"></param>
         public override void SetShapeIsSelected(bool isSelected)
         {
             IsSelected = isSelected;
         }
 
+        /// <summary>
+        /// Get flag IsSelected
+        /// </summary>
+        /// <returns></returns>
         public override bool GetShapeIsSelected()
         {
             return IsSelected;
         }
 
+        /// <summary>
+        /// Copying the shape method
+        /// </summary>
+        /// <returns></returns>
         public override Shape Clone()
         {
             return new Triangle(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape, PenStyle, IsSelected);

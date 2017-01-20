@@ -4,6 +4,9 @@ using System.Drawing.Drawing2D;
 
 namespace PaintMV.Shapes
 {
+    /// <summary>
+    /// Abstract shape class allows you to add different shapes in the list
+    /// </summary>
     [Serializable]
     public abstract class Shape
     {
@@ -21,7 +24,7 @@ namespace PaintMV.Shapes
         public abstract void Draw(Graphics g);
         public abstract Shape Clone();
         public abstract bool ContainsPoint(Point p);
-        public abstract bool ContainsSelectedFigure(Point startPoint, Point endPoint);
+        public abstract bool ContainsSelectedFigure(Point startPoint, Point endPoint, Point p);
         public abstract void SetShapeIsSelected(bool isSelected);
         public abstract bool GetShapeIsSelected();
     }

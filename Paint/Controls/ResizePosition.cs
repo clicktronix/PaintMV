@@ -5,18 +5,30 @@ using PaintMV.Shapes;
 
 namespace PaintMV.Controls
 {
+    /// <summary>
+    /// Changing class sizes shapes and moving it on the form
+    /// </summary>
     public class ResizePosition
     {
         private readonly FrmPaint _frmPaint;
 
+        /// <summary>
+        /// class constructor
+        /// </summary>
+        /// <param name="frmPaint"></param>
         public ResizePosition(FrmPaint frmPaint)
         {
             _frmPaint = frmPaint;
         }
 
+        /// <summary>
+        /// Method changing sizes shapes and moving it on the form
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="tempShape"></param>
         public void GetValueOfResizedPosition(MouseEventArgs e, Shape tempShape)
         {
-            switch (_frmPaint.ShapeSelectionByPoint.NodeSelected)
+            switch (_frmPaint.ShapeSelection.NodeSelected)
             {
                 case Enumerations.ResizePosition.LeftUp:
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X + e.X - _frmPaint.StartPoint.X, tempShape.StartOrigin.Y);
@@ -40,8 +52,6 @@ namespace PaintMV.Controls
                     tempShape.Width += e.X - _frmPaint.StartPoint.X;
                     tempShape.StartOrigin = new Point(tempShape.StartOrigin.X, tempShape.StartOrigin.Y + e.Y - _frmPaint.StartPoint.Y);
                     tempShape.Height -= e.Y - _frmPaint.StartPoint.Y;
-                    //tempShape.EndOrigin = new Point(tempShape.EndOrigin.X, tempShape.EndOrigin.Y + e.Y - _frmPaint.EndPoint.Y);
-                    //tempShape.EndOrigin = new Point(tempShape.EndOrigin.X + e.X - _frmPaint.EndPoint.X, tempShape.EndOrigin.Y );
                     break;
                 case Enumerations.ResizePosition.RightBottom:
                     tempShape.Width += e.X - _frmPaint.StartPoint.X;

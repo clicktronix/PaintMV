@@ -49,9 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\LineSelectionByPoint.cs" />
+    <Compile Include="Controls\LineSelection.cs" />
     <Compile Include="Controls\ResizePosition.cs" />
-    <Compile Include="Controls\ShapeSelectionByPoint.cs" />
+    <Compile Include="Controls\ShapeSelection.cs" />
+    <Compile Include="Controls\SupportPoints.cs" />
     <Compile Include="Enumerations\PositionsEnum.cs" />
     <Compile Include="GUI\MyPanel.cs">
       <SubType>Component</SubType>
