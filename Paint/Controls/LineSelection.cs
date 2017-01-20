@@ -4,15 +4,27 @@ using PaintMV.Shapes;
 
 namespace PaintMV.Controls
 {
-    public class LineSelectionByPoint
+    /// <summary>
+    /// Class releasing the selected line
+    /// </summary>
+    public class LineSelection
     {
         private readonly FrmPaint _frmPaint;
 
-        public LineSelectionByPoint(FrmPaint frmPaint)
+        /// <summary>
+        /// class constructor
+        /// </summary>
+        /// <param name="frmPaint"></param>
+        public LineSelection(FrmPaint frmPaint)
         {
             _frmPaint = frmPaint;
         }
 
+        /// <summary>
+        /// Method releasing the selected line
+        /// </summary>
+        /// <param name="shape"></param>
+        /// <param name="g"></param>
         public void MakeSelectionOfLine(Shape shape, Graphics g)
         {
             int xValue = shape.StartOrigin.X;

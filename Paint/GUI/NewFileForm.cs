@@ -3,17 +3,28 @@ using System.Windows.Forms;
 
 namespace PaintMV.GUI
 {
+    /// <summary>
+    /// Class to create a new form of drawing
+    /// </summary>
     public partial class NewFileForm : Form
     {
         private bool inputerror = false;
         private bool notdigit = false;
         private bool emptyfield = false;
 
+        /// <summary>
+        /// class constructor
+        /// </summary>
         public NewFileForm()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Method of creating a new form of drawing on the data entered
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void okButton_Click(object sender, EventArgs e)
         {
             if (usersSize.Checked)
