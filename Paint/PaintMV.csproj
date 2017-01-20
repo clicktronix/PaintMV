@@ -49,14 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enumerations\ColorsEnum.cs" />
     <Compile Include="Controls\LineSelectionByPoint.cs" />
-    <Compile Include="Controls\ShapeSelectionByPoint.cs" />
     <Compile Include="Controls\ResizePosition.cs" />
+    <Compile Include="Controls\ShapeSelectionByPoint.cs" />
+    <Compile Include="Enumerations\PositionsEnum.cs" />
     <Compile Include="GUI\MyPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\Selection.cs" />
+    <Compile Include="Controls\RectSelection.cs" />
     <Compile Include="Enumerations\ShapesEnum.cs" />
     <Compile Include="GUI\NewFileForm.cs">
       <SubType>Form</SubType>

@@ -9,7 +9,7 @@ namespace PaintMV.Shapes
     {
         public Point MoveOriginStart { get; }
 
-        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape, DashStyle penStyle)
+        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape, DashStyle penStyle, bool isSelected)
         {
             StartOrigin = startOrigin;
             Width = width;
@@ -19,6 +19,7 @@ namespace PaintMV.Shapes
             MoveOriginStart = startOrigin;
             FilledShape = fillShape;
             PenStyle = penStyle;
+            IsSelected = isSelected;
         }
 
         public override void Draw(Graphics g)
@@ -49,9 +50,64 @@ namespace PaintMV.Shapes
             return false;
         }
 
+        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
+        {
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
+            if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
+            {
+                rect.X = startPoint.X;
+                rect.Y = startPoint.Y;
+                rect.Height = endPoint.Y - startPoint.Y;
+                rect.Width = endPoint.X - startPoint.X;
+            }
+            else if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
+            {
+                rect.X = endPoint.X;
+                rect.Y = endPoint.Y;
+                rect.Height = startPoint.Y - endPoint.Y;
+                rect.Width = startPoint.X - endPoint.X;
+            }
+            else if ((endPoint.Y > startPoint.Y) && (endPoint.X < startPoint.X))
+            {
+                rect.X = endPoint.X;
+                rect.Y = startPoint.Y;
+                rect.Height = endPoint.Y - startPoint.Y;
+                rect.Width = startPoint.X - endPoint.X;
+            }
+            else if ((endPoint.Y < startPoint.Y) && (endPoint.X > startPoint.X))
+            {
+                rect.X = startPoint.X;
+                rect.Y = endPoint.Y;
+                rect.Height = startPoint.Y - endPoint.Y;
+                rect.Width = endPoint.X - startPoint.X;
+            }
+
+            GraphicsPath myPath = new GraphicsPath();
+            myPath.AddRectangle(rect);
+
+            bool pointWithinEllipse = myPath.IsVisible(StartOrigin.X + 15, StartOrigin.Y + 15);
+            if (pointWithinEllipse)
+            {
+                IsSelected = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        public override void SetShapeIsSelected(bool isSelected)
+        {
+            IsSelected = isSelected;
+        }
+
+        public override bool GetShapeIsSelected()
+        {
+            return IsSelected;
+        }
+
         public override Shape Clone()
         {
-            return new Ellipse(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape, PenStyle);
+            return new Ellipse(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape, PenStyle, IsSelected);
         }
     }
 }

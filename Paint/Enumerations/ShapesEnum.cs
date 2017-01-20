@@ -6,6 +6,7 @@
         Rectangle,
         Line,
         Triangle,
+        SelectRectangle,
         None
     }
 }

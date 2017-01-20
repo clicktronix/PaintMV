@@ -14,10 +14,14 @@ namespace PaintMV.Shapes
         public int ShapeSize { get; set; }
         public Color ChosenColor { get; set; }
         public bool FilledShape { get; set; }
+        public bool IsSelected { get; set; } = false;
         public DashStyle PenStyle { get; set; }
 
         public abstract void Draw(Graphics g);
         public abstract Shape Clone();
         public abstract bool ContainsPoint(Point p);
+        public abstract bool ContainsSelectedFigure(Point startPoint, Point endPoint);
+        public abstract void SetShapeIsSelected(bool isSelected);
+        public abstract bool GetShapeIsSelected();
     }
 }

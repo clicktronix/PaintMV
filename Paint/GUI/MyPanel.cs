@@ -6,7 +6,7 @@ namespace PaintMV.GUI
     {
         public MyPanel()
         {
-            this.DoubleBuffered = true;
+            DoubleBuffered = true;
         }
     }
 }
