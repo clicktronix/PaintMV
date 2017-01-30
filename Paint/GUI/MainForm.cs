@@ -19,7 +19,6 @@ namespace PaintMV.GUI
         private int _shapeSize = 1;
         private bool _hasShapes;
         private bool _fillShape;
-        private Color _chosenColor = Color.Black;
         private bool _mIsClick;
         private bool _selectionMode;
         private Point _startPoint;
@@ -42,6 +41,9 @@ namespace PaintMV.GUI
         public static int PanelWidth { get; set; } = 700;
         public static int PanelHeight { get; set; } = 500;
         public DashStyle PenStyle = DashStyle.Solid;
+        public ColorChange ColorChange { get; }
+        public Color ChosenColor { set; get; } = Color.Black;
+        public LineStyleChose LineStyleChose { get; }
         public Point StartPoint
         {
             set { _startPoint = value; }
@@ -52,6 +54,9 @@ namespace PaintMV.GUI
             set { _endPoint = value; }
             get { return _endPoint; }
         }
+
+        
+
         #endregion
 
 #region Methods for drawing
@@ -79,6 +84,8 @@ namespace PaintMV.GUI
             ShapeSelection = new ShapeSelection(this);
             LineSelection = new LineSelection(this);
             MoveResize = new MoveResize(this);
+            ColorChange = new ColorChange(this);
+            LineStyleChose = new LineStyleChose(this);
         }
 
         /// <summary>
@@ -293,41 +300,6 @@ namespace PaintMV.GUI
         }
 
         /// <summary>
-        /// Change current color method 
-        /// </summary>
-        private void ChangeColor()
-        {
-            for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
-            {
-                if (IndexOfSelectedShape != null && Doc.AllShapes[i].GetShapeIsSelected() && IndexOfSelectedShape != null)
-                {
-                    Doc.AllShapes[i].ChosenColor = _chosenColor;
-                    Doc.AllShapes[i].FilledShape = chBoxFill.Checked;
-                }
-            }
-            PnlGraphic.Invalidate();
-        }
-
-        /// <summary>
-        /// Line style method
-        /// </summary>
-        private void ChoseLineStyle()
-        {
-            if (radioSolid.Checked)
-            {
-                PenStyle = DashStyle.Solid;
-            }
-            else if (radioDash.Checked)
-            {
-                PenStyle = DashStyle.Dash;
-            }
-            else if (radioDot.Checked)
-            {
-                PenStyle = DashStyle.Dot;
-            }
-        }
-
-        /// <summary>
         /// Method of determining the selected shape
         /// </summary>
         /// <param name="absShapeWidth"></param>
@@ -335,7 +307,7 @@ namespace PaintMV.GUI
         private void CheckChosenShape(int absShapeWidth, int absShapeHeight)
         {
             Point tempStartPoint;
-            ChoseLineStyle();
+            LineStyleChose.ChoseLineStyle();
             if (ShapesEnum == ShapesEnum.Ellipse || ShapesEnum == ShapesEnum.Rectangle || ShapesEnum == ShapesEnum.Triangle || ShapesEnum == ShapesEnum.SelectRectangle)
             {
                 if (_shapeWidth >= 0 || _shapeHeight >= 0)
@@ -356,15 +328,15 @@ namespace PaintMV.GUI
                 }
                 if (ShapesEnum == ShapesEnum.Ellipse)
                 {
-                    _figure = new Ellipse(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape, PenStyle, false);
+                    _figure = new Ellipse(tempStartPoint, absShapeWidth, absShapeHeight, ChosenColor, _shapeSize, _fillShape, PenStyle, false);
                 }
                 if (ShapesEnum == ShapesEnum.Rectangle)
                 {
-                    _figure = new Shapes.Rectangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape, PenStyle, false);
+                    _figure = new Shapes.Rectangle(tempStartPoint, absShapeWidth, absShapeHeight, ChosenColor, _shapeSize, _fillShape, PenStyle, false);
                 }
                 if (ShapesEnum == ShapesEnum.Triangle)
                 {
-                    _figure = new Triangle(tempStartPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, _fillShape, PenStyle, false);
+                    _figure = new Triangle(tempStartPoint, absShapeWidth, absShapeHeight, ChosenColor, _shapeSize, _fillShape, PenStyle, false);
                 }
                 if (ShapesEnum == ShapesEnum.SelectRectangle)
                 {
@@ -375,7 +347,7 @@ namespace PaintMV.GUI
             {
                 tempStartPoint = _startPoint;
                 Point tempEndPoint = _endPoint;
-                _figure = new Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, _chosenColor, _shapeSize, PenStyle, false, true);
+                _figure = new Line(tempStartPoint, tempEndPoint, absShapeWidth, absShapeHeight, ChosenColor, _shapeSize, PenStyle, false, true);
             }
             else if (ShapesEnum == ShapesEnum.None) { }
             else { throw new ArgumentOutOfRangeException(); }
@@ -745,7 +717,7 @@ namespace PaintMV.GUI
             {
                 if (IndexOfSelectedShape != null && Doc.AllShapes[i].GetShapeIsSelected() && IndexOfSelectedShape != null)
                 {
-                    ChoseLineStyle();
+                    LineStyleChose.ChoseLineStyle();
                     Doc.AllShapes[i].ChosenColor = colorDialog1.Color;
                     Doc.AllShapes[i].ShapeSize = (int) numSize.Value;
                     Doc.AllShapes[i].PenStyle = PenStyle;
@@ -834,9 +806,9 @@ namespace PaintMV.GUI
             DialogResult d = colorDialog1.ShowDialog();
             if (d == DialogResult.OK)
             {
-                _chosenColor = colorDialog1.Color;
-                btnDefaultColor.BackColor = _chosenColor;
-                ChangeColor();
+                ChosenColor = colorDialog1.Color;
+                btnDefaultColor.BackColor = ChosenColor;
+                ColorChange.ChangeColor();
             }
         }
         

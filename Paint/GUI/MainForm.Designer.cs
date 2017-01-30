@@ -486,7 +486,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.CheckBox chBoxFill;
+        public System.Windows.Forms.CheckBox chBoxFill;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuUndo;
         private System.Windows.Forms.ToolStripMenuItem menuRedo;
@@ -495,9 +495,9 @@
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.ToolStripMenuItem menuClear;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.RadioButton radioDot;
-        private System.Windows.Forms.RadioButton radioDash;
-        private System.Windows.Forms.RadioButton radioSolid;
+        public System.Windows.Forms.RadioButton radioDot;
+        public System.Windows.Forms.RadioButton radioDash;
+        public System.Windows.Forms.RadioButton radioSolid;
         private System.Windows.Forms.ToolStripMenuItem menuSaveLike;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button button1;

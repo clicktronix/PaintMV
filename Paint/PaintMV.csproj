@@ -54,6 +54,8 @@
     <Compile Include="Controls\ShapeSelection.cs" />
     <Compile Include="Controls\SupportPoints.cs" />
     <Compile Include="Enumerations\PositionsEnum.cs" />
+    <Compile Include="Controls\ColorChange.cs" />
+    <Compile Include="Controls\LineStyleChose.cs" />
     <Compile Include="GUI\MyPanel.cs">
       <SubType>Component</SubType>
     </Compile>
