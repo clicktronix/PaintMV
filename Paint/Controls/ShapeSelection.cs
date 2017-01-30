@@ -16,17 +16,17 @@ namespace PaintMV.Controls
         public int Width { get; set; }
         public int Height { get; set; }
         public SupportPoints SupportPoints { get; }
-        public FrmPaint FrmPaint { get; }
-        public Enumerations.ResizePosition NodeSelected { set; get; } = Enumerations.ResizePosition.None;
+        public MainForm MainForm { get; }
+        public Enumerations.Positions NodeSelected { set; get; } = Enumerations.Positions.None;
 #endregion
 
         /// <summary>
         /// class constructor
         /// </summary>
-        /// <param name="frmPaint"></param>
-        public ShapeSelection(FrmPaint frmPaint)
+        /// <param name="mainForm"></param>
+        public ShapeSelection(MainForm mainForm)
         {
-            FrmPaint = frmPaint;
+            MainForm = mainForm;
             SupportPoints = new SupportPoints(this);
         }
 

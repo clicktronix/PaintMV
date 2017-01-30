@@ -1,6 +1,6 @@
 ﻿namespace PaintMV.GUI
 {
-    partial class FrmPaint
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPaint));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnEllipse = new System.Windows.Forms.Button();
             this.btnRectangle = new System.Windows.Forms.Button();
             this.btnDefaultColor = new System.Windows.Forms.Button();
@@ -426,7 +426,7 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Upd Selection";
             // 
-            // FrmPaint
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -443,7 +443,7 @@
             this.DoubleBuffered = true;
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuOptions;
-            this.Name = "FrmPaint";
+            this.Name = "MainForm";
             this.Text = "PaintMV";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPaint_FormClosing);
@@ -486,7 +486,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.CheckBox chBoxFill;
+        public System.Windows.Forms.CheckBox chBoxFill;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuUndo;
         private System.Windows.Forms.ToolStripMenuItem menuRedo;
@@ -495,9 +495,9 @@
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.ToolStripMenuItem menuClear;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.RadioButton radioDot;
-        private System.Windows.Forms.RadioButton radioDash;
-        private System.Windows.Forms.RadioButton radioSolid;
+        public System.Windows.Forms.RadioButton radioDot;
+        public System.Windows.Forms.RadioButton radioDash;
+        public System.Windows.Forms.RadioButton radioSolid;
         private System.Windows.Forms.ToolStripMenuItem menuSaveLike;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button button1;

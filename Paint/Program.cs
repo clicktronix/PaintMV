@@ -14,7 +14,7 @@ namespace PaintMV
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmPaint());
+            Application.Run(new MainForm());
         }
     }
 }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Class with a enumeration of support points positions
     /// </summary>
-    public enum ResizePosition
+    public enum Positions
     {
         UpMiddle,
         LeftMiddle,

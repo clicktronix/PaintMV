@@ -32,8 +32,8 @@ namespace PaintMV.GUI
                 if (notdigit || emptyfield || inputerror) MessageBox.Show(@"Введены неверные данные!");
                 else
                 {
-                    FrmPaint.PanelWidth = Convert.ToInt32(numericUpDown1.Text);
-                    FrmPaint.PanelHeight = Convert.ToInt32(numericUpDown2.Text);
+                    MainForm.PanelWidth = Convert.ToInt32(numericUpDown1.Text);
+                    MainForm.PanelHeight = Convert.ToInt32(numericUpDown2.Text);
                     Close();
                 }
             }
@@ -41,23 +41,23 @@ namespace PaintMV.GUI
             {
                 if (defaultSize1.Checked)
                 {
-                    FrmPaint.PanelWidth = 320;
-                    FrmPaint.PanelHeight = 240;
+                    MainForm.PanelWidth = 320;
+                    MainForm.PanelHeight = 240;
                 }
                 else if (defaultSize2.Checked)
                 {
-                    FrmPaint.PanelWidth = 640;
-                    FrmPaint.PanelHeight = 480;
+                    MainForm.PanelWidth = 640;
+                    MainForm.PanelHeight = 480;
                 }
                 else if (defaultSize3.Checked)
                 {
-                    FrmPaint.PanelWidth = 800;
-                    FrmPaint.PanelHeight = 600;
+                    MainForm.PanelWidth = 800;
+                    MainForm.PanelHeight = 600;
                 }
                 else if (defaultSize4.Checked)
                 {
-                    FrmPaint.PanelWidth = 1024;
-                    FrmPaint.PanelHeight = 768;
+                    MainForm.PanelWidth = 1024;
+                    MainForm.PanelHeight = 768;
                 }
                 Close();
             }
