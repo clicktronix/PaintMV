@@ -33,28 +33,28 @@ namespace PaintMV.Controls
             switch (value)
             {
                 case 0:
-                    return new Rectangle(xValue - 3 - _shapeSelection.FrmPaint.SizeNodeRect/2, yValue - 3 - _shapeSelection.FrmPaint.SizeNodeRect/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                    return new Rectangle(xValue - 3 - _shapeSelection.MainForm.SizeNodeRect/2, yValue - 3 - _shapeSelection.MainForm.SizeNodeRect/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case 1:
-                    return new Rectangle(xValue - 4 - _shapeSelection.FrmPaint.SizeNodeRect/2, yValue + shape.Height/2 - _shapeSelection.FrmPaint.SizeNodeRect/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                    return new Rectangle(xValue - 4 - _shapeSelection.MainForm.SizeNodeRect/2, yValue + shape.Height/2 - _shapeSelection.MainForm.SizeNodeRect/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case 2:
-                    return new Rectangle(xValue - 3 - _shapeSelection.FrmPaint.SizeNodeRect/2, yValue + 3 + shape.Height - _shapeSelection.FrmPaint.SizeNodeRect/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                    return new Rectangle(xValue - 3 - _shapeSelection.MainForm.SizeNodeRect/2, yValue + 3 + shape.Height - _shapeSelection.MainForm.SizeNodeRect/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case 3:
-                    return new Rectangle(xValue + shape.Width/2 - _shapeSelection.FrmPaint.SizeNodeRect/2, yValue + 3 + shape.Height - _shapeSelection.FrmPaint.SizeNodeRect/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                    return new Rectangle(xValue + shape.Width/2 - _shapeSelection.MainForm.SizeNodeRect/2, yValue + 3 + shape.Height - _shapeSelection.MainForm.SizeNodeRect/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case 4:
-                    return new Rectangle(xValue + 3 + shape.Width - _shapeSelection.FrmPaint.SizeNodeRect/2, yValue - 3 - _shapeSelection.FrmPaint.SizeNodeRect/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                    return new Rectangle(xValue + 3 + shape.Width - _shapeSelection.MainForm.SizeNodeRect/2, yValue - 3 - _shapeSelection.MainForm.SizeNodeRect/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case 5:
-                    return new Rectangle(xValue + 3 + shape.Width - _shapeSelection.FrmPaint.SizeNodeRect/2, yValue + 3 + shape.Height - _shapeSelection.FrmPaint.SizeNodeRect/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                    return new Rectangle(xValue + 3 + shape.Width - _shapeSelection.MainForm.SizeNodeRect/2, yValue + 3 + shape.Height - _shapeSelection.MainForm.SizeNodeRect/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case 6:
-                    return new Rectangle(xValue + 3 + shape.Width - _shapeSelection.FrmPaint.SizeNodeRect/2, yValue + shape.Height/2 - _shapeSelection.FrmPaint.SizeNodeRect/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                    return new Rectangle(xValue + 3 + shape.Width - _shapeSelection.MainForm.SizeNodeRect/2, yValue + shape.Height/2 - _shapeSelection.MainForm.SizeNodeRect/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case 7:
-                    return new Rectangle(xValue + shape.Width/2 - _shapeSelection.FrmPaint.SizeNodeRect/2, yValue - 4 - _shapeSelection.FrmPaint.SizeNodeRect/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                    return new Rectangle(xValue + shape.Width/2 - _shapeSelection.MainForm.SizeNodeRect/2, yValue - 4 - _shapeSelection.MainForm.SizeNodeRect/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
                 default:
                     return new Rectangle();
             }
@@ -65,16 +65,16 @@ namespace PaintMV.Controls
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public Enumerations.ResizePosition GetNodeSelectable(Point p)
+        public Enumerations.Positions GetNodeSelectable(Point p)
         {
-            foreach (Enumerations.ResizePosition r in Enum.GetValues(typeof (Enumerations.ResizePosition)))
+            foreach (Enumerations.Positions r in Enum.GetValues(typeof (Enumerations.Positions)))
             {
                 if (GetRectangle(r).Contains(p))
                 {
                     return r;
                 }
             }
-            return Enumerations.ResizePosition.None;
+            return Enumerations.Positions.None;
         }
 
         /// <summary>
@@ -82,32 +82,32 @@ namespace PaintMV.Controls
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public Cursor GetCursor(Enumerations.ResizePosition p)
+        public Cursor GetCursor(Enumerations.Positions p)
         {
             switch (p)
             {
-                case Enumerations.ResizePosition.LeftUp:
+                case Enumerations.Positions.LeftUp:
                     return Cursors.SizeNWSE;
 
-                case Enumerations.ResizePosition.LeftMiddle:
+                case Enumerations.Positions.LeftMiddle:
                     return Cursors.SizeWE;
 
-                case Enumerations.ResizePosition.LeftBottom:
+                case Enumerations.Positions.LeftBottom:
                     return Cursors.SizeNESW;
 
-                case Enumerations.ResizePosition.BottomMiddle:
+                case Enumerations.Positions.BottomMiddle:
                     return Cursors.SizeNS;
 
-                case Enumerations.ResizePosition.RightUp:
+                case Enumerations.Positions.RightUp:
                     return Cursors.SizeNESW;
 
-                case Enumerations.ResizePosition.RightBottom:
+                case Enumerations.Positions.RightBottom:
                     return Cursors.SizeNWSE;
 
-                case Enumerations.ResizePosition.RightMiddle:
+                case Enumerations.Positions.RightMiddle:
                     return Cursors.SizeWE;
 
-                case Enumerations.ResizePosition.UpMiddle:
+                case Enumerations.Positions.UpMiddle:
                     return Cursors.SizeNS;
                 default:
                     return Cursors.Default;
@@ -119,36 +119,36 @@ namespace PaintMV.Controls
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private Rectangle GetRectangle(Enumerations.ResizePosition value)
+        private Rectangle GetRectangle(Enumerations.Positions value)
         {
-            Debug.Assert(_shapeSelection.FrmPaint.IndexOfSelectedShape != null, "Нет нарисованных фигур!");
-            Shape tempShape = _shapeSelection.FrmPaint.Doc.AllShapes[_shapeSelection.FrmPaint.IndexOfSelectedShape.Value];
+            Debug.Assert(_shapeSelection.MainForm.IndexOfSelectedShape != null, "Нет нарисованных фигур!");
+            Shape tempShape = _shapeSelection.MainForm.Doc.AllShapes[_shapeSelection.MainForm.IndexOfSelectedShape.Value];
 
             switch (value)
             {
-                case Enumerations.ResizePosition.LeftUp:
-                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y - 7, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                case Enumerations.Positions.LeftUp:
+                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y - 7, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
-                case Enumerations.ResizePosition.LeftMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + tempShape.Height/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                case Enumerations.Positions.LeftMiddle:
+                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + tempShape.Height/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
-                case Enumerations.ResizePosition.LeftBottom:
-                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                case Enumerations.Positions.LeftBottom:
+                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
-                case Enumerations.ResizePosition.BottomMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                case Enumerations.Positions.BottomMiddle:
+                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
-                case Enumerations.ResizePosition.RightUp:
-                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y - 7, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                case Enumerations.Positions.RightUp:
+                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y - 7, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
-                case Enumerations.ResizePosition.RightBottom:
-                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                case Enumerations.Positions.RightBottom:
+                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
-                case Enumerations.ResizePosition.RightMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + tempShape.Height/2, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                case Enumerations.Positions.RightMiddle:
+                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + tempShape.Height/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
-                case Enumerations.ResizePosition.UpMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y - 6, _shapeSelection.FrmPaint.SizeNodeRect, _shapeSelection.FrmPaint.SizeNodeRect);
+                case Enumerations.Positions.UpMiddle:
+                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y - 6, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
                 default:
                     return new Rectangle();
             }

@@ -9,15 +9,15 @@ namespace PaintMV.Controls
     /// </summary>
     public class LineSelection
     {
-        private readonly FrmPaint _frmPaint;
+        private readonly MainForm _mainForm;
 
         /// <summary>
         /// class constructor
         /// </summary>
-        /// <param name="frmPaint"></param>
-        public LineSelection(FrmPaint frmPaint)
+        /// <param name="mainForm"></param>
+        public LineSelection(MainForm mainForm)
         {
-            _frmPaint = frmPaint;
+            _mainForm = mainForm;
         }
 
         /// <summary>
@@ -34,17 +34,17 @@ namespace PaintMV.Controls
             {
                 if (i == 0)
                 {
-                    g.DrawEllipse(new Pen(Color.Blue), xValue - _frmPaint.SizeNodeRect / 2, yValue - _frmPaint.SizeNodeRect / 2, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
+                    g.DrawEllipse(new Pen(Color.Blue), xValue - _mainForm.SizeNodeRect / 2, yValue - _mainForm.SizeNodeRect / 2, _mainForm.SizeNodeRect, _mainForm.SizeNodeRect);
                 }
                 else
                 {
-                    g.DrawEllipse(new Pen(Color.Blue), shape.EndOrigin.X - 3, shape.EndOrigin.Y - 3, _frmPaint.SizeNodeRect, _frmPaint.SizeNodeRect);
+                    g.DrawEllipse(new Pen(Color.Blue), shape.EndOrigin.X - 3, shape.EndOrigin.Y - 3, _mainForm.SizeNodeRect, _mainForm.SizeNodeRect);
                 }
             }
             Pen tempPen = new Pen(Color.Blue);
             tempPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
             g.DrawLine(tempPen, shape.StartOrigin.X, shape.StartOrigin.Y, shape.EndOrigin.X, shape.EndOrigin.Y);
-            _frmPaint.PnlGraphic.Invalidate();
+            _mainForm.PnlGraphic.Invalidate();
         }
     }
 }
