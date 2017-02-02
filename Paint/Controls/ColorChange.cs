@@ -4,7 +4,7 @@ namespace PaintMV.Controls
 {
     public class ColorChange
     {
-        private MainForm _mainForm;
+        private readonly MainForm _mainForm;
 
         public ColorChange(MainForm mainForm)
         {
