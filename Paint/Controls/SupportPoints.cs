@@ -121,34 +121,47 @@ namespace PaintMV.Controls
         /// <returns></returns>
         private Rectangle GetRectangle(Enumerations.Positions value)
         {
-            Debug.Assert(_shapeSelection.MainForm.IndexOfSelectedShape != null, "Нет нарисованных фигур!");
-            Shape tempShape = _shapeSelection.MainForm.Doc.AllShapes[_shapeSelection.MainForm.IndexOfSelectedShape.Value];
+            Debug.Assert(_shapeSelection.MainForm.IndexOfSelectedShape != null, "No figures for selection!");
+
+            Shape tempShape =
+                _shapeSelection.MainForm.Doc.AllShapes[_shapeSelection.MainForm.IndexOfSelectedShape.Value];
 
             switch (value)
             {
                 case Enumerations.Positions.LeftUp:
-                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y - 7, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
+                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y - 7,
+                        _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case Enumerations.Positions.LeftMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + tempShape.Height/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
+                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + tempShape.Height/2,
+                        _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case Enumerations.Positions.LeftBottom:
-                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
+                    return new Rectangle(tempShape.StartOrigin.X - 7, tempShape.StartOrigin.Y + 5 + tempShape.Height,
+                        _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case Enumerations.Positions.BottomMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
+                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2,
+                        tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.MainForm.SizeNodeRect,
+                        _shapeSelection.MainForm.SizeNodeRect);
 
                 case Enumerations.Positions.RightUp:
-                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y - 7, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
+                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y - 7,
+                        _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
 
                 case Enumerations.Positions.RightBottom:
-                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
+                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width,
+                        tempShape.StartOrigin.Y + 5 + tempShape.Height, _shapeSelection.MainForm.SizeNodeRect,
+                        _shapeSelection.MainForm.SizeNodeRect);
 
                 case Enumerations.Positions.RightMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width, tempShape.StartOrigin.Y + tempShape.Height/2, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
+                    return new Rectangle(tempShape.StartOrigin.X + 5 + tempShape.Width,
+                        tempShape.StartOrigin.Y + tempShape.Height/2, _shapeSelection.MainForm.SizeNodeRect,
+                        _shapeSelection.MainForm.SizeNodeRect);
 
                 case Enumerations.Positions.UpMiddle:
-                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y - 6, _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
+                    return new Rectangle(tempShape.StartOrigin.X + tempShape.Width/2, tempShape.StartOrigin.Y - 6,
+                        _shapeSelection.MainForm.SizeNodeRect, _shapeSelection.MainForm.SizeNodeRect);
                 default:
                     return new Rectangle();
             }

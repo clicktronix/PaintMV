@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using PaintMV.GUI;
 using PaintMV.Shapes;
@@ -8,7 +9,7 @@ namespace PaintMV.Controls
     /// <summary>
     /// Changing class sizes shapes and moving it on the form
     /// </summary>
-    public class MoveResize
+    public class MoveResize : ICommand
     {
         private readonly MainForm _mainForm;
 
@@ -24,9 +25,10 @@ namespace PaintMV.Controls
         /// <summary>
         /// Method changing sizes shapes and moving it on the form
         /// </summary>
+        /// <param name="g"></param>
         /// <param name="e"></param>
         /// <param name="tempShape"></param>
-        public void GetValueOfResizedPosition(MouseEventArgs e, Shape tempShape)
+        public void Execute(Graphics g, MouseEventArgs e, Shape tempShape)
         {
             switch (_mainForm.ShapeSelection.NodeSelected)
             {
@@ -76,6 +78,22 @@ namespace PaintMV.Controls
                     }
                     break;
             }
+        }
+
+        /// <summary>
+        /// Undo changing shape
+        /// </summary>
+        public void Undo()
+        {
+
+        }
+
+        /// <summary>
+        /// Redo changing shape
+        /// </summary>
+        public void Redo()
+        {
+
         }
     }
 }

@@ -3,10 +3,17 @@ using PaintMV.GUI;
 
 namespace PaintMV.Controls
 {
+    /// <summary>
+    /// Class selection line style
+    /// </summary>
     public class LineStyleChose
     {
-        private MainForm _mainForm;
+        private readonly MainForm _mainForm;
 
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        /// <param name="mainForm"></param>
         public LineStyleChose(MainForm mainForm)
         {
             _mainForm = mainForm;
@@ -15,7 +22,7 @@ namespace PaintMV.Controls
         /// <summary>
         /// Line style method
         /// </summary>
-        public void ChoseLineStyle()
+        public void LineStyle()
         {
             if (_mainForm.radioSolid.Checked)
             {

@@ -10,8 +10,6 @@ namespace PaintMV.Shapes
     [Serializable]
     internal class Ellipse : Shape
     {
-        public Point MoveOriginStart { get; }
-
         /// <summary>
         /// class constructor
         /// </summary>
@@ -23,14 +21,14 @@ namespace PaintMV.Shapes
         /// <param name="fillShape"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
-        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape, DashStyle penStyle, bool isSelected)
+        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, 
+            bool fillShape, DashStyle penStyle, bool isSelected)
         {
             StartOrigin = startOrigin;
             Width = width;
             Height = height;
             ChosenColor = chosenColor;
             ShapeSize = shapeSize;
-            MoveOriginStart = startOrigin;
             FilledShape = fillShape;
             PenStyle = penStyle;
             IsSelected = isSelected;
@@ -78,7 +76,6 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
-        /// <param name="p"></param>
         /// <returns></returns>
         public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {

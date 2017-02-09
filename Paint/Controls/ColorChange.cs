@@ -2,10 +2,17 @@ using PaintMV.GUI;
 
 namespace PaintMV.Controls
 {
+    /// <summary>
+    /// Class color changer
+    /// </summary>
     public class ColorChange
     {
-        private MainForm _mainForm;
+        private readonly MainForm _mainForm;
 
+        /// <summary>
+        /// Class constructor
+        /// </summary>
+        /// <param name="mainForm"></param>
         public ColorChange(MainForm mainForm)
         {
             _mainForm = mainForm;
@@ -14,7 +21,7 @@ namespace PaintMV.Controls
         /// <summary>
         /// Change current color method 
         /// </summary>
-        public void ChangeColor()
+        public void Color()
         {
             for (int i = _mainForm.Doc.AllShapes.Count - 1; i >= 0; i--)
             {
@@ -24,7 +31,6 @@ namespace PaintMV.Controls
                     _mainForm.Doc.AllShapes[i].FilledShape = _mainForm.chBoxFill.Checked;
                 }
             }
-            _mainForm.PnlGraphic.Invalidate();
         }
     }
 }
