@@ -12,6 +12,8 @@ namespace PaintMV.Controls
     public class MoveResize : ICommand
     {
         private readonly MainForm _mainForm;
+        private readonly List<List<Shape>> _currentLists = new List<List<Shape>>();
+        private readonly List<List<Shape>> _previousLists = new List<List<Shape>>();
 
         /// <summary>
         /// class constructor
@@ -85,7 +87,13 @@ namespace PaintMV.Controls
         /// </summary>
         public void Undo()
         {
-
+            _mainForm.Doc.AllShapes.Clear();
+            if (_previousLists[_previousLists.Count - 1].Count > 0)
+            {
+                _mainForm.Doc.AllShapes = new List<Shape>(_previousLists[_previousLists.Count - 1]);
+                _currentLists.Add(_previousLists[_previousLists.Count - 1]);
+                _previousLists.Remove(_previousLists[_previousLists.Count - 1]);
+            }
         }
 
         /// <summary>
@@ -93,7 +101,42 @@ namespace PaintMV.Controls
         /// </summary>
         public void Redo()
         {
+            _mainForm.Doc.AllShapes.Clear();
+            if (_currentLists[_currentLists.Count - 1].Count > 0)
+            {
+                _mainForm.Doc.AllShapes = new List<Shape>(_currentLists[_currentLists.Count - 1]);
+                _previousLists.Add(_currentLists[_currentLists.Count - 1]);
+                _currentLists.Remove(_currentLists[_currentLists.Count - 1]);
+            }
+        }
 
+        /// <summary>
+        /// Update undo lists
+        /// </summary>
+        public void ExecuteUndo()
+        {
+            var undoShapesList = new List<Shape>(_mainForm.CopiedShapes);
+            _previousLists.Add(undoShapesList);
+        }
+
+        /// <summary>
+        /// Update redo lists
+        /// </summary>
+        public void ExecuteRedo()
+        {
+            var redoShapesList = new List<Shape>(_mainForm.Doc.AllShapes);
+            _currentLists.Add(redoShapesList);
+        }
+
+        /// <summary>
+        /// Clear added lists, when MouseMove method called
+        /// </summary>
+        public void IncrementCurrentLists()
+        {
+            if (_currentLists.Count > 1)
+            {
+                _currentLists.Remove(_currentLists[_currentLists.Count - 2]);
+            }
         }
     }
 }

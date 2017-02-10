@@ -17,8 +17,6 @@ namespace PaintMV.Controls
         private readonly List<List<Shape>> _previousLists = new List<List<Shape>>();
         private readonly List<List<Shape>> _redoLists = new List<List<Shape>>();
         private readonly List<List<Shape>> _undoLists = new List<List<Shape>>();
-        private Shape _a;
-        private Shape _b;
 #endregion
 
         /// <summary>
@@ -38,25 +36,22 @@ namespace PaintMV.Controls
         /// <param name="tempShape"></param>
         public void Execute(Graphics g, MouseEventArgs e, Shape tempShape)
         {
-            var redoShapes = new List<Shape>();
             var undoShapes = new List<Shape>();
+            var redoShapes = new List<Shape>();
             for (int i = _mainForm.Doc.AllShapes.Count - 1; i >= 0; i--)
             {
+                var shapeA = _mainForm.Doc.AllShapes[i].Clone();
+                undoShapes.Add(shapeA);
                 if (_mainForm.IndexOfSelectedShape != null && _mainForm.Doc.AllShapes[i].GetShapeIsSelected() && _mainForm.IndexOfSelectedShape != null)
                 {
                     _mainForm.LineStyleChose.LineStyle();
-                    _a = _mainForm.Doc.AllShapes[i].Clone();
-                    _b = _mainForm.Doc.AllShapes[i].Clone();
-                    _mainForm.Doc.AllShapes.Remove(_mainForm.Doc.AllShapes[i]);
-                    _a.ChosenColor = _mainForm.ChosenColor;
-                    _a.FilledShape = _mainForm.chBoxFill.Checked;
-                    _a.ShapeSize = (int) _mainForm.numSize.Value;
-                    _a.PenStyle = _mainForm.PenStyle;
-
-                    _mainForm.Doc.AllShapes.Add(_a);
-                    undoShapes.Add(_b);
-                    redoShapes.Add(_a);
+                    _mainForm.Doc.AllShapes[i].ChosenColor = _mainForm.ChosenColor;
+                    _mainForm.Doc.AllShapes[i].FilledShape = _mainForm.chBoxFill.Checked;
+                    _mainForm.Doc.AllShapes[i].ShapeSize = (int) _mainForm.numSize.Value;
+                    _mainForm.Doc.AllShapes[i].PenStyle = _mainForm.PenStyle;
                 }
+                var shapeB = _mainForm.Doc.AllShapes[i].Clone();
+                redoShapes.Add(shapeB);
             }
             _currentLists.Add(redoShapes);
             _previousLists.Add(undoShapes);
@@ -67,11 +62,8 @@ namespace PaintMV.Controls
         /// </summary>
         public void Undo()
         {
-            if (_mainForm.Doc.AllShapes.Count >= _currentLists[_currentLists.Count - 1].Count)
-            {
-                _mainForm.Doc.AllShapes.RemoveRange(_mainForm.Doc.AllShapes.Count - _currentLists[_currentLists.Count - 1].Count, _currentLists[_currentLists.Count - 1].Count);
-            }
-            _mainForm.Doc.AllShapes.AddRange(_previousLists[_previousLists.Count - 1]);
+            _mainForm.Doc.AllShapes.Clear();
+            _mainForm.Doc.AllShapes = new List<Shape>(_previousLists[_previousLists.Count - 1]);
             _undoLists.Add(_previousLists[_previousLists.Count - 1]);
             _redoLists.Add(_currentLists[_currentLists.Count - 1]);
             _previousLists.Remove(_previousLists[_previousLists.Count - 1]);
@@ -87,11 +79,8 @@ namespace PaintMV.Controls
             _currentLists.Add(_redoLists[_redoLists.Count - 1]);
             _undoLists.Remove(_undoLists[_undoLists.Count - 1]);
             _redoLists.Remove(_redoLists[_redoLists.Count - 1]);
-            if (_mainForm.Doc.AllShapes.Count >= _previousLists[_previousLists.Count - 1].Count)
-            {
-                _mainForm.Doc.AllShapes.RemoveRange(_mainForm.Doc.AllShapes.Count - _previousLists[_previousLists.Count - 1].Count, _previousLists[_previousLists.Count - 1].Count);
-            }
-            _mainForm.Doc.AllShapes.AddRange(_currentLists[_currentLists.Count - 1]);
+            _mainForm.Doc.AllShapes.Clear();
+            _mainForm.Doc.AllShapes = new List<Shape>(_currentLists[_currentLists.Count - 1]);
         }
     }
 }

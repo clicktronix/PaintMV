@@ -60,7 +60,7 @@
     <Compile Include="Controls\DrawShape.cs" />
     <Compile Include="Controls\Copy.cs" />
     <Compile Include="Controls\Cut.cs" />
-    <Compile Include="GUI\MyPanel.cs">
+    <Compile Include="GUI\GraphicPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enumerations\ShapesEnum.cs" />

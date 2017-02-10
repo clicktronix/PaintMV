@@ -24,6 +24,7 @@ namespace PaintMV.GUI
         private bool _loadedFile;
         private bool _rectSelectionMode;
         private bool _moveSelectionMode;
+        private int _moveCount;
         private readonly List<ICommand> _commands = new List<ICommand>();
         private readonly List<ICommand> _redoCommands = new List<ICommand>();
 
@@ -74,7 +75,7 @@ namespace PaintMV.GUI
             InitializeComponent();
             Doc = new ShapesList();
             Redo = new ShapesList();
-            PnlGraphic = new MyPanel();
+            PnlGraphic = new GraphicPanel();
             Controls.Add(PnlGraphic);
             btnEllipse.BackColor = Color.White;
             PnlGraphic.BackColor = Color.White;
@@ -151,6 +152,8 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void pnlGraphic_MouseDown(object sender, MouseEventArgs e)
         {
+            CopyListOfFigures();
+            MoveResize.ExecuteUndo();
             _mIsClick = true;
             if (_selectionMode && Doc.AllShapes.Count == 0)
             {
@@ -189,13 +192,14 @@ namespace PaintMV.GUI
         }
 
         /// <summary>
-        /// method is called when you unclick on form
+        /// Method is called when you unclick on form
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void pnlGraphic_MouseUp(object sender, MouseEventArgs e)
         {
             _paintMode = false;
+            _moveCount = 0;
             if (!_selectionMode && (e.X - _startPoint.X) != 0 && !_rectSelectionMode && !_moveSelectionMode)
             {
                 Doc.AllShapes.Add(Figure);
@@ -206,10 +210,6 @@ namespace PaintMV.GUI
             {
                 Doc.AllShapes.Remove(Figure);
             }
-            //if (_moveSelectionMode && IndexOfSelectedShape != null)
-            //{
-            //    _commands.Add(MoveResize);
-            //}
             _mIsClick = false;
             MMove = false;
             Figure = null;
@@ -247,6 +247,15 @@ namespace PaintMV.GUI
                         if (!Doc.AllShapes[i].GetShapeIsSelected()) continue;
                         if (IndexOfSelectedShape == null) continue;
                         MoveResize.Execute(null, e, Doc.AllShapes[i]);
+                        MoveResize.IncrementCurrentLists();
+                        MoveResize.ExecuteRedo();
+                        if (_moveCount == 0)
+                        {
+                            _commands.Add(MoveResize);
+                        }
+                        _commands.Remove(_commands[_commands.Count - 1]);
+                        _commands.Add(MoveResize);
+                        _moveCount++;
                     }
                 }
                 _startPoint.X = e.X;
@@ -318,6 +327,20 @@ namespace PaintMV.GUI
                 Doc.AllShapes[i].SetShapeIsSelected(false);
             }
         }
+
+        /// <summary>
+        /// Copy list of current figures
+        /// </summary>
+        private void CopyListOfFigures()
+        {
+            CopiedShapes.Clear();
+            for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
+            {
+                var a = Doc.AllShapes[i].Clone();
+                CopiedShapes.Add(a);
+            }
+        }
+
         #endregion
 
 #region Control methods
@@ -635,13 +658,6 @@ namespace PaintMV.GUI
                 _moveSelectionMode = true;
                 _selectionMode = true;
                 btnMove.Text = @"ON";
-                for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
-                {
-                    if (Doc.AllShapes[i].GetShapeIsSelected())
-                    {
-                        MoveResize.SavePreviouslyFigure(Doc.AllShapes[i]);
-                    }
-                }
             }
             PnlGraphic.Invalidate();
         }
@@ -772,7 +788,6 @@ namespace PaintMV.GUI
             btnEllipse_Click(sender, e);
             PnlGraphic.Invalidate();
             _commands.Clear();
-            Cut.CutedShapes.Clear();
             _redoCommands.Clear();
         }
         #endregion

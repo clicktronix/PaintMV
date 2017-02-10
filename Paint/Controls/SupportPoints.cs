@@ -121,11 +121,8 @@ namespace PaintMV.Controls
         /// <returns></returns>
         private Rectangle GetRectangle(Enumerations.Positions value)
         {
-            Debug.Assert(_shapeSelection.MainForm.IndexOfSelectedShape != null, "No figures for selection!");
-
-            Shape tempShape =
-                _shapeSelection.MainForm.Doc.AllShapes[_shapeSelection.MainForm.IndexOfSelectedShape.Value];
-
+            Debug.Assert(_shapeSelection.MainForm.IndexOfSelectedShape != null, "No selected figures!");
+            Shape tempShape = _shapeSelection.MainForm.Doc.AllShapes[_shapeSelection.MainForm.IndexOfSelectedShape.Value];
             switch (value)
             {
                 case Enumerations.Positions.LeftUp:
