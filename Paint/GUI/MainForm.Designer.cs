@@ -1,6 +1,6 @@
 ﻿namespace PaintMV.GUI
 {
-    partial class FrmPaint
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPaint));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.btnEllipse = new System.Windows.Forms.Button();
             this.btnRectangle = new System.Windows.Forms.Button();
             this.btnDefaultColor = new System.Windows.Forms.Button();
@@ -62,9 +62,11 @@
             this.radioDash = new System.Windows.Forms.RadioButton();
             this.radioSolid = new System.Windows.Forms.RadioButton();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnRectSelection = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.btnMove = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).BeginInit();
             this.grpColor.SuspendLayout();
             this.menuOptions.SuspendLayout();
@@ -75,6 +77,7 @@
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnEllipse
@@ -138,7 +141,7 @@
             // grpColor
             // 
             this.grpColor.Controls.Add(this.btnDefaultColor);
-            this.grpColor.Location = new System.Drawing.Point(4, 502);
+            this.grpColor.Location = new System.Drawing.Point(4, 562);
             this.grpColor.Name = "grpColor";
             this.grpColor.Size = new System.Drawing.Size(116, 65);
             this.grpColor.TabIndex = 13;
@@ -237,7 +240,6 @@
             // 
             // menuUndo
             // 
-            this.menuUndo.Enabled = false;
             this.menuUndo.Name = "menuUndo";
             this.menuUndo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.menuUndo.Size = new System.Drawing.Size(174, 22);
@@ -246,7 +248,6 @@
             // 
             // menuRedo
             // 
-            this.menuRedo.Enabled = false;
             this.menuRedo.Name = "menuRedo";
             this.menuRedo.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.Z)));
@@ -287,7 +288,7 @@
             this.btnSelection.Name = "btnSelection";
             this.btnSelection.Size = new System.Drawing.Size(102, 28);
             this.btnSelection.TabIndex = 4;
-            this.btnSelection.Text = "Move/Resize OFF";
+            this.btnSelection.Text = "OFF";
             this.btnSelection.Click += new System.EventHandler(this.btnSelection_Click);
             // 
             // groupBox1
@@ -335,7 +336,7 @@
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.chBoxFill);
-            this.groupBox4.Location = new System.Drawing.Point(4, 444);
+            this.groupBox4.Location = new System.Drawing.Point(4, 504);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(116, 54);
             this.groupBox4.TabIndex = 22;
@@ -396,19 +397,19 @@
             this.radioSolid.Text = "Solid";
             this.radioSolid.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnRectSelection
             // 
-            this.button1.Location = new System.Drawing.Point(8, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 28);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "Select OFF";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnRectSelection.Location = new System.Drawing.Point(8, 19);
+            this.btnRectSelection.Name = "btnRectSelection";
+            this.btnRectSelection.Size = new System.Drawing.Size(102, 28);
+            this.btnRectSelection.TabIndex = 24;
+            this.btnRectSelection.Text = "OFF";
+            this.btnRectSelection.UseVisualStyleBackColor = true;
+            this.btnRectSelection.Click += new System.EventHandler(this.btnRectSelection_Click);
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.button1);
+            this.groupBox6.Controls.Add(this.btnRectSelection);
             this.groupBox6.Location = new System.Drawing.Point(4, 328);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(116, 54);
@@ -419,18 +420,39 @@
             // groupBox7
             // 
             this.groupBox7.Controls.Add(this.btnUpdate);
-            this.groupBox7.Location = new System.Drawing.Point(4, 388);
+            this.groupBox7.Location = new System.Drawing.Point(4, 448);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(116, 54);
             this.groupBox7.TabIndex = 26;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Upd Selection";
+            this.groupBox7.Text = "Update Selection";
             // 
-            // FrmPaint
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.btnMove);
+            this.groupBox8.Location = new System.Drawing.Point(4, 388);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(116, 54);
+            this.groupBox8.TabIndex = 27;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Move/Resize Mode";
+            // 
+            // btnMove
+            // 
+            this.btnMove.Location = new System.Drawing.Point(8, 19);
+            this.btnMove.Name = "btnMove";
+            this.btnMove.Size = new System.Drawing.Size(102, 28);
+            this.btnMove.TabIndex = 24;
+            this.btnMove.Text = "OFF";
+            this.btnMove.UseVisualStyleBackColor = true;
+            this.btnMove.Click += new System.EventHandler(this.btnMoveResize_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 661);
+            this.ClientSize = new System.Drawing.Size(984, 769);
+            this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox5);
@@ -443,7 +465,7 @@
             this.DoubleBuffered = true;
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuOptions;
-            this.Name = "FrmPaint";
+            this.Name = "MainForm";
             this.Text = "PaintMV";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPaint_FormClosing);
@@ -460,6 +482,7 @@
             this.groupBox5.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -470,7 +493,7 @@
         private System.Windows.Forms.Button btnEllipse;
         private System.Windows.Forms.Button btnRectangle;
         private System.Windows.Forms.Button btnDefaultColor;
-        private System.Windows.Forms.NumericUpDown numSize;
+        public System.Windows.Forms.NumericUpDown numSize;
         private System.Windows.Forms.GroupBox grpColor;
         private System.Windows.Forms.Button btnTriangle;
         private System.Windows.Forms.Button btnLine;
@@ -486,7 +509,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.CheckBox chBoxFill;
+        public System.Windows.Forms.CheckBox chBoxFill;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuUndo;
         private System.Windows.Forms.ToolStripMenuItem menuRedo;
@@ -495,14 +518,16 @@
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.ToolStripMenuItem menuClear;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.RadioButton radioDot;
-        private System.Windows.Forms.RadioButton radioDash;
-        private System.Windows.Forms.RadioButton radioSolid;
+        public System.Windows.Forms.RadioButton radioDot;
+        public System.Windows.Forms.RadioButton radioDash;
+        public System.Windows.Forms.RadioButton radioSolid;
         private System.Windows.Forms.ToolStripMenuItem menuSaveLike;
         private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnRectSelection;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.Button btnMove;
     }
 }
 

@@ -10,8 +10,6 @@ namespace PaintMV.Shapes
     [Serializable]
     internal class Ellipse : Shape
     {
-        public Point MoveOriginStart { get; }
-
         /// <summary>
         /// class constructor
         /// </summary>
@@ -23,14 +21,14 @@ namespace PaintMV.Shapes
         /// <param name="fillShape"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
-        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape, DashStyle penStyle, bool isSelected)
+        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, 
+            bool fillShape, DashStyle penStyle, bool isSelected)
         {
             StartOrigin = startOrigin;
             Width = width;
             Height = height;
             ChosenColor = chosenColor;
             ShapeSize = shapeSize;
-            MoveOriginStart = startOrigin;
             FilledShape = fillShape;
             PenStyle = penStyle;
             IsSelected = isSelected;
@@ -79,7 +77,7 @@ namespace PaintMV.Shapes
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
         /// <returns></returns>
-        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint, Point p)
+        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
@@ -89,26 +87,26 @@ namespace PaintMV.Shapes
                 rect.Height = endPoint.Y - startPoint.Y;
                 rect.Width = endPoint.X - startPoint.X;
             }
-            else if ((endPoint.Y < p.Y) && (endPoint.X < p.X))
+            else if ((endPoint.Y < startPoint.Y) && (endPoint.X < startPoint.X))
             {
                 rect.X = endPoint.X;
                 rect.Y = endPoint.Y;
-                rect.Height = p.Y - endPoint.Y;
-                rect.Width = p.X - endPoint.X;
+                rect.Height = startPoint.Y - endPoint.Y;
+                rect.Width = startPoint.X - endPoint.X;
             }
-            else if ((endPoint.Y > p.Y) && (endPoint.X < p.X))
+            else if ((endPoint.Y > startPoint.Y) && (endPoint.X < startPoint.X))
             {
                 rect.X = endPoint.X;
-                rect.Y = p.Y;
-                rect.Height = endPoint.Y - p.Y;
-                rect.Width = p.X - endPoint.X;
+                rect.Y = startPoint.Y;
+                rect.Height = endPoint.Y - startPoint.Y;
+                rect.Width = startPoint.X - endPoint.X;
             }
-            else if ((endPoint.Y < p.Y) && (endPoint.X > p.X))
+            else if ((endPoint.Y < startPoint.Y) && (endPoint.X > startPoint.X))
             {
-                rect.X = p.X;
+                rect.X = startPoint.X;
                 rect.Y = endPoint.Y;
-                rect.Height = p.Y - endPoint.Y;
-                rect.Width = endPoint.X - p.X;
+                rect.Height = startPoint.Y - endPoint.Y;
+                rect.Width = endPoint.X - startPoint.X;
             }
             GraphicsPath myPath = new GraphicsPath();
             myPath.AddRectangle(rect);

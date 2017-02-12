@@ -72,8 +72,9 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
+        /// <param name="p"></param>
         /// <returns></returns>
-        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint, Point p)
+        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
@@ -83,26 +84,26 @@ namespace PaintMV.Shapes
                 rect.Height = endPoint.Y - startPoint.Y;
                 rect.Width = endPoint.X - startPoint.X;
             }
-            else if ((endPoint.Y < p.Y) && (endPoint.X < p.X))
+            else if ((endPoint.Y < startPoint.Y) && (endPoint.X < startPoint.X))
             {
                 rect.X = endPoint.X;
                 rect.Y = endPoint.Y;
-                rect.Height = p.Y - endPoint.Y;
-                rect.Width = p.X - endPoint.X;
+                rect.Height = startPoint.Y - endPoint.Y;
+                rect.Width = startPoint.X - endPoint.X;
             }
-            else if ((endPoint.Y > p.Y) && (endPoint.X < p.X))
+            else if ((endPoint.Y > startPoint.Y) && (endPoint.X < startPoint.X))
             {
                 rect.X = endPoint.X;
-                rect.Y = p.Y;
-                rect.Height = endPoint.Y - p.Y;
-                rect.Width = p.X - endPoint.X;
+                rect.Y = startPoint.Y;
+                rect.Height = endPoint.Y - startPoint.Y;
+                rect.Width = startPoint.X - endPoint.X;
             }
-            else if ((endPoint.Y < p.Y) && (endPoint.X > p.X))
+            else if ((endPoint.Y < startPoint.Y) && (endPoint.X > startPoint.X))
             {
-                rect.X = p.X;
+                rect.X = startPoint.X;
                 rect.Y = endPoint.Y;
-                rect.Height = p.Y - endPoint.Y;
-                rect.Width = endPoint.X - p.X;
+                rect.Height = startPoint.Y - endPoint.Y;
+                rect.Width = endPoint.X - startPoint.X;
             }
             GraphicsPath myPath = new GraphicsPath();
             myPath.AddRectangle(rect);
