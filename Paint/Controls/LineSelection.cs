@@ -10,6 +10,7 @@ namespace PaintMV.Controls
     public class LineSelection
     {
         private readonly MainForm _mainForm;
+        private int _sizeNodeRect { set; get; } = 10;
 
         /// <summary>
         /// class constructor
@@ -34,11 +35,11 @@ namespace PaintMV.Controls
             {
                 if (i == 0)
                 {
-                    g.DrawEllipse(new Pen(Color.Blue), xValue - _mainForm.SizeNodeRect / 2, yValue - _mainForm.SizeNodeRect / 2, _mainForm.SizeNodeRect, _mainForm.SizeNodeRect);
+                    g.DrawEllipse(new Pen(Color.Blue), xValue - _sizeNodeRect / 2, yValue - _sizeNodeRect / 2, _sizeNodeRect, _sizeNodeRect);
                 }
                 else
                 {
-                    g.DrawEllipse(new Pen(Color.Blue), shape.EndOrigin.X - 3, shape.EndOrigin.Y - 3, _mainForm.SizeNodeRect, _mainForm.SizeNodeRect);
+                    g.DrawEllipse(new Pen(Color.Blue), shape.EndOrigin.X - 3, shape.EndOrigin.Y - 3, _sizeNodeRect, _sizeNodeRect);
                 }
             }
             Pen tempPen = new Pen(Color.Blue);

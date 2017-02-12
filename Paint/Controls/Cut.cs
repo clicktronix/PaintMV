@@ -12,8 +12,6 @@ namespace PaintMV.Controls
     public class Cut : ICommand
     {
         private readonly MainForm _mainForm;
-        private readonly List<List<Shape>> _currentLists = new List<List<Shape>>();
-        private readonly List<List<Shape>> _previousLists = new List<List<Shape>>();
         private readonly List<List<Shape>> _redoLists = new List<List<Shape>>();
         private readonly List<List<Shape>> _undoLists = new List<List<Shape>>();
 
@@ -34,19 +32,17 @@ namespace PaintMV.Controls
         /// <param name="tempShape"></param>
         public void Execute(Graphics g, MouseEventArgs e, Shape tempShape)
         {
-            List<Shape> ñutedShapes = new List<Shape>();
+            var ñurrentShapes = new List<Shape>(_mainForm.Doc.AllShapes);
             for (int i = _mainForm.Doc.AllShapes.Count - 1; i >= 0; i--)
             {
                 if (_mainForm.IndexOfSelectedShape != null && _mainForm.Doc.AllShapes[i].GetShapeIsSelected() && _mainForm.IndexOfSelectedShape != null)
                 {
-                    var obj = _mainForm.Doc.AllShapes[_mainForm.Doc.AllShapes.Count - 1];
-                    obj.SetShapeIsSelected(false);
                     _mainForm.Doc.AllShapes[i].SetShapeIsSelected(false);
-                    ñutedShapes.Add(obj);
                     _mainForm.Doc.AllShapes.Remove(_mainForm.Doc.AllShapes[i]);
                 }
             }
-            _undoLists.Add(ñutedShapes);
+            _undoLists.Add(ñurrentShapes);
+            _redoLists.Add(_mainForm.Doc.AllShapes);
         }
 
         /// <summary>
@@ -54,9 +50,12 @@ namespace PaintMV.Controls
         /// </summary>
         public void Undo()
         {
-            _mainForm.Doc.AllShapes.AddRange(_undoLists[_undoLists.Count - 1]);
-            _redoLists.Add(_undoLists[_undoLists.Count - 1]);
-            _undoLists.Remove(_undoLists[_undoLists.Count - 1]);
+            if (_undoLists.Count > 0)
+            {
+                _mainForm.Doc.AllShapes = new List<Shape>(_undoLists[_undoLists.Count - 1]);
+                _redoLists.Add(_undoLists[_undoLists.Count - 1]);
+                _undoLists.Remove(_undoLists[_undoLists.Count - 1]);
+            }
         }
 
         /// <summary>
@@ -64,11 +63,10 @@ namespace PaintMV.Controls
         /// </summary>
         public void Redo()
         {
-            if (_mainForm.Doc.AllShapes.Count >= _redoLists[_redoLists.Count - 1].Count)
-            {
-                _mainForm.Doc.AllShapes.RemoveRange(_mainForm.Doc.AllShapes.Count - _redoLists[_redoLists.Count - 1].Count, _redoLists[_redoLists.Count - 1].Count);
-                _undoLists.Add(_redoLists[_redoLists.Count - 1]);
-            }
+            _undoLists.Add(_redoLists[_redoLists.Count - 1]);
+            _redoLists.Remove(_redoLists[_redoLists.Count - 1]);
+            _mainForm.Doc.AllShapes = new List<Shape>(_redoLists[_redoLists.Count - 1]);
+            
         }
     }
 }

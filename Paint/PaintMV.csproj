@@ -55,7 +55,6 @@
     <Compile Include="Controls\ShapeSelection.cs" />
     <Compile Include="Controls\SupportPoints.cs" />
     <Compile Include="Enumerations\PositionsEnum.cs" />
-    <Compile Include="Controls\ColorChange.cs" />
     <Compile Include="Controls\LineStyleChose.cs" />
     <Compile Include="Controls\DrawShape.cs" />
     <Compile Include="Controls\Copy.cs" />
@@ -71,6 +70,7 @@
       <DependentUpon>NewFileForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\UpdateShape.cs" />
+    <Compile Include="Controls\UnselectShapes.cs" />
     <Compile Include="Shapes\ShapesList.cs" />
     <Compile Include="GUI\MainForm.cs">
       <SubType>Form</SubType>

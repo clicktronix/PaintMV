@@ -87,8 +87,7 @@ namespace PaintMV.Controls
         /// </summary>
         public void Undo()
         {
-            _mainForm.Doc.AllShapes.Clear();
-            if (_previousLists[_previousLists.Count - 1].Count > 0)
+            if (_previousLists.Count > 0)
             {
                 _mainForm.Doc.AllShapes = new List<Shape>(_previousLists[_previousLists.Count - 1]);
                 _currentLists.Add(_previousLists[_previousLists.Count - 1]);
@@ -101,12 +100,11 @@ namespace PaintMV.Controls
         /// </summary>
         public void Redo()
         {
-            _mainForm.Doc.AllShapes.Clear();
-            if (_currentLists[_currentLists.Count - 1].Count > 0)
+            if (_currentLists.Count > 0)
             {
-                _mainForm.Doc.AllShapes = new List<Shape>(_currentLists[_currentLists.Count - 1]);
                 _previousLists.Add(_currentLists[_currentLists.Count - 1]);
                 _currentLists.Remove(_currentLists[_currentLists.Count - 1]);
+                _mainForm.Doc.AllShapes = new List<Shape>(_currentLists[_currentLists.Count - 1]);
             }
         }
 

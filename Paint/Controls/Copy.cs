@@ -39,7 +39,10 @@ namespace PaintMV.Controls
                 {
                     _mainForm.Doc.AllShapes[i].SetShapeIsSelected(false);
                     var copiedShape = _mainForm.Doc.AllShapes[i].Clone();
-                    copiedShape.SetShapeIsSelected(true);
+                    Point a = Point.Empty;
+                    a.X = copiedShape.StartOrigin.X + 15;
+                    a.Y = copiedShape.StartOrigin.Y + 15;
+                    copiedShape.StartOrigin = a;
                     copiedShapes.Add(copiedShape);
                 }
             }
