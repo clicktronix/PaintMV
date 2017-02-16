@@ -49,15 +49,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ICommand.cs" />
     <Compile Include="Controls\LineSelection.cs" />
     <Compile Include="Controls\MoveResize.cs" />
     <Compile Include="Controls\ShapeSelection.cs" />
     <Compile Include="Controls\SupportPoints.cs" />
     <Compile Include="Enumerations\PositionsEnum.cs" />
-    <Compile Include="Controls\ColorChange.cs" />
     <Compile Include="Controls\LineStyleChose.cs" />
-    <Compile Include="Controls\ChoseShape.cs" />
-    <Compile Include="GUI\MyPanel.cs">
+    <Compile Include="Controls\DrawShape.cs" />
+    <Compile Include="Controls\Copy.cs" />
+    <Compile Include="Controls\Cut.cs" />
+    <Compile Include="GUI\GraphicPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enumerations\ShapesEnum.cs" />
@@ -67,6 +69,9 @@
     <Compile Include="GUI\NewFileForm.Designer.cs">
       <DependentUpon>NewFileForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\UpdateShape.cs" />
+    <Compile Include="Controls\UnselectShapes.cs" />
+    <Compile Include="Shapes\Polygon.cs" />
     <Compile Include="Shapes\ShapesList.cs" />
     <Compile Include="GUI\MainForm.cs">
       <SubType>Form</SubType>

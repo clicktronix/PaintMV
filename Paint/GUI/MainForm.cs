@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -20,33 +21,40 @@ namespace PaintMV.GUI
         private bool _selectionMode;
         private Point _startPoint;
         private Point _endPoint;
-        private readonly ShapesList _redo;
         private bool _loadedFile;
         private bool _rectSelectionMode;
         private bool _moveSelectionMode;
+        private int _moveCount;
+        private readonly List<ICommand> _commands = new List<ICommand>();
+        private readonly List<ICommand> _redoCommands = new List<ICommand>();
+        private readonly List<string> _commandsHistory = new List<string>();
+        private readonly List<string> _commandsRedoHistory = new List<string>();
 
-        public bool FillShape;
         public int ShapeWidth;
         public int ShapeHeight;
         public int ShapeSize = 1;
         public Shape Figure;
+        public List<Shape> CopiedShapes = new List<Shape>();
         public ShapeSelection ShapeSelection { get; }
         public LineSelection LineSelection { get; }
         public ShapesEnum ShapesEnum { get; set; }
-        public int SizeNodeRect { set; get; } = 10;
         public int? IndexOfSelectedShape { set; get; }
         public ShapesList Doc { set; get; }
-        public ShapesList SelectedShapes { set; get; }
         public Panel PnlGraphic { get; }
         public MoveResize MoveResize { get; }
         public bool MMove { set; get; }
         public static int PanelWidth { get; set; } = 700;
         public static int PanelHeight { get; set; } = 500;
         public DashStyle PenStyle = DashStyle.Solid;
-        public ColorChange ColorChange { get; }
         public Color ChosenColor { set; get; } = Color.Black;
+        public Color FillColor { set; get; } = Color.Empty;
         public LineStyleChose LineStyleChose { get; }
-        public ChoseShape ChoseShape { get; }
+        public DrawShape DrawShape { get; }
+        public Copy Copy { get; }
+        public Cut Cut { get; }
+        public ShapesList Redo { get; }
+        public UpdateShape UpdateShape { get; }
+        public UnselectShapes UnselectShapes { get; }
         public Point StartPoint
         {
             set { _startPoint = value; }
@@ -67,9 +75,8 @@ namespace PaintMV.GUI
         {
             InitializeComponent();
             Doc = new ShapesList();
-            SelectedShapes = new ShapesList();
-            _redo = new ShapesList();
-            PnlGraphic = new MyPanel();
+            Redo = new ShapesList();
+            PnlGraphic = new GraphicPanel();
             Controls.Add(PnlGraphic);
             btnEllipse.BackColor = Color.White;
             PnlGraphic.BackColor = Color.White;
@@ -84,9 +91,12 @@ namespace PaintMV.GUI
             ShapeSelection = new ShapeSelection(this);
             LineSelection = new LineSelection(this);
             MoveResize = new MoveResize(this);
-            ColorChange = new ColorChange(this);
             LineStyleChose = new LineStyleChose(this);
-            ChoseShape = new ChoseShape(this);
+            DrawShape = new DrawShape(this);
+            Copy = new Copy(this);
+            Cut = new Cut(this);
+            UpdateShape = new UpdateShape(this);
+            UnselectShapes = new UnselectShapes(this);
         }
 
         /// <summary>
@@ -96,7 +106,6 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void pnlGraphic_Paint(object sender, PaintEventArgs e)
         {
-            UpdateUndoRedo();
             if (_hasShapes && Doc.AllShapes != null)
             {
                 foreach (Shape shape in Doc.AllShapes)
@@ -116,19 +125,11 @@ namespace PaintMV.GUI
             {
                 for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
                 {
-                    if ((_selectionMode && Doc.AllShapes[i].GetShapeIsSelected()) || (Doc.AllShapes[i].GetShapeIsSelected() && _rectSelectionMode))
-                    {
-                        if (Doc.AllShapes[i].IsLine)
-                        {
-                            if (Doc.AllShapes == null) continue;
-                            if (IndexOfSelectedShape != null) LineSelection.MakeSelectionOfLine(Doc.AllShapes[i], e.Graphics);
-                        }
-                        else
-                        {
-                            if (Doc.AllShapes == null) continue;
-                            if (IndexOfSelectedShape != null) ShapeSelection.MakeSelectionOfShape(Doc.AllShapes[i], e.Graphics);
-                        }
-                    }
+                    if ((!_selectionMode || !Doc.AllShapes[i].GetShapeIsSelected()) && (!Doc.AllShapes[i].GetShapeIsSelected() || !_rectSelectionMode)) continue;
+                    if (Doc.AllShapes[i].IsLine) { ShapeSelection.NotRectSelection = true; }
+                    else { ShapeSelection.NotRectSelection = false; }
+                    if (Doc.AllShapes == null) continue;
+                    if (IndexOfSelectedShape != null) ShapeSelection.MakeSelectionOfShape(Doc.AllShapes[i], e.Graphics);
                 }
             }
             if (_paintMode)
@@ -145,11 +146,52 @@ namespace PaintMV.GUI
         private void pnlGraphic_MouseDown(object sender, MouseEventArgs e)
         {
             _mIsClick = true;
-            if (_selectionMode && Doc.AllShapes.Count == 0)
+            if (_rectSelectionMode && Doc.AllShapes.Count == 0)
             {
                 MessageBox.Show(@"No figures for selection!");
             }
             else if (_selectionMode && Doc.AllShapes.Count != 0)
+            {
+                for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
+                {
+                    if (!Doc.AllShapes[i].ContainsPoint(e.Location)) continue;
+                    ProccessOfSelectionFigure(i);
+                }
+                if (IndexOfSelectedShape != null && (_moveSelectionMode && Doc.AllShapes[IndexOfSelectedShape.Value].GetShapeIsSelected()))
+                {
+                    ShapeSelection.NodeSelected = Positions.None;
+                    ShapeSelection.NodeSelected = ShapeSelection.SupportPoints.GetNodeSelectable(e.Location);
+                }
+            }
+            else if (!_selectionMode)
+            {
+                _paintMode = true;
+                if (ShapesEnum == ShapesEnum.Polygon)
+                {
+                    DrawShape.Execute(null, e, null);
+                }
+            }
+            _startPoint.X = e.X;
+            _startPoint.Y = e.Y;
+            PnlGraphic.Invalidate();
+        }
+
+        /// <summary>
+        /// Method is called when you unclick on form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pnlGraphic_MouseUp(object sender, MouseEventArgs e)
+        {
+            _paintMode = false;
+            _moveCount = 0;
+            if (!_selectionMode && ((e.X - _startPoint.X) != 0 || (e.X - _startPoint.X) == 0 && ShapesEnum == ShapesEnum.Polygon) && !_rectSelectionMode && !_moveSelectionMode)
+            {
+                Doc.AllShapes.Add(Figure);
+                _commands.Add(DrawShape);
+                _hasShapes = true;
+            }
+            if (_rectSelectionMode && Doc.AllShapes.Count != 0)
             {
                 bool selectionFlag = false;
                 for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
@@ -158,49 +200,16 @@ namespace PaintMV.GUI
                     selectionFlag = true;
                     ProccessOfSelectionFigure(i);
                 }
-                if (_moveSelectionMode && IndexOfSelectedShape != null && Doc.AllShapes[IndexOfSelectedShape.Value].GetShapeIsSelected())
-                {
-                    ShapeSelection.NodeSelected = Positions.None;
-                    ShapeSelection.NodeSelected = ShapeSelection.SupportPoints.GetNodeSelectable(e.Location);
-                }
-                if (ShapeSelection.NodeSelected != Positions.None)
-                {
-                    selectionFlag = true;
-                }
                 if (!selectionFlag && !_moveSelectionMode)
                 {
-                    UnselectAllFigures();
+                    UnselectShapes.UnselectAllShapes();
                 }
-            }
-            else if (!_selectionMode)
-            {
-                _paintMode = true;
-            }
-            _startPoint.X = e.X;
-            _startPoint.Y = e.Y;
-            PnlGraphic.Invalidate();
-        }
-
-        /// <summary>
-        /// method is called when you unclick on form
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void pnlGraphic_MouseUp(object sender, MouseEventArgs e)
-        {
-            _paintMode = false;
-            if (!_selectionMode && (e.X - _startPoint.X) != 0)
-            {
-                Doc.AllShapes.Add(Figure);
-                _hasShapes = true;
-            }
-            if (_rectSelectionMode && Doc.AllShapes.Count != 0)
-            {
-                Doc.AllShapes.Remove(Figure);
             }
             _mIsClick = false;
             MMove = false;
             Figure = null;
+            UndoListAddElements();
+            RedoListAddElements();
             PnlGraphic.Invalidate();
         }
 
@@ -218,29 +227,37 @@ namespace PaintMV.GUI
                 ShapeWidth = e.X - _startPoint.X;
                 ShapeHeight = e.Y - _startPoint.Y;
                 ShapeSize = (int)numSize.Value;
-                FillShape = chBoxFill.Checked;
                 var absShapeWidth = Math.Abs(ShapeWidth);
                 var absShapeHeight = Math.Abs(ShapeHeight);
-                ChoseShape.CheckChosenShape(absShapeWidth, absShapeHeight);
-            }
-            else if (_moveSelectionMode && IndexOfSelectedShape != null && Doc.AllShapes[IndexOfSelectedShape.Value].GetShapeIsSelected())
+                DrawShape.SetShapeParameters(absShapeWidth, absShapeHeight);
+                DrawShape.Execute(null, e, null);
+            } else if (_moveSelectionMode)
             {
-                ChangeCursor(e.Location);
+                PnlGraphic.Cursor = ShapeSelection.SupportPoints.GetCursor(ShapeSelection.SupportPoints.GetNodeSelectable(e.Location));
                 if (_mIsClick == false) { return; }
-                if (Doc.AllShapes[IndexOfSelectedShape.Value].GetShapeIsSelected())
+                if (IndexOfSelectedShape != null && Doc.AllShapes[IndexOfSelectedShape.Value].GetShapeIsSelected())
                 {
                     for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
                     {
                         if (!Doc.AllShapes[i].GetShapeIsSelected()) continue;
                         if (IndexOfSelectedShape == null) continue;
-                        Shape tempShape = Doc.AllShapes[i];
-                        MoveResize.GetValueOfResizedPosition(e, tempShape);
+                        MoveResize.Execute(null, e, Doc.AllShapes[i]);
+                        MoveResize.IncrementCurrentLists();
+                        MoveResize.ExecuteRedo();
+                        if (_moveCount == 0)
+                        {
+                            _commands.Add(MoveResize);
+                            CopyListOfFigures();
+                            MoveResize.ExecuteUndo();
+                        }
+                        _commands.Remove(_commands[_commands.Count - 1]);
+                        _commands.Add(MoveResize);
+                        _moveCount++;
                     }
                 }
                 _startPoint.X = e.X;
                 _startPoint.Y = e.Y;
-            }
-            else if (_rectSelectionMode)
+            } else if (_rectSelectionMode && _startPoint.X != 0 && _startPoint.Y != 0 && _endPoint.X != 0 && _endPoint.Y != 0 )
             {
                 bool selectionFlag = false;
                 for (var i = Doc.AllShapes.Count - 1; i >= 0; i--)
@@ -251,7 +268,8 @@ namespace PaintMV.GUI
                 }
                 if (!selectionFlag)
                 {
-                    UnselectAllFigures();
+                    UnselectShapes.UnselectAllShapes();
+                    RefreshPoints();
                 }
             }
             PnlGraphic.Invalidate();
@@ -272,8 +290,7 @@ namespace PaintMV.GUI
             {
                 Doc.AllShapes[i] = Doc.AllShapes[i + 1];
                 Doc.AllShapes[i + 1] = tempShape;
-            }
-            else if (Doc.AllShapes.Count > 2 && tempShape != Doc.AllShapes[Doc.AllShapes.Count - 1])
+            } else if (Doc.AllShapes.Count > 2 && tempShape != Doc.AllShapes[Doc.AllShapes.Count - 1])
             {
                 for (var j = i; j < Doc.AllShapes.Count - 1; j++)
                 {
@@ -297,23 +314,32 @@ namespace PaintMV.GUI
         }
 
         /// <summary>
-        /// Transmitting the coordinates of the cursor method
+        /// Copy list of current figures
         /// </summary>
-        /// <param name="p"></param>
-        private void ChangeCursor(Point p)
+        private void CopyListOfFigures()
         {
-            PnlGraphic.Cursor = ShapeSelection.SupportPoints.GetCursor(ShapeSelection.SupportPoints.GetNodeSelectable(p));
+            CopiedShapes.Clear();
+            for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
+            {
+                var a = Doc.AllShapes[i].Clone();
+                CopiedShapes.Add(a);
+            }
         }
 
         /// <summary>
-        /// Set flag IsSelected false of all shapes in list
+        /// Update selected shapes
         /// </summary>
-        private void UnselectAllFigures()
+        private void UpdateSelectedShapes()
         {
-            for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
+            if (IndexOfSelectedShape != null && Doc.AllShapes[IndexOfSelectedShape.Value].GetShapeIsSelected())
             {
-                Doc.AllShapes[i].SetShapeIsSelected(false);
+                UpdateShape.Execute(null,null,null);
+                _commands.Add(UpdateShape);
+                PnlGraphic.Invalidate();
+                UndoListAddElements();
+                RedoListAddElements();
             }
+            PnlGraphic.Invalidate();
         }
         #endregion
 
@@ -328,9 +354,8 @@ namespace PaintMV.GUI
             string button = "rectangle";
             ShapesEnum = ShapesEnum.Rectangle;
             ChangeButtonColor(button);
-            _selectionMode = true;
-            _rectSelectionMode = false;
-            btnSelection_Click(sender, e);
+            _rectSelectionMode = true;
+            btnRectSelection_Click(sender, e);
         }
 
         /// <summary>
@@ -343,9 +368,8 @@ namespace PaintMV.GUI
             ShapesEnum = ShapesEnum.Ellipse;
             string button = "ellipse";
             ChangeButtonColor(button);
-            _selectionMode = true;
-            _rectSelectionMode = false;
-            btnSelection_Click(sender, e);
+            _rectSelectionMode = true;
+            btnRectSelection_Click(sender, e);
         }
 
         /// <summary>
@@ -358,9 +382,8 @@ namespace PaintMV.GUI
             ShapesEnum = ShapesEnum.Line;
             string button = "line";
             ChangeButtonColor(button);
-            _selectionMode = true;
-            _rectSelectionMode = false;
-            btnSelection_Click(sender, e);
+            _rectSelectionMode = true;
+            btnRectSelection_Click(sender, e);
         }
 
         /// <summary>
@@ -373,9 +396,8 @@ namespace PaintMV.GUI
             ShapesEnum = ShapesEnum.Triangle;
             string button = "triangle";
             ChangeButtonColor(button);
-            _selectionMode = true;
-            _rectSelectionMode = false;
-            btnSelection_Click(sender, e);
+            _rectSelectionMode = true;
+            btnRectSelection_Click(sender, e);
         }
 
         /// <summary>
@@ -394,13 +416,11 @@ namespace PaintMV.GUI
                 {
                     menuSave_Click(sender, e);
                     OpenDialogForm();
-                }
-                else if (result == DialogResult.No)
+                } else if (result == DialogResult.No)
                 {
                     OpenDialogForm();
                 }
-            }
-            else
+            } else
             {
                 OpenDialogForm();
             }
@@ -411,20 +431,17 @@ namespace PaintMV.GUI
         /// </summary>
         private void OpenDialogForm()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = @"Paint Files | *.pnt";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            var openFileDialog = new OpenFileDialog {Filter = @"Paint Files | *.pnt"};
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+            var newDoc = new ShapesList();
+            Doc = newDoc;
+            using (Stream file = openFileDialog.OpenFile())
             {
-                ShapesList newDoc = new ShapesList();
-                Doc = newDoc;
-                using (Stream file = openFileDialog.OpenFile())
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    Doc = (ShapesList) formatter.Deserialize(file);
-                }
-                _loadedFile = true;
-                PnlGraphic.Invalidate();
+                BinaryFormatter formatter = new BinaryFormatter();
+                Doc = (ShapesList) formatter.Deserialize(file);
             }
+            _loadedFile = true;
+            PnlGraphic.Invalidate();
         }
 
         /// <summary>
@@ -439,17 +456,17 @@ namespace PaintMV.GUI
                 const string message = "Do you want to save changes?";
                 const string caption = "Save changes";
                 var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
+                switch (result)
                 {
-                    menuSave_Click(sender, e);
-                    NewBlankPage();
+                    case DialogResult.Yes:
+                        menuSave_Click(sender, e);
+                        NewBlankPage();
+                        break;
+                    case DialogResult.No:
+                        NewBlankPage();
+                        break;
                 }
-                else if (result == DialogResult.No)
-                {
-                    NewBlankPage();
-                }
-            }
-            else
+            } else
             {
                 NewBlankPage();
             }
@@ -462,15 +479,13 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void menuSave_Click(object sender, EventArgs e)
         {
-            UnselectAllFigures();
+            UnselectShapes.UnselectAllShapes();
             SaveFileDialog saveFileDialog = new SaveFileDialog {Filter = @"Paint Files | *.pnt"};
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
+            using (Stream file = saveFileDialog.OpenFile())
             {
-                using (Stream file = saveFileDialog.OpenFile())
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(file, Doc);
-                }
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(file, Doc);
             }
         }
 
@@ -481,17 +496,15 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void menuSaveLike_Click(object sender, EventArgs e)
         {
-            UnselectAllFigures();
+            UnselectShapes.UnselectAllShapes();
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = @"Paint Files (*.JPG)|*.JPG|Image Files(*.GIF)|*.GIF|Image Files(*.PNG)|*.PNG|All files (*.*)|*.*";
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog() != DialogResult.OK) return;
+            using (Bitmap bitmap = new Bitmap(PnlGraphic.ClientSize.Width,
+                PnlGraphic.ClientSize.Height))
             {
-                using (Bitmap bitmap = new Bitmap(PnlGraphic.ClientSize.Width,
-                                  PnlGraphic.ClientSize.Height))
-                {
-                    PnlGraphic.DrawToBitmap(bitmap, PnlGraphic.ClientRectangle);
-                    bitmap.Save(saveFileDialog.FileName, ImageFormat.Jpeg);
-                }
+                PnlGraphic.DrawToBitmap(bitmap, PnlGraphic.ClientRectangle);
+                bitmap.Save(saveFileDialog.FileName, ImageFormat.Jpeg);
             }
         }
 
@@ -506,7 +519,7 @@ namespace PaintMV.GUI
             PnlGraphic.Size = new Size(PanelWidth, PanelHeight);
             ShapesList newDoc = new ShapesList();
             Doc = newDoc;
-            UnselectAllFigures();
+            UnselectShapes.UnselectAllShapes();
             IndexOfSelectedShape = null;
             _selectionMode = false;
             _rectSelectionMode = false;
@@ -519,64 +532,44 @@ namespace PaintMV.GUI
         /// <param name="button"></param>
         private void ChangeButtonColor(string button)
         {
-            if (button == "rectangle")
+            switch (button)
             {
-                btnRectangle.BackColor = Color.White;
-                btnEllipse.BackColor = Color.Transparent;
-                btnLine.BackColor = Color.Transparent;
-                btnTriangle.BackColor = Color.Transparent;
+                case "rectangle":
+                    btnRectangle.BackColor = Color.White;
+                    btnEllipse.BackColor = Color.Transparent;
+                    btnLine.BackColor = Color.Transparent;
+                    btnTriangle.BackColor = Color.Transparent;
+                    btnPolygon.BackColor = Color.Transparent;
+                    break;
+                case "line":
+                    btnEllipse.BackColor = Color.Transparent;
+                    btnRectangle.BackColor = Color.Transparent;
+                    btnLine.BackColor = Color.White;
+                    btnTriangle.BackColor = Color.Transparent;
+                    btnPolygon.BackColor = Color.Transparent;
+                    break;
+                case "triangle":
+                    btnEllipse.BackColor = Color.Transparent;
+                    btnRectangle.BackColor = Color.Transparent;
+                    btnLine.BackColor = Color.Transparent;
+                    btnTriangle.BackColor = Color.White;
+                    btnPolygon.BackColor = Color.Transparent;
+                    break;
+                case "ellipse":
+                    btnEllipse.BackColor = Color.White;
+                    btnRectangle.BackColor = Color.Transparent;
+                    btnLine.BackColor = Color.Transparent;
+                    btnTriangle.BackColor = Color.Transparent;
+                    btnPolygon.BackColor = Color.Transparent;
+                    break;
+                case "polygon":
+                    btnPolygon.BackColor = Color.White;
+                    btnEllipse.BackColor = Color.Transparent;
+                    btnRectangle.BackColor = Color.Transparent;
+                    btnLine.BackColor = Color.Transparent;
+                    btnTriangle.BackColor = Color.Transparent;
+                    break;
             }
-            else if (button == "line")
-            {
-                btnEllipse.BackColor = Color.Transparent;
-                btnRectangle.BackColor = Color.Transparent;
-                btnLine.BackColor = Color.White;
-                btnTriangle.BackColor = Color.Transparent;
-            }
-            else if (button == "triangle")
-            {
-                btnEllipse.BackColor = Color.Transparent;
-                btnRectangle.BackColor = Color.Transparent;
-                btnLine.BackColor = Color.Transparent;
-                btnTriangle.BackColor = Color.White;
-            }
-            else if (button == "ellipse")
-            {
-                btnEllipse.BackColor = Color.White;
-                btnRectangle.BackColor = Color.Transparent;
-                btnLine.BackColor = Color.Transparent;
-                btnTriangle.BackColor = Color.Transparent;
-            }
-        }
-
-        /// <summary>
-        /// Point selection button
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnSelection_Click(object sender, EventArgs e)
-        {
-            RefreshPoints();
-            UnselectAllFigures();
-            btnRectSelection.Text = @"OFF";
-            groupBox6.Text = @"Rect Selection";
-            _rectSelectionMode = false;
-            
-            btnMove.Text = @"OFF";
-            _moveSelectionMode = false;
-            if (_selectionMode)
-            {
-                _selectionMode = false;
-                btnSelection.Text = @"OFF";
-                groupBox2.Text = @"Point Selection";
-            }
-            else
-            {
-                _selectionMode = true;
-                btnSelection.Text = @"ON";
-                groupBox2.Text = @"Point Selection ON";
-            }
-            PnlGraphic.Invalidate();
         }
 
         /// <summary>
@@ -587,19 +580,16 @@ namespace PaintMV.GUI
         private void btnRectSelection_Click(object sender, EventArgs e)
         {
             RefreshPoints();
-            UnselectAllFigures();
-            btnSelection.Text = @"OFF";
-            groupBox2.Text = @"Point Selection";
+            UnselectShapes.UnselectAllShapes();
             _selectionMode = false;
             btnMove.Text = @"OFF";
             _moveSelectionMode = false;
             if (_rectSelectionMode)
             {
-                btnRectangle_Click(sender, e);
+                _rectSelectionMode = false;
                 btnRectSelection.Text = @"OFF";
                 groupBox6.Text = @"Rect Selection";
-            }
-            else
+            } else
             {
                 ShapesEnum = ShapesEnum.SelectRectangle;
                 _rectSelectionMode = true;
@@ -616,33 +606,25 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void btnMoveResize_Click(object sender, EventArgs e)
         {
-            RefreshPoints();
-            groupBox2.Text = @"Point Selection";
-            groupBox6.Text = @"Rect Selection";
-            _rectSelectionMode = false;
-            if (_moveSelectionMode)
+            if (IndexOfSelectedShape != null && IndexOfSelectedShape.Value > -1 && Doc.AllShapes.Count > -1)
             {
-                btnRectangle_Click(sender, e);
-                btnMove.Text = @"OFF";
+                RefreshPoints();
+                groupBox6.Text = @"Rect Selection";
+                _rectSelectionMode = false;
+                if (_moveSelectionMode)
+                {
+                    btnRectangle_Click(sender, e);
+                    btnMove.Text = @"OFF";
+                }
+                else
+                {
+                    btnRectSelection.Text = @"OFF";
+                    _moveSelectionMode = true;
+                    _selectionMode = true;
+                    btnMove.Text = @"ON";
+                }
+                PnlGraphic.Invalidate();
             }
-            else
-            {
-                btnSelection.Text = @"OFF";
-                btnRectSelection.Text = @"OFF";
-                _moveSelectionMode = true;
-                _selectionMode = true;
-                btnMove.Text = @"ON";
-            }
-            PnlGraphic.Invalidate();
-        }
-
-        /// <summary>
-        /// Enable/disable undo redo buttons
-        /// </summary>
-        private void UpdateUndoRedo()
-        {
-            menuUndo.Enabled = (Doc.AllShapes.Count > 0);
-            menuRedo.Enabled = (_redo.AllShapes.Count > 0);
         }
 
         /// <summary>
@@ -652,13 +634,16 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void menuUndo_Click(object sender, EventArgs e)
         {
-            if (Doc.AllShapes.Count < 1) return;
-            var obj = Doc.AllShapes[Doc.AllShapes.Count - 1];
-            obj.SetShapeIsSelected(false);
-            Doc.AllShapes.Remove(obj);
-            _redo.AllShapes.Add(obj);
+            if (_commands.Count > 0)
+            {
+                var item = _commands[_commands.Count - 1];
+                _redoCommands.Add(item);
+                item.Undo();
+                _commands.Remove(_commands[_commands.Count - 1]);
+            }
             btnEllipse_Click(sender, e);
-            UnselectAllFigures();
+            UndoListAddElements();
+            RedoListAddElements();
             PnlGraphic.Invalidate();
         }
 
@@ -669,33 +654,16 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void menuRedo_Click(object sender, EventArgs e)
         {
-            if (_redo.AllShapes.Count < 1) return;
-            var obj = _redo.AllShapes[_redo.AllShapes.Count - 1];
-            obj.SetShapeIsSelected(false);
-            _redo.AllShapes.Remove(obj);
-            Doc.AllShapes.Add(obj);
-            btnEllipse_Click(sender, e);
-            UnselectAllFigures();
-            PnlGraphic.Invalidate();
-        }
-
-        /// <summary>
-        /// Update selected shapes method
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
+            if (_redoCommands.Count > 0)
             {
-                if (IndexOfSelectedShape != null && Doc.AllShapes[i].GetShapeIsSelected() && IndexOfSelectedShape != null)
-                {
-                    LineStyleChose.ChoseLineStyle();
-                    Doc.AllShapes[i].ChosenColor = colorDialog1.Color;
-                    Doc.AllShapes[i].ShapeSize = (int) numSize.Value;
-                    Doc.AllShapes[i].PenStyle = PenStyle;
-                }
+                var item = _redoCommands[_redoCommands.Count - 1];
+                _commands.Add(item);
+                item.Redo();
+                _redoCommands.Remove(_redoCommands[_redoCommands.Count - 1]);
             }
+            btnEllipse_Click(sender, e);
+            RedoListAddElements();
+            UndoListAddElements();
             PnlGraphic.Invalidate();
         }
 
@@ -706,19 +674,11 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void menuCopy_Click(object sender, EventArgs e)
         {
-            for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
-            {
-                if (IndexOfSelectedShape != null && Doc.AllShapes[i].GetShapeIsSelected() && IndexOfSelectedShape != null)
-                {
-                    Doc.AllShapes[i].SetShapeIsSelected(false);
-                    Shape copiedFigure = Doc.AllShapes[i].Clone();
-                    copiedFigure.SetShapeIsSelected(false);
-                    Doc.AllShapes.Add(copiedFigure);
-                }
-            }
-            _selectionMode = false;
-            _rectSelectionMode = false;
-            btnSelection_Click(sender, e);
+            Copy.Execute(null,null,null);
+            _commands.Add(Copy);
+            btnMoveResize_Click(sender, e);
+            UndoListAddElements();
+            RedoListAddElements();
             PnlGraphic.Invalidate();
         }
 
@@ -729,21 +689,12 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void menuCut_Click(object sender, EventArgs e)
         {
-            for (int i = Doc.AllShapes.Count - 1; i >= 0; i--)
-            {
-                if (IndexOfSelectedShape != null && Doc.AllShapes[i].GetShapeIsSelected() && IndexOfSelectedShape != null)
-                {
-                    var obj = Doc.AllShapes[Doc.AllShapes.Count - 1];
-                    obj.SetShapeIsSelected(false);
-                    Doc.AllShapes[i].SetShapeIsSelected(false);
-                    Doc.AllShapes.Remove(Doc.AllShapes[i]);
-                    _redo.AllShapes.Add(obj);
-                }
-            }
-            _selectionMode = true;
-            _rectSelectionMode = false;
-            btnSelection_Click(sender, e);
-            UnselectAllFigures();
+            Cut.Execute(null, null, null);
+            _commands.Add(Cut);
+            btnEllipse_Click(sender, e);
+            UnselectShapes.UnselectAllShapes();
+            UndoListAddElements();
+            RedoListAddElements();
             PnlGraphic.Invalidate();
         }
 
@@ -754,18 +705,15 @@ namespace PaintMV.GUI
         /// <param name="e"></param>
         private void FrmPaint_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _selectionMode = false;
             _rectSelectionMode = false;
-            UnselectAllFigures();
-            if (Doc.AllShapes.Count > 0)
+            UnselectShapes.UnselectAllShapes();
+            if (Doc.AllShapes.Count <= 0) return;
+            const string message = "Do you want to save changes?";
+            const string caption = "Save changes";
+            var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
             {
-                const string message = "Do you want to save changes?";
-                const string caption = "Save changes";
-                var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                {
-                    menuSave_Click(sender, e);
-                }
+                menuSave_Click(sender, e);
             }
         }
 
@@ -777,14 +725,26 @@ namespace PaintMV.GUI
         private void btnDefaultColor_Click(object sender, EventArgs e)
         {
             DialogResult d = colorDialog1.ShowDialog();
-            if (d == DialogResult.OK)
-            {
-                ChosenColor = colorDialog1.Color;
-                btnDefaultColor.BackColor = ChosenColor;
-                ColorChange.ChangeColor();
-            }
+            if (d != DialogResult.OK) return;
+            ChosenColor = colorDialog1.Color;
+            btnDefaultColor.BackColor = ChosenColor;
+            UpdateSelectedShapes();
         }
-        
+
+        /// <summary>
+        /// Set fill button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnFillShape_Click(object sender, EventArgs e)
+        {
+            DialogResult d = colorDialog2.ShowDialog();
+            if (d != DialogResult.OK) return;
+            FillColor = colorDialog2.Color;
+            btnFillShape.BackColor = FillColor;
+            UpdateSelectedShapes();
+        }
+
         /// <summary>
         /// Clear button
         /// </summary>
@@ -794,10 +754,133 @@ namespace PaintMV.GUI
         {
             ShapesList newDoc = new ShapesList();
             Doc = newDoc;
-            UnselectAllFigures();
+            UnselectShapes.UnselectAllShapes();
             IndexOfSelectedShape = null;
             btnEllipse_Click(sender, e);
             PnlGraphic.Invalidate();
+            _commands.Clear();
+            _redoCommands.Clear();
+        }
+
+        /// <summary>
+        /// Undo commands history
+        /// </summary>
+        private void UndoListAddElements()
+        {
+            listUndo.Items.Clear();
+            _commandsHistory.Clear();
+            for (var i = _commands.Count - 1; i >= 0; i--)
+            {
+                var operation = _commands[i].Operation();
+                if (operation != null)
+                {
+                    listUndo.Items.Add(operation);
+                    _commandsHistory.Add(operation);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Redo commands history
+        /// </summary>
+        private void RedoListAddElements()
+        {
+            listRedo.Items.Clear();
+            _commandsRedoHistory.Clear();
+            for (var i = _redoCommands.Count - 1; i >= 0; i--)
+            {
+                var operation = _redoCommands[i].Operation();
+                if (operation != null)
+                {
+                    listRedo.Items.Add(operation);
+                    _commandsRedoHistory.Add(operation);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the index of the selected command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listUndo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listUndo.SelectedIndex > -1)
+            {
+                var commandIndex = listUndo.SelectedIndex;
+                do
+                {
+                    menuUndo_Click(sender, e);
+                    commandIndex--;
+                } while (commandIndex > -1);
+            }
+        }
+
+        /// <summary>
+        /// Get the index of the selected command
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listRedo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listRedo.SelectedIndex > -1)
+            {
+                var commandIndex = listRedo.SelectedIndex;
+                do
+                {
+                    menuRedo_Click(sender, e);
+                    commandIndex--;
+                } while (commandIndex > -1);
+            }
+        }
+        
+        /// <summary>
+        /// Update figures when radio button clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void radioSolid_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSelectedShapes();
+        }
+
+        /// <summary>
+        /// Update figures when radio button clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void radioDash_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSelectedShapes();
+        }
+
+        /// <summary>
+        /// Update figures when radio button clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void radioDot_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSelectedShapes();
+        }
+
+        /// <summary>
+        /// Update figures when numeric button clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void numSize_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateSelectedShapes();
+        }
+
+        private void btnPolygon_Click(object sender, EventArgs e)
+        {
+            ShapesEnum = ShapesEnum.Polygon;
+            string button = "polygon";
+            ChangeButtonColor(button);
+            _rectSelectionMode = true;
+            btnRectSelection_Click(sender, e);
         }
         #endregion
     }

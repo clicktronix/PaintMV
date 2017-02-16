@@ -1,50 +1,53 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace PaintMV.Shapes
 {
-    /// <summary>
-    /// Class creates an rectangle shape
-    /// </summary>
     [Serializable]
-    internal class Rectangle : Shape
+    internal class Polygon : Shape
     {
         /// <summary>
         /// class constructor
         /// </summary>
-        /// <param name="startOrigin"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
+        /// <param name="pointsArray"></param>
         /// <param name="chosenColor"></param>
-        /// <param name="fillColor"></param>
         /// <param name="shapeSize"></param>
-        /// <param name="fillShape"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
-        public Rectangle(Point startOrigin, int width, int height, Color chosenColor, Color fillColor, int shapeSize, 
-            DashStyle penStyle, bool isSelected)
+        /// <param name="isLine"></param>
+        /// <param name="endOfPolygon"></param>
+        public Polygon(List<Point> pointsArray, Color chosenColor, int shapeSize, DashStyle penStyle, 
+            bool isSelected, bool isLine, bool endOfPolygon)
         {
-            StartOrigin = startOrigin;
-            Width = width;
-            Height = height;
+            PointsArray = pointsArray.ToArray();
             ChosenColor = chosenColor;
-            FillColor = fillColor;
             ShapeSize = shapeSize;
             PenStyle = penStyle;
             IsSelected = isSelected;
+            IsLine = isLine;
+            EndOfPolygon = endOfPolygon;
         }
 
         /// <summary>
-        /// Drawing a rectangle method
+        /// Drawing a line method
         /// </summary>
         /// <param name="g"></param>
         public override void Draw(Graphics g)
         {
             Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
             SolidBrush tempBrush = new SolidBrush(FillColor);
-            g.FillRectangle(tempBrush, StartOrigin.X, StartOrigin.Y, Width, Height);
-            g.DrawRectangle(pen, StartOrigin.X, StartOrigin.Y, Width, Height);
+            if (PointsArray.Length > 1)
+            {
+                g.DrawLines(pen, PointsArray);
+                if (EndOfPolygon)
+                {
+                    g.FillPolygon(tempBrush, PointsArray);
+                    g.DrawPolygon(pen, PointsArray);
+                }
+            }
         }
 
         /// <summary>
@@ -54,8 +57,11 @@ namespace PaintMV.Shapes
         /// <returns></returns>
         public override bool ContainsPoint(Point p)
         {
-            if (p.X > StartOrigin.X - 5 && p.X < StartOrigin.X + Width + 10 && 
-                p.Y > StartOrigin.Y - 5 && p.Y < StartOrigin.Y + Height + 10)
+            GraphicsPath myPath = new GraphicsPath();
+            myPath.AddLine(StartOrigin, EndOrigin);
+            bool pointWithinLine = myPath.IsOutlineVisible(p, new Pen(ChosenColor, ShapeSize));
+
+            if (pointWithinLine)
             {
                 return true;
             }
@@ -67,7 +73,6 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
-        /// <param name="p"></param>
         /// <returns></returns>
         public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
@@ -109,6 +114,7 @@ namespace PaintMV.Shapes
                 IsSelected = true;
                 return true;
             }
+
             return false;
         }
 
@@ -136,7 +142,7 @@ namespace PaintMV.Shapes
         /// <returns></returns>
         public override Shape Clone()
         {
-            return new Rectangle(StartOrigin, Width, Height, ChosenColor, FillColor, ShapeSize, PenStyle, IsSelected);
+            return new Polygon(PointsArray.ToList(), ChosenColor, ShapeSize, PenStyle, IsSelected, IsLine, EndOfPolygon);
         }
     }
 }

@@ -9,7 +9,9 @@ namespace PaintMV.Controls
     /// </summary>
     public class LineSelection
     {
-        private readonly MainForm _mainForm;
+        public MainForm MainForm { get; }
+        //public LinesSupportPoints LinesSupportPoints { get; }
+        //public Enumerations.LinesPositions NodeSelected { set; get; } = Enumerations.LinesPositions.None;
 
         /// <summary>
         /// class constructor
@@ -17,7 +19,8 @@ namespace PaintMV.Controls
         /// <param name="mainForm"></param>
         public LineSelection(MainForm mainForm)
         {
-            _mainForm = mainForm;
+            MainForm = mainForm;
+            //LinesSupportPoints = new LinesSupportPoints(this);
         }
 
         /// <summary>
@@ -27,24 +30,13 @@ namespace PaintMV.Controls
         /// <param name="g"></param>
         public void MakeSelectionOfLine(Shape shape, Graphics g)
         {
-            int xValue = shape.StartOrigin.X;
-            int yValue = shape.StartOrigin.Y;
-
             for (int i = 0; i < 2; i++)
             {
-                if (i == 0)
-                {
-                    g.DrawEllipse(new Pen(Color.Blue), xValue - _mainForm.SizeNodeRect / 2, yValue - _mainForm.SizeNodeRect / 2, _mainForm.SizeNodeRect, _mainForm.SizeNodeRect);
-                }
-                else
-                {
-                    g.DrawEllipse(new Pen(Color.Blue), shape.EndOrigin.X - 3, shape.EndOrigin.Y - 3, _mainForm.SizeNodeRect, _mainForm.SizeNodeRect);
-                }
+                //g.DrawRectangle(new Pen(Color.Blue), LinesSupportPoints.GetRect(i, shape));
             }
-            Pen tempPen = new Pen(Color.Blue);
-            tempPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            Pen tempPen = new Pen(Color.Blue) {DashStyle = System.Drawing.Drawing2D.DashStyle.Dash};
             g.DrawLine(tempPen, shape.StartOrigin.X, shape.StartOrigin.Y, shape.EndOrigin.X, shape.EndOrigin.Y);
-            _mainForm.PnlGraphic.Invalidate();
+            MainForm.PnlGraphic.Invalidate();
         }
     }
 }

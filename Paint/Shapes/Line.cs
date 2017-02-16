@@ -11,7 +11,7 @@ namespace PaintMV.Shapes
     internal class Line : Shape
     {
         /// <summary>
-        /// class constructor
+        /// Class constructor
         /// </summary>
         /// <param name="startOrigin"></param>
         /// <param name="endOrigin"></param>
@@ -22,18 +22,18 @@ namespace PaintMV.Shapes
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
         /// <param name="isLine"></param>
-        public Line(Point startOrigin, Point endOrigin, int width, int height, Color chosenColor, 
-            int shapeSize, DashStyle penStyle, bool isSelected, bool isLine)
+        public Line(Point startOrigin, Point endOrigin, Color chosenColor, int shapeSize, DashStyle penStyle, 
+            bool isSelected, bool isLine, int width, int height)
         {
             StartOrigin = startOrigin;
             EndOrigin = endOrigin;
-            Width = width;
-            Height = height;
             ChosenColor = chosenColor;
             ShapeSize = shapeSize;
             PenStyle = penStyle;
             IsSelected = isSelected;
             IsLine = isLine;
+            Width = width;
+            Height = height;
         }
 
         /// <summary>
@@ -42,8 +42,7 @@ namespace PaintMV.Shapes
         /// <param name="g"></param>
         public override void Draw(Graphics g)
         {
-            Pen pen = new Pen(ChosenColor, ShapeSize);
-            pen.DashStyle = PenStyle;
+            Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
             g.DrawLine(pen, StartOrigin, EndOrigin);
         }
 
@@ -70,7 +69,6 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
-        /// <param name="p"></param>
         /// <returns></returns>
         public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
@@ -140,7 +138,7 @@ namespace PaintMV.Shapes
         /// <returns></returns>
         public override Shape Clone()
         {
-            return new Line(StartOrigin, EndOrigin, Width, Height, ChosenColor, ShapeSize, PenStyle, IsSelected, IsLine);
+            return new Line(StartOrigin, EndOrigin, ChosenColor, ShapeSize, PenStyle, IsSelected, IsLine, Width, Height);
         }
     }
 }

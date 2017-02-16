@@ -13,6 +13,8 @@
         RightMiddle,
         RightBottom,
         BottomMiddle,
+        LeftLinePoint,
+        RightLinePoint,
         None
     }
 }

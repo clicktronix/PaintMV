@@ -5,9 +5,9 @@ namespace PaintMV.GUI
     /// <summary>
     /// Drawing panel class
     /// </summary>
-    sealed class MyPanel : Panel
+    sealed class GraphicPanel : Panel
     {
-        public MyPanel()
+        public GraphicPanel()
         {
             DoubleBuffered = true;
         }

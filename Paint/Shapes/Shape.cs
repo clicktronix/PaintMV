@@ -12,13 +12,15 @@ namespace PaintMV.Shapes
     {
         public Point StartOrigin { get; set; }
         public Point EndOrigin { get; set; }
+        public Point[] PointsArray { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public int ShapeSize { get; set; }
         public Color ChosenColor { get; set; }
-        public bool FilledShape { get; set; }
+        public Color FillColor { get; set; }
         public bool IsSelected { get; set; } = false;
         public bool IsLine { get; set; } = false;
+        public bool EndOfPolygon { get; set; }
         public DashStyle PenStyle { get; set; }
 
         public abstract void Draw(Graphics g);

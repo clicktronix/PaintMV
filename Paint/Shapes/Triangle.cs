@@ -21,14 +21,14 @@ namespace PaintMV.Shapes
         /// <param name="fillShape"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
-        public Triangle(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, bool fillShape, DashStyle penStyle, bool isSelected)
+        public Triangle(Point startOrigin, int width, int height, Color chosenColor, Color fillColor, int shapeSize, DashStyle penStyle, bool isSelected)
         {
             StartOrigin = startOrigin;
             Width = width;
             Height = height;
             ChosenColor = chosenColor;
+            FillColor = fillColor;
             ShapeSize = shapeSize;
-            FilledShape = fillShape;
             PenStyle = penStyle;
             IsSelected = isSelected;
         }
@@ -46,19 +46,12 @@ namespace PaintMV.Shapes
                 new Point(StartOrigin.X + Width, StartOrigin.Y + Height)
             };
 
-            Pen pen = new Pen(ChosenColor, ShapeSize);
-            pen.DashStyle = PenStyle;
-            if (FilledShape)
-            {
-                SolidBrush tempBrush = new SolidBrush(ChosenColor);
-                g.FillPolygon(tempBrush, trianglePoints);
-            }
-            else
-            {
-                g.DrawLine(pen, StartOrigin.X + Width, StartOrigin.Y + Height, StartOrigin.X + Width / 2, StartOrigin.Y);
-                g.DrawLine(pen, StartOrigin.X + Width / 2, StartOrigin.Y, StartOrigin.X, StartOrigin.Y + Height);
-                g.DrawLine(pen, StartOrigin.X, StartOrigin.Y + Height, StartOrigin.X + Width, StartOrigin.Y + Height);
-            }
+            Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
+            SolidBrush tempBrush = new SolidBrush(FillColor);
+            g.FillPolygon(tempBrush, trianglePoints);
+            g.DrawLine(pen, StartOrigin.X + Width, StartOrigin.Y + Height, StartOrigin.X + Width / 2, StartOrigin.Y);
+            g.DrawLine(pen, StartOrigin.X + Width / 2, StartOrigin.Y, StartOrigin.X, StartOrigin.Y + Height);
+            g.DrawLine(pen, StartOrigin.X, StartOrigin.Y + Height, StartOrigin.X + Width, StartOrigin.Y + Height);
         }
 
         /// <summary>
@@ -158,7 +151,7 @@ namespace PaintMV.Shapes
         /// <returns></returns>
         public override Shape Clone()
         {
-            return new Triangle(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape, PenStyle, IsSelected);
+            return new Triangle(StartOrigin, Width, Height, ChosenColor, FillColor, ShapeSize, PenStyle, IsSelected);
         }
     }
 }

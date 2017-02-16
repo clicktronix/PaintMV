@@ -10,15 +10,15 @@ namespace PaintMV.Controls
     /// </summary>
     public class ShapeSelection
     {
+
 #region Properties 
-        public Point StartOrigin { get; set; }
-        public Point EndOrigin { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
+
+        public bool NotRectSelection;
         public SupportPoints SupportPoints { get; }
         public MainForm MainForm { get; }
         public Enumerations.Positions NodeSelected { set; get; } = Enumerations.Positions.None;
-#endregion
+        
+        #endregion
 
         /// <summary>
         /// class constructor
@@ -37,14 +37,24 @@ namespace PaintMV.Controls
         /// <param name="g"></param>
         public void MakeSelectionOfShape(Shape shape, Graphics g)
         {
-            for (int i = 0; i < 8; i++)
+            if (NotRectSelection)
             {
-                g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(i, shape));
+                //g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(8, shape));
+                //g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(9, shape));
+                //Pen tempPen = new Pen(Color.Blue) { DashStyle = DashStyle.Dash };
+                //g.DrawLine(tempPen, shape.StartOrigin.X, shape.StartOrigin.Y, shape.EndOrigin.X, shape.EndOrigin.Y);
+                //MainForm.PnlGraphic.Invalidate();
             }
-
-            Pen tempPen = new Pen(Color.Blue);
-            tempPen.DashStyle = DashStyle.Dash;
-            g.DrawRectangle(tempPen, shape.StartOrigin.X - 3, shape.StartOrigin.Y - 3, shape.Width + 6, shape.Height + 6);
+            else
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(i, shape));
+                }
+                Pen tempPen = new Pen(Color.Blue);
+                tempPen.DashStyle = DashStyle.Dash;
+                g.DrawRectangle(tempPen, shape.StartOrigin.X - 3, shape.StartOrigin.Y - 3, shape.Width + 6, shape.Height + 6);
+            }
         }
     }
 }
