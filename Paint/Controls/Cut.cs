@@ -14,6 +14,7 @@ namespace PaintMV.Controls
         private readonly MainForm _mainForm;
         private readonly List<List<Shape>> _redoLists = new List<List<Shape>>();
         private readonly List<List<Shape>> _undoLists = new List<List<Shape>>();
+        private string _operationName;
 
         /// <summary>
         /// Class constructor
@@ -43,6 +44,7 @@ namespace PaintMV.Controls
             }
             _undoLists.Add(ñurrentShapes);
             _redoLists.Add(_mainForm.Doc.AllShapes);
+            _operationName = "Cut figures";
         }
 
         /// <summary>
@@ -66,7 +68,15 @@ namespace PaintMV.Controls
             _undoLists.Add(_redoLists[_redoLists.Count - 1]);
             _redoLists.Remove(_redoLists[_redoLists.Count - 1]);
             _mainForm.Doc.AllShapes = new List<Shape>(_redoLists[_redoLists.Count - 1]);
-            
+        }
+
+        /// <summary>
+        /// Name of the operation
+        /// </summary>
+        /// <returns></returns>
+        public string Operation()
+        {
+            return _operationName;
         }
     }
 }

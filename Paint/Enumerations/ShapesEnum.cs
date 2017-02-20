@@ -9,6 +9,7 @@
         Rectangle,
         Line,
         Triangle,
+        Polygon,
         SelectRectangle,
         None
     }

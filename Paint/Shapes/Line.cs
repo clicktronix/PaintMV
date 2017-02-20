@@ -11,7 +11,7 @@ namespace PaintMV.Shapes
     internal class Line : Shape
     {
         /// <summary>
-        /// class constructor
+        /// Class constructor
         /// </summary>
         /// <param name="startOrigin"></param>
         /// <param name="endOrigin"></param>
@@ -22,18 +22,18 @@ namespace PaintMV.Shapes
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
         /// <param name="isLine"></param>
-        public Line(Point startOrigin, Point endOrigin, int width, int height, Color chosenColor, 
-            int shapeSize, DashStyle penStyle, bool isSelected, bool isLine)
+        public Line(Point startOrigin, Point endOrigin, Color chosenColor, int shapeSize, DashStyle penStyle, 
+            bool isSelected, bool isLine, int width, int height)
         {
             StartOrigin = startOrigin;
             EndOrigin = endOrigin;
-            Width = width;
-            Height = height;
             ChosenColor = chosenColor;
             ShapeSize = shapeSize;
             PenStyle = penStyle;
             IsSelected = isSelected;
             IsLine = isLine;
+            Width = width;
+            Height = height;
         }
 
         /// <summary>
@@ -42,8 +42,7 @@ namespace PaintMV.Shapes
         /// <param name="g"></param>
         public override void Draw(Graphics g)
         {
-            Pen pen = new Pen(ChosenColor, ShapeSize);
-            pen.DashStyle = PenStyle;
+            Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
             g.DrawLine(pen, StartOrigin, EndOrigin);
         }
 
@@ -51,7 +50,6 @@ namespace PaintMV.Shapes
         /// Method of determining the figure clicked on or not
         /// </summary>
         /// <param name="p"></param>
-        /// <returns></returns>
         public override bool ContainsPoint(Point p)
         {
             GraphicsPath myPath = new GraphicsPath();
@@ -70,11 +68,9 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
-        /// <param name="p"></param>
-        /// <returns></returns>
         public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
-            System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
+            var rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
             {
                 rect.X = startPoint.X;
@@ -106,7 +102,7 @@ namespace PaintMV.Shapes
             GraphicsPath myPath = new GraphicsPath();
             myPath.AddRectangle(rect);
 
-            bool pointWithinEllipse = myPath.IsVisible(StartOrigin.X + 15, StartOrigin.Y + 15);
+            bool pointWithinEllipse = myPath.IsVisible(StartOrigin.X, StartOrigin.Y);
             if (pointWithinEllipse)
             {
                 IsSelected = true;
@@ -140,7 +136,7 @@ namespace PaintMV.Shapes
         /// <returns></returns>
         public override Shape Clone()
         {
-            return new Line(StartOrigin, EndOrigin, Width, Height, ChosenColor, ShapeSize, PenStyle, IsSelected, IsLine);
+            return new Line(StartOrigin, EndOrigin, ChosenColor, ShapeSize, PenStyle, IsSelected, IsLine, Width, Height);
         }
     }
 }

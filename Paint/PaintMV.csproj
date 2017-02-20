@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\ICommand.cs" />
-    <Compile Include="Controls\LineSelection.cs" />
     <Compile Include="Controls\MoveResize.cs" />
     <Compile Include="Controls\ShapeSelection.cs" />
     <Compile Include="Controls\SupportPoints.cs" />
@@ -71,6 +70,7 @@
     </Compile>
     <Compile Include="Controls\UpdateShape.cs" />
     <Compile Include="Controls\UnselectShapes.cs" />
+    <Compile Include="Shapes\Polygon.cs" />
     <Compile Include="Shapes\ShapesList.cs" />
     <Compile Include="GUI\MainForm.cs">
       <SubType>Form</SubType>
@@ -114,7 +114,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

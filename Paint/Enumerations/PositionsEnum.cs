@@ -13,6 +13,9 @@
         RightMiddle,
         RightBottom,
         BottomMiddle,
+        LeftLinePoint,
+        RightLinePoint,
+        PolygonPoint,
         None
     }
 }

@@ -11,25 +11,25 @@ namespace PaintMV.Shapes
     internal class Ellipse : Shape
     {
         /// <summary>
-        /// class constructor
+        /// Create the instance of class <see cref="Ellipse"/>
         /// </summary>
         /// <param name="startOrigin"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <param name="chosenColor"></param>
+        /// <param name="fillColor"></param>
         /// <param name="shapeSize"></param>
-        /// <param name="fillShape"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
-        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, int shapeSize, 
-            bool fillShape, DashStyle penStyle, bool isSelected)
+        public Ellipse(Point startOrigin, int width, int height, Color chosenColor, Color fillColor, int shapeSize, 
+            DashStyle penStyle, bool isSelected)
         {
             StartOrigin = startOrigin;
             Width = width;
             Height = height;
             ChosenColor = chosenColor;
+            FillColor = fillColor;
             ShapeSize = shapeSize;
-            FilledShape = fillShape;
             PenStyle = penStyle;
             IsSelected = isSelected;
         }
@@ -40,17 +40,10 @@ namespace PaintMV.Shapes
         /// <param name="g"></param>
         public override void Draw(Graphics g)
         {
-            if (FilledShape)
-            {
-                SolidBrush tempBrush = new SolidBrush(ChosenColor);
-                g.FillEllipse(tempBrush, StartOrigin.X, StartOrigin.Y, Width, Height);
-            }
-            else
-            {
-                Pen pen = new Pen(ChosenColor, ShapeSize);
-                pen.DashStyle = PenStyle;
-                g.DrawEllipse(pen, StartOrigin.X, StartOrigin.Y, Width, Height);
-            }
+            Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
+            SolidBrush tempBrush = new SolidBrush(FillColor);
+            g.FillEllipse(tempBrush, StartOrigin.X, StartOrigin.Y, Width, Height);
+            g.DrawEllipse(pen, StartOrigin.X, StartOrigin.Y, Width, Height);
         }
 
         /// <summary>
@@ -144,7 +137,7 @@ namespace PaintMV.Shapes
         /// <returns></returns>
         public override Shape Clone()
         {
-            return new Ellipse(StartOrigin, Width, Height, ChosenColor, ShapeSize, FilledShape, PenStyle, IsSelected);
+            return new Ellipse(StartOrigin, Width, Height, ChosenColor, FillColor, ShapeSize, PenStyle, IsSelected);
         }
     }
 }

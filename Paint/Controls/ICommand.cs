@@ -11,5 +11,7 @@ namespace PaintMV.Controls
         void Undo();
 
         void Redo();
+
+        string Operation();
     }
 }
