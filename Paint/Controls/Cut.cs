@@ -11,18 +11,18 @@ namespace PaintMV.Controls
     /// </summary>
     public class Cut : ICommand
     {
-        private readonly MainForm _mainForm;
-        private readonly List<List<Shape>> _redoLists = new List<List<Shape>>();
-        private readonly List<List<Shape>> _undoLists = new List<List<Shape>>();
+        private readonly DrawHandlers _drawHandlers;
+        private readonly List<List<IShape>> _redoLists = new List<List<IShape>>();
+        private readonly List<List<IShape>> _undoLists = new List<List<IShape>>();
         private string _operationName;
 
         /// <summary>
-        /// Class constructor
+        /// Create the instance of class <see cref="Cut"/>
         /// </summary>
-        /// <param name="mainForm"></param>
-        public Cut(MainForm mainForm)
+        /// <param name="drawHandlers"></param>
+        public Cut(DrawHandlers drawHandlers)
         {
-            _mainForm = mainForm;
+            _drawHandlers = drawHandlers;
         }
 
         /// <summary>
@@ -31,19 +31,20 @@ namespace PaintMV.Controls
         /// <param name="g"></param>
         /// <param name="e"></param>
         /// <param name="tempShape"></param>
-        public void Execute(Graphics g, MouseEventArgs e, Shape tempShape)
+        public void Execute(Graphics g, MouseEventArgs e, IShape tempShape)
         {
-            var ñurrentShapes = new List<Shape>(_mainForm.Doc.AllShapes);
-            for (int i = _mainForm.Doc.AllShapes.Count - 1; i >= 0; i--)
+            var ñurrentShapes = new List<IShape>(_drawHandlers.ShapesList);
+            for (int i = _drawHandlers.ShapesList.Count - 1; i >= 0; i--)
             {
-                if (_mainForm.IndexOfSelectedShape != null && _mainForm.Doc.AllShapes[i].GetShapeIsSelected() && _mainForm.IndexOfSelectedShape != null)
+                if (_drawHandlers.IndexOfSelectedShape != null && _drawHandlers.ShapesList[i].GetShapeIsSelected() 
+                    && _drawHandlers.IndexOfSelectedShape != null)
                 {
-                    _mainForm.Doc.AllShapes[i].SetShapeIsSelected(false);
-                    _mainForm.Doc.AllShapes.Remove(_mainForm.Doc.AllShapes[i]);
+                    _drawHandlers.ShapesList[i].SetShapeIsSelected(false);
+                    _drawHandlers.ShapesList.Remove(_drawHandlers.ShapesList[i]);
                 }
             }
             _undoLists.Add(ñurrentShapes);
-            _redoLists.Add(_mainForm.Doc.AllShapes);
+            _redoLists.Add(_drawHandlers.ShapesList);
             _operationName = "Cut figures";
         }
 
@@ -54,7 +55,7 @@ namespace PaintMV.Controls
         {
             if (_undoLists.Count > 0)
             {
-                _mainForm.Doc.AllShapes = new List<Shape>(_undoLists[_undoLists.Count - 1]);
+                _drawHandlers.ShapesList = new List<IShape>(_undoLists[_undoLists.Count - 1]);
                 _redoLists.Add(_undoLists[_undoLists.Count - 1]);
                 _undoLists.Remove(_undoLists[_undoLists.Count - 1]);
             }
@@ -67,7 +68,7 @@ namespace PaintMV.Controls
         {
             _undoLists.Add(_redoLists[_redoLists.Count - 1]);
             _redoLists.Remove(_redoLists[_redoLists.Count - 1]);
-            _mainForm.Doc.AllShapes = new List<Shape>(_redoLists[_redoLists.Count - 1]);
+            _drawHandlers.ShapesList = new List<IShape>(_redoLists[_redoLists.Count - 1]);
         }
 
         /// <summary>

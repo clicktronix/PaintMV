@@ -29,13 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.btnEllipse = new System.Windows.Forms.Button();
-            this.btnRectangle = new System.Windows.Forms.Button();
             this.btnDefaultColor = new System.Windows.Forms.Button();
             this.numSize = new System.Windows.Forms.NumericUpDown();
             this.grpColor = new System.Windows.Forms.GroupBox();
-            this.btnTriangle = new System.Windows.Forms.Button();
-            this.btnLine = new System.Windows.Forms.Button();
             this.menuOptions = new System.Windows.Forms.MenuStrip();
             this.menuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,6 +48,10 @@
             this.openDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnPolygon = new System.Windows.Forms.Button();
+            this.btnEllipse = new System.Windows.Forms.Button();
+            this.btnLine = new System.Windows.Forms.Button();
+            this.btnTriangle = new System.Windows.Forms.Button();
+            this.btnRectangle = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btnFillShape = new System.Windows.Forms.Button();
@@ -59,16 +59,15 @@
             this.radioDot = new System.Windows.Forms.RadioButton();
             this.radioDash = new System.Windows.Forms.RadioButton();
             this.radioSolid = new System.Windows.Forms.RadioButton();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.btnRectSelection = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.btnMove = new System.Windows.Forms.Button();
-            this.colorDialog2 = new System.Windows.Forms.ColorDialog();
             this.listUndo = new System.Windows.Forms.ListBox();
             this.listRedo = new System.Windows.Forms.ListBox();
             this.labelUndoHistory = new System.Windows.Forms.Label();
             this.labelRedoHistory = new System.Windows.Forms.Label();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).BeginInit();
             this.grpColor.SuspendLayout();
             this.menuOptions.SuspendLayout();
@@ -79,30 +78,6 @@
             this.groupBox6.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnEllipse
-            // 
-            this.btnEllipse.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnEllipse.FlatAppearance.BorderSize = 0;
-            this.btnEllipse.Image = ((System.Drawing.Image)(resources.GetObject("btnEllipse.Image")));
-            this.btnEllipse.Location = new System.Drawing.Point(16, 19);
-            this.btnEllipse.Name = "btnEllipse";
-            this.btnEllipse.Size = new System.Drawing.Size(35, 35);
-            this.btnEllipse.TabIndex = 1;
-            this.btnEllipse.UseVisualStyleBackColor = true;
-            this.btnEllipse.Click += new System.EventHandler(this.btnEllipse_Click);
-            // 
-            // btnRectangle
-            // 
-            this.btnRectangle.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnRectangle.FlatAppearance.BorderSize = 0;
-            this.btnRectangle.Image = ((System.Drawing.Image)(resources.GetObject("btnRectangle.Image")));
-            this.btnRectangle.Location = new System.Drawing.Point(66, 19);
-            this.btnRectangle.Name = "btnRectangle";
-            this.btnRectangle.Size = new System.Drawing.Size(35, 35);
-            this.btnRectangle.TabIndex = 3;
-            this.btnRectangle.UseVisualStyleBackColor = true;
-            this.btnRectangle.Click += new System.EventHandler(this.btnRectangle_Click);
             // 
             // btnDefaultColor
             // 
@@ -148,30 +123,6 @@
             this.grpColor.TabIndex = 13;
             this.grpColor.TabStop = false;
             this.grpColor.Text = "Set Color";
-            // 
-            // btnTriangle
-            // 
-            this.btnTriangle.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnTriangle.FlatAppearance.BorderSize = 0;
-            this.btnTriangle.Image = ((System.Drawing.Image)(resources.GetObject("btnTriangle.Image")));
-            this.btnTriangle.Location = new System.Drawing.Point(66, 60);
-            this.btnTriangle.Name = "btnTriangle";
-            this.btnTriangle.Size = new System.Drawing.Size(35, 35);
-            this.btnTriangle.TabIndex = 11;
-            this.btnTriangle.UseVisualStyleBackColor = true;
-            this.btnTriangle.Click += new System.EventHandler(this.btnTriangle_Click);
-            // 
-            // btnLine
-            // 
-            this.btnLine.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.btnLine.FlatAppearance.BorderSize = 0;
-            this.btnLine.Image = ((System.Drawing.Image)(resources.GetObject("btnLine.Image")));
-            this.btnLine.Location = new System.Drawing.Point(16, 60);
-            this.btnLine.Name = "btnLine";
-            this.btnLine.Size = new System.Drawing.Size(35, 35);
-            this.btnLine.TabIndex = 14;
-            this.btnLine.UseVisualStyleBackColor = true;
-            this.btnLine.Click += new System.EventHandler(this.btnLine_Click);
             // 
             // menuOptions
             // 
@@ -309,6 +260,54 @@
             this.btnPolygon.UseVisualStyleBackColor = true;
             this.btnPolygon.Click += new System.EventHandler(this.btnPolygon_Click);
             // 
+            // btnEllipse
+            // 
+            this.btnEllipse.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnEllipse.FlatAppearance.BorderSize = 0;
+            this.btnEllipse.Image = ((System.Drawing.Image)(resources.GetObject("btnEllipse.Image")));
+            this.btnEllipse.Location = new System.Drawing.Point(16, 19);
+            this.btnEllipse.Name = "btnEllipse";
+            this.btnEllipse.Size = new System.Drawing.Size(35, 35);
+            this.btnEllipse.TabIndex = 1;
+            this.btnEllipse.UseVisualStyleBackColor = true;
+            this.btnEllipse.Click += new System.EventHandler(this.btnEllipse_Click);
+            // 
+            // btnLine
+            // 
+            this.btnLine.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnLine.FlatAppearance.BorderSize = 0;
+            this.btnLine.Image = ((System.Drawing.Image)(resources.GetObject("btnLine.Image")));
+            this.btnLine.Location = new System.Drawing.Point(16, 60);
+            this.btnLine.Name = "btnLine";
+            this.btnLine.Size = new System.Drawing.Size(35, 35);
+            this.btnLine.TabIndex = 14;
+            this.btnLine.UseVisualStyleBackColor = true;
+            this.btnLine.Click += new System.EventHandler(this.btnLine_Click);
+            // 
+            // btnTriangle
+            // 
+            this.btnTriangle.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnTriangle.FlatAppearance.BorderSize = 0;
+            this.btnTriangle.Image = ((System.Drawing.Image)(resources.GetObject("btnTriangle.Image")));
+            this.btnTriangle.Location = new System.Drawing.Point(66, 60);
+            this.btnTriangle.Name = "btnTriangle";
+            this.btnTriangle.Size = new System.Drawing.Size(35, 35);
+            this.btnTriangle.TabIndex = 11;
+            this.btnTriangle.UseVisualStyleBackColor = true;
+            this.btnTriangle.Click += new System.EventHandler(this.btnTriangle_Click);
+            // 
+            // btnRectangle
+            // 
+            this.btnRectangle.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.btnRectangle.FlatAppearance.BorderSize = 0;
+            this.btnRectangle.Image = ((System.Drawing.Image)(resources.GetObject("btnRectangle.Image")));
+            this.btnRectangle.Location = new System.Drawing.Point(66, 19);
+            this.btnRectangle.Name = "btnRectangle";
+            this.btnRectangle.Size = new System.Drawing.Size(35, 35);
+            this.btnRectangle.TabIndex = 3;
+            this.btnRectangle.UseVisualStyleBackColor = true;
+            this.btnRectangle.Click += new System.EventHandler(this.btnRectangle_Click);
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.numSize);
@@ -384,7 +383,6 @@
             this.radioSolid.TabStop = true;
             this.radioSolid.Text = "Solid";
             this.radioSolid.UseVisualStyleBackColor = true;
-            this.radioSolid.CheckedChanged += new System.EventHandler(this.radioSolid_CheckedChanged);
             // 
             // btnRectSelection
             // 
@@ -404,7 +402,7 @@
             this.groupBox6.Size = new System.Drawing.Size(116, 54);
             this.groupBox6.TabIndex = 25;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Rect Selection";
+            this.groupBox6.Text = "Selection";
             // 
             // groupBox8
             // 
@@ -428,6 +426,7 @@
             // 
             // listUndo
             // 
+            this.listUndo.FormatString = "N0";
             this.listUndo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.listUndo.Location = new System.Drawing.Point(4, 549);
             this.listUndo.Name = "listUndo";
@@ -437,6 +436,8 @@
             // 
             // listRedo
             // 
+            this.listRedo.FormatString = "N0";
+            this.listRedo.FormattingEnabled = true;
             this.listRedo.Location = new System.Drawing.Point(4, 679);
             this.listRedo.Name = "listRedo";
             this.listRedo.Size = new System.Drawing.Size(116, 108);
@@ -465,7 +466,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1171, 866);
+            this.ClientSize = new System.Drawing.Size(1171, 865);
             this.Controls.Add(this.labelRedoHistory);
             this.Controls.Add(this.labelUndoHistory);
             this.Controls.Add(this.listRedo);
@@ -531,18 +532,17 @@
         public System.Windows.Forms.RadioButton radioDash;
         public System.Windows.Forms.RadioButton radioSolid;
         private System.Windows.Forms.ToolStripMenuItem menuSaveLike;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button btnRectSelection;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Button btnMove;
         private System.Windows.Forms.Button btnPolygon;
         private System.Windows.Forms.Button btnFillShape;
-        private System.Windows.Forms.ColorDialog colorDialog2;
-        private System.Windows.Forms.ListBox listUndo;
-        private System.Windows.Forms.ListBox listRedo;
         private System.Windows.Forms.Label labelUndoHistory;
         private System.Windows.Forms.Label labelRedoHistory;
+        private System.Windows.Forms.ColorDialog colorDialog;
+        private System.Windows.Forms.ListBox listRedo;
+        private System.Windows.Forms.ListBox listUndo;
     }
 }
 

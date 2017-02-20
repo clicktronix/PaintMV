@@ -7,15 +7,15 @@ namespace PaintMV.Controls
     /// </summary>
     public class UnselectShapes
     {
-        private readonly MainForm _mainForm;
+        private readonly DrawHandlers _drawHandlers;
 
         /// <summary>
         /// Class constructor
         /// </summary>
-        /// <param name="mainForm"></param>
-        public UnselectShapes(MainForm mainForm)
+        /// <param name="drawHandlers"></param>
+        public UnselectShapes(DrawHandlers drawHandlers)
         {
-            _mainForm = mainForm;
+            _drawHandlers = drawHandlers;
         }
 
         /// <summary>
@@ -23,9 +23,9 @@ namespace PaintMV.Controls
         /// </summary>
         public void UnselectAllShapes()
         {
-            for (int i = _mainForm.Doc.AllShapes.Count - 1; i >= 0; i--)
+            for (int i = _drawHandlers.ShapesList.Count - 1; i >= 0; i--)
             {
-                _mainForm.Doc.AllShapes[i].SetShapeIsSelected(false);
+                _drawHandlers.ShapesList[i].SetShapeIsSelected(false);
             }
         }
     }

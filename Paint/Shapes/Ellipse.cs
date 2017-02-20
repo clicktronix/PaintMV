@@ -8,10 +8,22 @@ namespace PaintMV.Shapes
     /// Class creates an ellipse shape
     /// </summary>
     [Serializable]
-    internal class Ellipse : Shape
+    internal class Ellipse : IShape
     {
+        public Point StartOrigin { get; set; }
+        public Point EndOrigin { get; set; }
+        public Point[] PointsArray { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int ShapeSize { get; set; }
+        public Color ChosenColor { get; set; }
+        public Color FillColor { get; set; }
+        public bool IsSelected { get; set; }
+        public string ShapeName { get; set; }
+        public DashStyle PenStyle { get; set; }
+
         /// <summary>
-        /// class constructor
+        /// Create the instance of class <see cref="Ellipse"/>
         /// </summary>
         /// <param name="startOrigin"></param>
         /// <param name="width"></param>
@@ -38,7 +50,7 @@ namespace PaintMV.Shapes
         /// Drawing an ellipse method
         /// </summary>
         /// <param name="g"></param>
-        public override void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
             Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
             SolidBrush tempBrush = new SolidBrush(FillColor);
@@ -51,7 +63,7 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public override bool ContainsPoint(Point p)
+        public bool ContainsPoint(Point p)
         {
             GraphicsPath myPath = new GraphicsPath();
             myPath.AddEllipse(StartOrigin.X - 6, StartOrigin.Y - 6, Width + 15, Height + 15);
@@ -70,8 +82,8 @@ namespace PaintMV.Shapes
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
         /// <returns></returns>
-        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
-        {
+        public bool ContainsSelectedFigure(Point startPoint, Point endPoint)
+        { 
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
             {
@@ -117,7 +129,7 @@ namespace PaintMV.Shapes
         /// Set flag IsSelected 
         /// </summary>
         /// <param name="isSelected"></param>
-        public override void SetShapeIsSelected(bool isSelected)
+        public void SetShapeIsSelected(bool isSelected)
         {
             IsSelected = isSelected;
         }
@@ -126,7 +138,7 @@ namespace PaintMV.Shapes
         /// Get flag IsSelected
         /// </summary>
         /// <returns></returns>
-        public override bool GetShapeIsSelected()
+        public bool GetShapeIsSelected()
         {
             return IsSelected;
         }
@@ -135,7 +147,7 @@ namespace PaintMV.Shapes
         /// Copying the shape method
         /// </summary>
         /// <returns></returns>
-        public override Shape Clone()
+        public IShape Clone()
         {
             return new Ellipse(StartOrigin, Width, Height, ChosenColor, FillColor, ShapeSize, PenStyle, IsSelected);
         }

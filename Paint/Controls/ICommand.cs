@@ -4,9 +4,12 @@ using PaintMV.Shapes;
 
 namespace PaintMV.Controls
 {
+    /// <summary>
+    /// Commands interface
+    /// </summary>
     public interface ICommand
     {
-        void Execute(Graphics g, MouseEventArgs e, Shape tempShape);
+        void Execute(Graphics g, MouseEventArgs e, IShape tempShape);
 
         void Undo();
 

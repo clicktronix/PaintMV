@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PaintMV.Controls.Controls.Properties {
+namespace PaintMV.Properties {
     using System;
     
     

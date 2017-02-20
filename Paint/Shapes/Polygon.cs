@@ -1,48 +1,60 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
 
 namespace PaintMV.Shapes
 {
     [Serializable]
-    internal class Polygon : Shape
+    internal class Polygon : IShape
     {
+        public bool DrawPolygon { get; set; }
+        public Point StartOrigin { get; set; }
+        public Point EndOrigin { get; set; }
+        public Point[] PointsArray { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int ShapeSize { get; set; }
+        public Color ChosenColor { get; set; }
+        public Color FillColor { get; set; }
+        public bool IsSelected { get; set; }
+        public string ShapeName { get; set; }
+        public DashStyle PenStyle { get; set; }
+
         /// <summary>
-        /// class constructor
+        /// Create the instance of class <see cref="Polygon"/>
         /// </summary>
         /// <param name="pointsArray"></param>
         /// <param name="chosenColor"></param>
+        /// <param name="fillColor"></param>
         /// <param name="shapeSize"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
-        /// <param name="isLine"></param>
-        /// <param name="endOfPolygon"></param>
-        public Polygon(List<Point> pointsArray, Color chosenColor, int shapeSize, DashStyle penStyle, 
-            bool isSelected, bool isLine, bool endOfPolygon)
+        /// <param name="drawPolygon"></param>
+        public Polygon(Point[] pointsArray, Color chosenColor, Color fillColor, int shapeSize, DashStyle penStyle, 
+            bool isSelected, bool drawPolygon)
         {
-            PointsArray = pointsArray.ToArray();
+            PointsArray = pointsArray;
             ChosenColor = chosenColor;
+            FillColor = fillColor;
             ShapeSize = shapeSize;
             PenStyle = penStyle;
             IsSelected = isSelected;
-            IsLine = isLine;
-            EndOfPolygon = endOfPolygon;
+            DrawPolygon = drawPolygon;
+            ShapeName = "Polygon";
         }
 
         /// <summary>
         /// Drawing a line method
         /// </summary>
         /// <param name="g"></param>
-        public override void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
             Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
             SolidBrush tempBrush = new SolidBrush(FillColor);
             if (PointsArray.Length > 1)
             {
                 g.DrawLines(pen, PointsArray);
-                if (EndOfPolygon)
+                if (DrawPolygon)
                 {
                     g.FillPolygon(tempBrush, PointsArray);
                     g.DrawPolygon(pen, PointsArray);
@@ -55,13 +67,13 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public override bool ContainsPoint(Point p)
+        public bool ContainsPoint(Point p)
         {
             GraphicsPath myPath = new GraphicsPath();
-            myPath.AddLine(StartOrigin, EndOrigin);
-            bool pointWithinLine = myPath.IsOutlineVisible(p, new Pen(ChosenColor, ShapeSize));
+            myPath.AddLines(PointsArray);
+            bool pointWithinPolygon = myPath.IsVisible(p);
 
-            if (pointWithinLine)
+            if (pointWithinPolygon)
             {
                 return true;
             }
@@ -74,7 +86,7 @@ namespace PaintMV.Shapes
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
         /// <returns></returns>
-        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
+        public bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
@@ -108,8 +120,12 @@ namespace PaintMV.Shapes
             GraphicsPath myPath = new GraphicsPath();
             myPath.AddRectangle(rect);
 
-            bool pointWithinEllipse = myPath.IsVisible(StartOrigin.X + 15, StartOrigin.Y + 15);
-            if (pointWithinEllipse)
+            bool pointWithinPolygon = false;
+            for (var i = PointsArray.Length - 1; i > 0; i--)
+            {
+                pointWithinPolygon = myPath.IsVisible(PointsArray[i]);
+            }
+            if (pointWithinPolygon)
             {
                 IsSelected = true;
                 return true;
@@ -122,7 +138,7 @@ namespace PaintMV.Shapes
         /// Set flag IsSelected 
         /// </summary>
         /// <param name="isSelected"></param>
-        public override void SetShapeIsSelected(bool isSelected)
+        public void SetShapeIsSelected(bool isSelected)
         {
             IsSelected = isSelected;
         }
@@ -131,7 +147,7 @@ namespace PaintMV.Shapes
         /// Get flag IsSelected
         /// </summary>
         /// <returns></returns>
-        public override bool GetShapeIsSelected()
+        public bool GetShapeIsSelected()
         {
             return IsSelected;
         }
@@ -140,9 +156,9 @@ namespace PaintMV.Shapes
         /// Copying the shape method
         /// </summary>
         /// <returns></returns>
-        public override Shape Clone()
+        public IShape Clone()
         {
-            return new Polygon(PointsArray.ToList(), ChosenColor, ShapeSize, PenStyle, IsSelected, IsLine, EndOfPolygon);
+            return new Polygon(PointsArray, ChosenColor, FillColor, ShapeSize, PenStyle, IsSelected, DrawPolygon);
         }
     }
 }

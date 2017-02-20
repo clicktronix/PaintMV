@@ -8,10 +8,22 @@ namespace PaintMV.Shapes
     /// Class creates an line shape
     /// </summary>
     [Serializable]
-    internal class Line : Shape
+    internal class Line : IShape
     {
+        public Point StartOrigin { get; set; }
+        public Point EndOrigin { get; set; }
+        public Point[] PointsArray { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int ShapeSize { get; set; }
+        public Color ChosenColor { get; set; }
+        public Color FillColor { get; set; }
+        public bool IsSelected { get; set; }
+        public string ShapeName { get; set; }
+        public DashStyle PenStyle { get; set; }
+
         /// <summary>
-        /// Class constructor
+        /// Create the instance of class <see cref="Line"/>
         /// </summary>
         /// <param name="startOrigin"></param>
         /// <param name="endOrigin"></param>
@@ -21,9 +33,8 @@ namespace PaintMV.Shapes
         /// <param name="shapeSize"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
-        /// <param name="isLine"></param>
         public Line(Point startOrigin, Point endOrigin, Color chosenColor, int shapeSize, DashStyle penStyle, 
-            bool isSelected, bool isLine, int width, int height)
+            bool isSelected, int width, int height)
         {
             StartOrigin = startOrigin;
             EndOrigin = endOrigin;
@@ -31,16 +42,16 @@ namespace PaintMV.Shapes
             ShapeSize = shapeSize;
             PenStyle = penStyle;
             IsSelected = isSelected;
-            IsLine = isLine;
             Width = width;
             Height = height;
+            ShapeName = "Line";
         }
 
         /// <summary>
         /// Drawing a line method
         /// </summary>
         /// <param name="g"></param>
-        public override void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
             Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
             g.DrawLine(pen, StartOrigin, EndOrigin);
@@ -50,8 +61,7 @@ namespace PaintMV.Shapes
         /// Method of determining the figure clicked on or not
         /// </summary>
         /// <param name="p"></param>
-        /// <returns></returns>
-        public override bool ContainsPoint(Point p)
+        public bool ContainsPoint(Point p)
         {
             GraphicsPath myPath = new GraphicsPath();
             myPath.AddLine(StartOrigin, EndOrigin);
@@ -69,10 +79,9 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
-        /// <returns></returns>
-        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
+        public bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
-            System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
+            var rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
             {
                 rect.X = startPoint.X;
@@ -104,7 +113,7 @@ namespace PaintMV.Shapes
             GraphicsPath myPath = new GraphicsPath();
             myPath.AddRectangle(rect);
 
-            bool pointWithinEllipse = myPath.IsVisible(StartOrigin.X + 15, StartOrigin.Y + 15);
+            bool pointWithinEllipse = myPath.IsVisible(StartOrigin.X, StartOrigin.Y);
             if (pointWithinEllipse)
             {
                 IsSelected = true;
@@ -118,7 +127,7 @@ namespace PaintMV.Shapes
         /// Set flag IsSelected 
         /// </summary>
         /// <param name="isSelected"></param>
-        public override void SetShapeIsSelected(bool isSelected)
+        public void SetShapeIsSelected(bool isSelected)
         {
             IsSelected = isSelected;
         }
@@ -127,7 +136,7 @@ namespace PaintMV.Shapes
         /// Get flag IsSelected
         /// </summary>
         /// <returns></returns>
-        public override bool GetShapeIsSelected()
+        public bool GetShapeIsSelected()
         {
             return IsSelected;
         }
@@ -136,9 +145,9 @@ namespace PaintMV.Shapes
         /// Copying the shape method
         /// </summary>
         /// <returns></returns>
-        public override Shape Clone()
+        public IShape Clone()
         {
-            return new Line(StartOrigin, EndOrigin, ChosenColor, ShapeSize, PenStyle, IsSelected, IsLine, Width, Height);
+            return new Line(StartOrigin, EndOrigin, ChosenColor, ShapeSize, PenStyle, IsSelected, Width, Height);
         }
     }
 }

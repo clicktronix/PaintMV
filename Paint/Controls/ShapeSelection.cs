@@ -13,21 +13,20 @@ namespace PaintMV.Controls
 
 #region Properties 
 
-        public bool NotRectSelection;
+        public bool LineSelection { get; set; }
+        public bool PolygonSelection { get; set; }
         public SupportPoints SupportPoints { get; }
-        public MainForm MainForm { get; }
         public Enumerations.Positions NodeSelected { set; get; } = Enumerations.Positions.None;
-        
+
         #endregion
 
         /// <summary>
-        /// class constructor
+        /// Create the instance of class <see cref="ShapeSelection"/>
         /// </summary>
-        /// <param name="mainForm"></param>
-        public ShapeSelection(MainForm mainForm)
+        /// <param name="drawHandlers"></param>
+        public ShapeSelection(DrawHandlers drawHandlers)
         {
-            MainForm = mainForm;
-            SupportPoints = new SupportPoints(this);
+            SupportPoints = new SupportPoints(drawHandlers);
         }
 
         /// <summary>
@@ -35,25 +34,37 @@ namespace PaintMV.Controls
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="g"></param>
-        public void MakeSelectionOfShape(Shape shape, Graphics g)
+        public void MakeSelectionOfShape(IShape shape, Graphics g)
         {
-            if (NotRectSelection)
+            Pen tempPen = new Pen(Color.Blue) { DashStyle = DashStyle.Dash };
+            if (LineSelection)
             {
-                //g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(8, shape));
-                //g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(9, shape));
-                //Pen tempPen = new Pen(Color.Blue) { DashStyle = DashStyle.Dash };
-                //g.DrawLine(tempPen, shape.StartOrigin.X, shape.StartOrigin.Y, shape.EndOrigin.X, shape.EndOrigin.Y);
-                //MainForm.PnlGraphic.Invalidate();
+                SupportPoints.PolygonSelection = false;
+                g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(8, shape));
+                g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(9, shape));
+                g.DrawLine(tempPen, shape.StartOrigin.X, shape.StartOrigin.Y, shape.EndOrigin.X, shape.EndOrigin.Y);
+            }
+            else if (PolygonSelection)
+            {
+                SupportPoints.PolygonSelection = true;
+                var points = shape.PointsArray;
+                for (var i = points.Length - 1; i > -1; i--)
+                {
+                    var supportShape = shape.Clone();
+                    supportShape.EndOrigin = points[i];
+                    g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(8, supportShape));
+                }
+                g.DrawPolygon(tempPen, shape.PointsArray);
             }
             else
             {
+                SupportPoints.PolygonSelection = false;
                 for (int i = 0; i < 8; i++)
                 {
                     g.DrawRectangle(new Pen(Color.Blue), SupportPoints.GetRect(i, shape));
                 }
-                Pen tempPen = new Pen(Color.Blue);
-                tempPen.DashStyle = DashStyle.Dash;
-                g.DrawRectangle(tempPen, shape.StartOrigin.X - 3, shape.StartOrigin.Y - 3, shape.Width + 6, shape.Height + 6);
+                g.DrawRectangle(tempPen, shape.StartOrigin.X - 3, shape.StartOrigin.Y - 3, shape.Width + 6,
+                    shape.Height + 6);
             }
         }
     }
