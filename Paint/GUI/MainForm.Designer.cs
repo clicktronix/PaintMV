@@ -383,7 +383,6 @@
             this.radioSolid.TabStop = true;
             this.radioSolid.Text = "Solid";
             this.radioSolid.UseVisualStyleBackColor = true;
-            this.radioSolid.CheckedChanged += new System.EventHandler(this.radioSolid_CheckedChanged);
             // 
             // btnRectSelection
             // 

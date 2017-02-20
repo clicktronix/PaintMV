@@ -11,24 +11,26 @@ namespace PaintMV.Controls
     /// </summary>
     public class UpdateShape : ICommand
     {
+
 #region Properties
 
-        private readonly MainForm _mainForm;
-        private readonly List<List<Shape>> _currentLists = new List<List<Shape>>();
-        private readonly List<List<Shape>> _previousLists = new List<List<Shape>>();
-        //private readonly List<List<Shape>> _redoLists = new List<List<Shape>>();
-        //private readonly List<List<Shape>> _undoLists = new List<List<Shape>>();
+        private readonly DrawHandlers _drawHandlers;
+        private readonly List<List<IShape>> _currentLists = new List<List<IShape>>();
+        private readonly List<List<IShape>> _previousLists = new List<List<IShape>>();
         private string _operationName;
+        private readonly NumericUpDown _lineSize;
 
 #endregion
 
         /// <summary>
-        /// Class constructor
+        /// Create the instance of class <see cref="UpdateShape"/>
         /// </summary>
-        /// <param name="mainForm"></param>
-        public UpdateShape(MainForm mainForm)
+        /// <param name="drawHandlers"></param>
+        /// <param name="lineSize"></param>
+        public UpdateShape(DrawHandlers drawHandlers, NumericUpDown lineSize)
         {
-            _mainForm = mainForm;
+            _drawHandlers = drawHandlers;
+            _lineSize = lineSize;
         }
 
         /// <summary>
@@ -37,40 +39,20 @@ namespace PaintMV.Controls
         /// <param name="g"></param>
         /// <param name="e"></param>
         /// <param name="tempShape"></param>
-        public void Execute(Graphics g, MouseEventArgs e, Shape tempShape)
+        public void Execute(Graphics g, MouseEventArgs e, IShape tempShape)
         {
-            //var undoShapes = new List<Shape>();
-            //var redoShapes = new List<Shape>();
-            //for (int i = _mainForm.Doc.AllShapes.Count - 1; i >= 0; i--)
-            //{
-            //    var shapeA = _mainForm.Doc.AllShapes[i].Clone();
-            //    undoShapes.Add(shapeA);
-            //    if (_mainForm.IndexOfSelectedShape != null && _mainForm.Doc.AllShapes[i].GetShapeIsSelected() && _mainForm.IndexOfSelectedShape != null)
-            //    {
-            //        _mainForm.LineStyleChose.LineStyle();
-            //        _mainForm.Doc.AllShapes[i].ChosenColor = _mainForm.ChosenColor;
-            //        _mainForm.Doc.AllShapes[i].FillColor = _mainForm.FillColor;
-            //        _mainForm.Doc.AllShapes[i].ShapeSize = (int)_mainForm.numSize.Value;
-            //        _mainForm.Doc.AllShapes[i].PenStyle = _mainForm.PenStyle;
-            //    }
-            //    var shapeB = _mainForm.Doc.AllShapes[i].Clone();
-            //    redoShapes.Add(shapeB);
-            //}
-            //_currentLists.Add(redoShapes);
-            //_previousLists.Add(undoShapes);
-            //_operationName = "Update shapes";
-            var undoShapes = new List<Shape>();
-            foreach (Shape shape in _mainForm.Doc.AllShapes)
+            var undoShapes = new List<IShape>();
+            foreach (IShape shape in _drawHandlers.ShapesList)
             {
                 var shapeA = shape.Clone();
                 undoShapes.Add(shapeA);
-                if (_mainForm.IndexOfSelectedShape != null && shape.GetShapeIsSelected() && _mainForm.IndexOfSelectedShape != null)
+                if (_drawHandlers.IndexOfSelectedShape != null && shape.GetShapeIsSelected() && _drawHandlers.IndexOfSelectedShape != null)
                 {
-                    _mainForm.LineStyleChose.LineStyle();
-                    shape.ChosenColor = _mainForm.ChosenColor;
-                    shape.FillColor = _mainForm.FillColor;
-                    shape.ShapeSize = (int)_mainForm.numSize.Value;
-                    shape.PenStyle = _mainForm.PenStyle;
+                    _drawHandlers.LineStyle();
+                    shape.ChosenColor = _drawHandlers.ChosenColor;
+                    shape.FillColor = _drawHandlers.FillColor;
+                    shape.ShapeSize = (int)_lineSize.Value;
+                    shape.PenStyle = _drawHandlers.PenStyle;
                 }
             }
             _previousLists.Add(undoShapes);
@@ -82,18 +64,10 @@ namespace PaintMV.Controls
         /// </summary>
         public void Undo()
         {
-            //if (_previousLists.Count > 0)
-            //{
-            //    _mainForm.Doc.AllShapes = new List<Shape>(_previousLists[_previousLists.Count - 1]);
-            //    _undoLists.Add(_previousLists[_previousLists.Count - 1]);
-            //    _redoLists.Add(_currentLists[_currentLists.Count - 1]);
-            //    _previousLists.Remove(_previousLists[_previousLists.Count - 1]);
-            //    _currentLists.Remove(_currentLists[_currentLists.Count - 1]);
-            //}
             if (_previousLists.Count > 0)
             {
-                _currentLists.Add(_mainForm.Doc.AllShapes);
-                _mainForm.Doc.AllShapes = new List<Shape>(_previousLists[_previousLists.Count - 1]);
+                _currentLists.Add(_drawHandlers.ShapesList);
+                _drawHandlers.ShapesList = new List<IShape>(_previousLists[_previousLists.Count - 1]);
                 _previousLists.Remove(_previousLists[_previousLists.Count - 1]);
             }
         }
@@ -103,18 +77,10 @@ namespace PaintMV.Controls
         /// </summary>
         public void Redo()
         {
-            //if (_currentLists.Count > 0)
-            //{
-            //    _previousLists.Add(_undoLists[_undoLists.Count - 1]);
-            //    _currentLists.Add(_redoLists[_redoLists.Count - 1]);
-            //    _undoLists.Remove(_undoLists[_undoLists.Count - 1]);
-            //    _redoLists.Remove(_redoLists[_redoLists.Count - 1]);
-            //    _mainForm.Doc.AllShapes = new List<Shape>(_currentLists[_currentLists.Count - 1]);
-            //}
             if (_currentLists.Count > 0)
             {
-                _previousLists.Add(_mainForm.Doc.AllShapes);
-                _mainForm.Doc.AllShapes = new List<Shape>(_currentLists[_currentLists.Count - 1]);
+                _previousLists.Add(_drawHandlers.ShapesList);
+                _drawHandlers.ShapesList = new List<IShape>(_currentLists[_currentLists.Count - 1]);
                 _currentLists.Remove(_currentLists[_currentLists.Count - 1]);
             }
         }

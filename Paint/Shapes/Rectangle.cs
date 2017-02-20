@@ -8,10 +8,22 @@ namespace PaintMV.Shapes
     /// Class creates an rectangle shape
     /// </summary>
     [Serializable]
-    internal class Rectangle : Shape
+    internal class Rectangle : IShape
     {
+        public Point StartOrigin { get; set; }
+        public Point EndOrigin { get; set; }
+        public Point[] PointsArray { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int ShapeSize { get; set; }
+        public Color ChosenColor { get; set; }
+        public Color FillColor { get; set; }
+        public bool IsSelected { get; set; }
+        public string ShapeName { get; set; }
+        public DashStyle PenStyle { get; set; }
+
         /// <summary>
-        /// class constructor
+        /// Create the instance of class <see cref="Rectangle"/>
         /// </summary>
         /// <param name="startOrigin"></param>
         /// <param name="width"></param>
@@ -19,7 +31,6 @@ namespace PaintMV.Shapes
         /// <param name="chosenColor"></param>
         /// <param name="fillColor"></param>
         /// <param name="shapeSize"></param>
-        /// <param name="fillShape"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
         public Rectangle(Point startOrigin, int width, int height, Color chosenColor, Color fillColor, int shapeSize, 
@@ -33,13 +44,14 @@ namespace PaintMV.Shapes
             ShapeSize = shapeSize;
             PenStyle = penStyle;
             IsSelected = isSelected;
+            ShapeName = "Rectangle";
         }
 
         /// <summary>
         /// Drawing a rectangle method
         /// </summary>
         /// <param name="g"></param>
-        public override void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
             Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
             SolidBrush tempBrush = new SolidBrush(FillColor);
@@ -52,7 +64,7 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public override bool ContainsPoint(Point p)
+        public bool ContainsPoint(Point p)
         {
             if (p.X > StartOrigin.X - 5 && p.X < StartOrigin.X + Width + 10 && 
                 p.Y > StartOrigin.Y - 5 && p.Y < StartOrigin.Y + Height + 10)
@@ -67,9 +79,8 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
-        /// <param name="p"></param>
         /// <returns></returns>
-        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
+        public bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
@@ -116,7 +127,7 @@ namespace PaintMV.Shapes
         /// Set flag IsSelected 
         /// </summary>
         /// <param name="isSelected"></param>
-        public override void SetShapeIsSelected(bool isSelected)
+        public void SetShapeIsSelected(bool isSelected)
         {
             IsSelected = isSelected;
         }
@@ -125,7 +136,7 @@ namespace PaintMV.Shapes
         /// Get flag IsSelected
         /// </summary>
         /// <returns></returns>
-        public override bool GetShapeIsSelected()
+        public bool GetShapeIsSelected()
         {
             return IsSelected;
         }
@@ -134,7 +145,7 @@ namespace PaintMV.Shapes
         /// Copying the shape method
         /// </summary>
         /// <returns></returns>
-        public override Shape Clone()
+        public IShape Clone()
         {
             return new Rectangle(StartOrigin, Width, Height, ChosenColor, FillColor, ShapeSize, PenStyle, IsSelected);
         }

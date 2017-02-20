@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Windows.Forms;
 using PaintMV.Enumerations;
 using PaintMV.GUI;
@@ -15,23 +14,30 @@ namespace PaintMV.Controls
     /// </summary>
     public class DrawShape : ICommand
     {
-        private readonly MainForm _mainForm;
-        private readonly List<Shape> _redoShapes = new List<Shape>();
+
+#region Properties
+
+        private readonly DrawHandlers _drawHandlers;
         private readonly List<Point> _newPolygon = new List<Point>();
-        private readonly List<List<Shape>> _currentLists = new List<List<Shape>>();
-        private readonly List<List<Shape>> _previousLists = new List<List<Shape>>();
+        private readonly List<List<IShape>> _currentLists = new List<List<IShape>>();
+        private readonly List<List<IShape>> _previousLists = new List<List<IShape>>();
         private string _operationName;
         private int _absShapeWidth;
         private int _absShapeHeight;
         private bool _drawPolygon;
 
+        public bool CompletedPolygon { get; set; }
+        public int PolyLinesCount { get; set; }
+
+#endregion
+
         /// <summary>
-        /// Class constructor
+        /// Create the instance of class <see cref="DrawShape"/>
         /// </summary>
-        /// <param name="mainForm"></param>
-        public DrawShape(MainForm mainForm)
+        /// <param name="drawHandlers"></param>
+        public DrawShape(DrawHandlers drawHandlers)
         {
-            _mainForm = mainForm;
+            _drawHandlers = drawHandlers;
         }
 
         /// <summary>
@@ -51,74 +57,76 @@ namespace PaintMV.Controls
         /// <param name="g"></param>
         /// <param name="e"></param>
         /// <param name="tempShape"></param>
-        public void Execute(Graphics g, MouseEventArgs e, Shape tempShape)
+        public void Execute(Graphics g, MouseEventArgs e, IShape tempShape)
         {
             Point tempStartPoint;
-            _mainForm.LineStyleChose.LineStyle();
-            if (_mainForm.ShapesEnum == ShapesEnum.Ellipse || _mainForm.ShapesEnum == ShapesEnum.Rectangle || 
-                _mainForm.ShapesEnum == ShapesEnum.Triangle || _mainForm.ShapesEnum == ShapesEnum.SelectRectangle)
+            _drawHandlers.LineStyle();
+            if (_drawHandlers.ShapesEnum == ShapesEnum.Ellipse || _drawHandlers.ShapesEnum == ShapesEnum.Rectangle ||
+                _drawHandlers.ShapesEnum == ShapesEnum.Triangle || _drawHandlers.ShapesEnum == ShapesEnum.SelectRectangle)
             {
-                if (_mainForm.ShapeWidth >= 0 || _mainForm.ShapeHeight >= 0)
+                if (_drawHandlers.ShapeWidth >= 0 || _drawHandlers.ShapeHeight >= 0)
                 {
-                    if (_mainForm.ShapeWidth < 0 && _mainForm.ShapeHeight > 0)
+                    if (_drawHandlers.ShapeWidth < 0 && _drawHandlers.ShapeHeight > 0)
                     {
-                        tempStartPoint = new Point(_mainForm.StartPoint.X - _absShapeWidth, _mainForm.StartPoint.Y);
+                        tempStartPoint = new Point(_drawHandlers.StartPoint.X - _absShapeWidth, _drawHandlers.StartPoint.Y);
                     }
-                    else if (_mainForm.ShapeWidth > 0 && _mainForm.ShapeHeight < 0)
+                    else if (_drawHandlers.ShapeWidth > 0 && _drawHandlers.ShapeHeight < 0)
                     {
-                        tempStartPoint = new Point(_mainForm.StartPoint.X, _mainForm.StartPoint.Y - _absShapeHeight);
+                        tempStartPoint = new Point(_drawHandlers.StartPoint.X, _drawHandlers.StartPoint.Y - _absShapeHeight);
                     }
-                    else { tempStartPoint = new Point(_mainForm.StartPoint.X, _mainForm.StartPoint.Y); }
+                    else { tempStartPoint = new Point(_drawHandlers.StartPoint.X, _drawHandlers.StartPoint.Y); }
                 }
                 else
                 {
-                    tempStartPoint = new Point(_mainForm.StartPoint.X - _absShapeWidth, _mainForm.StartPoint.Y - _absShapeHeight);
+                    tempStartPoint = new Point(_drawHandlers.StartPoint.X - _absShapeWidth, _drawHandlers.StartPoint.Y - _absShapeHeight);
                 }
-                if (_mainForm.ShapesEnum == ShapesEnum.Ellipse)
+                if (_drawHandlers.ShapesEnum == ShapesEnum.Ellipse)
                 {
-                    _mainForm.Figure = new Ellipse(tempStartPoint, _absShapeWidth, _absShapeHeight, _mainForm.ChosenColor, 
-                        _mainForm.FillColor, _mainForm.ShapeSize, _mainForm.PenStyle, false);
+                    _drawHandlers.Figure = new Ellipse(tempStartPoint, _absShapeWidth, _absShapeHeight, _drawHandlers.ChosenColor,
+                        _drawHandlers.FillColor, _drawHandlers.ShapeSize, _drawHandlers.PenStyle, false);
                     _operationName = "Add shape";
                 }
-                if (_mainForm.ShapesEnum == ShapesEnum.Rectangle)
+                if (_drawHandlers.ShapesEnum == ShapesEnum.Rectangle)
                 {
-                    _mainForm.Figure = new Shapes.Rectangle(tempStartPoint, _absShapeWidth, _absShapeHeight, _mainForm.ChosenColor, 
-                        _mainForm.FillColor, _mainForm.ShapeSize, _mainForm.PenStyle, false);
+                    _drawHandlers.Figure = new Shapes.Rectangle(tempStartPoint, _absShapeWidth, _absShapeHeight, _drawHandlers.ChosenColor,
+                        _drawHandlers.FillColor, _drawHandlers.ShapeSize, _drawHandlers.PenStyle, false);
                     _operationName = "Add shape";
                 }
-                if (_mainForm.ShapesEnum == ShapesEnum.Triangle)
+                if (_drawHandlers.ShapesEnum == ShapesEnum.Triangle)
                 {
-                    _mainForm.Figure = new Triangle(tempStartPoint, _absShapeWidth, _absShapeHeight, _mainForm.ChosenColor,
-                        _mainForm.FillColor, _mainForm.ShapeSize, _mainForm.PenStyle, false);
+                    _drawHandlers.Figure = new Triangle(tempStartPoint, _absShapeWidth, _absShapeHeight, _drawHandlers.ChosenColor,
+                        _drawHandlers.FillColor, _drawHandlers.ShapeSize, _drawHandlers.PenStyle, false);
                     _operationName = "Add shape";
                 }
-                if (_mainForm.ShapesEnum == ShapesEnum.SelectRectangle)
+                if (_drawHandlers.ShapesEnum == ShapesEnum.SelectRectangle)
                 {
-                    _mainForm.Figure = new Shapes.Rectangle(tempStartPoint, _absShapeWidth, _absShapeHeight, Color.Blue, 
+                    _drawHandlers.Figure = new Shapes.Rectangle(tempStartPoint, _absShapeWidth, _absShapeHeight, Color.Blue, 
                         Color.Empty, 1, DashStyle.Dash, false);
                 }
             }
-            else if (_mainForm.ShapesEnum == ShapesEnum.Line)
+            else if (_drawHandlers.ShapesEnum == ShapesEnum.Line)
             {
-                tempStartPoint = _mainForm.StartPoint;
-                Point tempEndPoint = _mainForm.EndPoint;
-                _mainForm.Figure = new Line(tempStartPoint, tempEndPoint, _mainForm.ChosenColor, _mainForm.ShapeSize, 
-                    _mainForm.PenStyle, false, true, _absShapeWidth, _absShapeHeight);
+                tempStartPoint = _drawHandlers.StartPoint;
+                Point tempEndPoint = _drawHandlers.EndPoint;
+                _drawHandlers.Figure = new Line(tempStartPoint, tempEndPoint, _drawHandlers.ChosenColor, _drawHandlers.ShapeSize,
+                    _drawHandlers.PenStyle, false, 
+                    _absShapeWidth, _absShapeHeight);
                 _operationName = "Add shape";
             }
-            else if (_mainForm.ShapesEnum == ShapesEnum.Polygon)
+            else if (_drawHandlers.ShapesEnum == ShapesEnum.Polygon)
             {
-                if (_mainForm.MMove) return;
+                if (_drawHandlers.MMove) return;
                 switch (e.Button)
                 {
                     case MouseButtons.Left:
                         _newPolygon.Add(new Point(e.X, e.Y));
                         if (_newPolygon.Count > 0)
                         {
-                            _mainForm.CompletedPolygon = true;
                             _drawPolygon = false;
-                            _mainForm.Figure = new Polygon(_newPolygon.ToArray(), Color.Green, 1, DashStyle.Dash, false, true, _drawPolygon);
-                            _mainForm.PolyLinesCount++;
+                            CompletedPolygon = true;
+                            _drawHandlers.Figure = new Polygon(_newPolygon.ToArray(), Color.Green, Color.Empty, 1, _drawHandlers.PenStyle, 
+                                false, _drawPolygon);
+                            PolyLinesCount++;
                         }
                         break;
 
@@ -127,7 +135,7 @@ namespace PaintMV.Controls
                         break;
                 }
             }
-            else if (_mainForm.ShapesEnum == ShapesEnum.None) { }
+            else if (_drawHandlers.ShapesEnum == ShapesEnum.None) { }
             else { throw new ArgumentOutOfRangeException(); }
         }
 
@@ -136,12 +144,12 @@ namespace PaintMV.Controls
             if (_newPolygon.Count > 1)
             {
                 _drawPolygon = true;
-                _mainForm.CompletedPolygon = false;
-                _mainForm.DeletePolyLines();
-                _mainForm.Figure = new Polygon(_newPolygon.ToArray(), _mainForm.ChosenColor,
-                    _mainForm.ShapeSize, _mainForm.PenStyle, false, true, _drawPolygon);
+                CompletedPolygon = false;
+                _drawHandlers.DeletePolyLines();
+                PolyLinesCount = 0;
+                _drawHandlers.Figure = new Polygon(_newPolygon.ToArray(), _drawHandlers.ChosenColor, _drawHandlers.FillColor, 
+                    _drawHandlers.ShapeSize, _drawHandlers.PenStyle, false, _drawPolygon);
                 _newPolygon.Clear();
-                _mainForm.PolyLinesCount = 0;
                 _operationName = "Add shape";
             }
             else
@@ -155,16 +163,10 @@ namespace PaintMV.Controls
         /// </summary>
         public void Undo()
         {
-            //if (_mainForm.Doc.AllShapes.Count > 0)
-            //{
-            //    var item = _mainForm.Doc.AllShapes[_mainForm.Doc.AllShapes.Count - 1];
-            //    _mainForm.Doc.AllShapes.Remove(_mainForm.Doc.AllShapes[_mainForm.Doc.AllShapes.Count - 1]);
-            //    _redoShapes.Add(item);
-            //}
             if (_previousLists.Count > 0)
             {
-                _currentLists.Add(_mainForm.Doc.AllShapes);
-                _mainForm.Doc.AllShapes = new List<Shape>(_previousLists[_previousLists.Count - 1]);
+                _currentLists.Add(_drawHandlers.ShapesList);
+                _drawHandlers.ShapesList = new List<IShape>(_previousLists[_previousLists.Count - 1]);
                 _previousLists.Remove(_previousLists[_previousLists.Count - 1]);
             }
         }
@@ -174,16 +176,10 @@ namespace PaintMV.Controls
         /// </summary>
         public void Redo()
         {
-            //if (_redoShapes.Count > 0)
-            //{
-            //    var item = _redoShapes[_redoShapes.Count - 1];
-            //    _mainForm.Doc.AllShapes.Add(item);
-            //    _redoShapes.Remove(_redoShapes[_redoShapes.Count - 1]);
-            //}
             if (_currentLists.Count > 0)
             {
-                _previousLists.Add(_mainForm.Doc.AllShapes);
-                _mainForm.Doc.AllShapes = new List<Shape>(_currentLists[_currentLists.Count - 1]);
+                _previousLists.Add(_drawHandlers.ShapesList);
+                _drawHandlers.ShapesList = new List<IShape>(_currentLists[_currentLists.Count - 1]);
                 _currentLists.Remove(_currentLists[_currentLists.Count - 1]);
             }
         }
@@ -202,7 +198,7 @@ namespace PaintMV.Controls
         /// </summary>
         public void ExecuteUndo()
         {
-            var undoShapesList = new List<Shape>(_mainForm.CopiedShapes);
+            var undoShapesList = new List<IShape>(_drawHandlers.CopiedShapes);
             _previousLists.Add(undoShapesList);
         }
 
@@ -211,7 +207,7 @@ namespace PaintMV.Controls
         /// </summary>
         public void ExecuteRedo()
         {
-            var redoShapesList = new List<Shape>(_mainForm.Doc.AllShapes);
+            var redoShapesList = new List<IShape>(_drawHandlers.ShapesList);
             _currentLists.Add(redoShapesList);
         }
 

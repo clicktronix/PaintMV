@@ -13,22 +13,20 @@ namespace PaintMV.Controls
 
 #region Properties 
 
-        public bool LineSelection;
-        public bool PolygonSelection;
+        public bool LineSelection { get; set; }
+        public bool PolygonSelection { get; set; }
         public SupportPoints SupportPoints { get; }
-        public MainForm MainForm { get; }
         public Enumerations.Positions NodeSelected { set; get; } = Enumerations.Positions.None;
-        
+
 #endregion
 
         /// <summary>
-        /// class constructor
+        /// Create the instance of class <see cref="ShapeSelection"/>
         /// </summary>
-        /// <param name="mainForm"></param>
-        public ShapeSelection(MainForm mainForm)
+        /// <param name="drawHandlers"></param>
+        public ShapeSelection(DrawHandlers drawHandlers)
         {
-            MainForm = mainForm;
-            SupportPoints = new SupportPoints(this, MainForm);
+            SupportPoints = new SupportPoints(drawHandlers);
         }
 
         /// <summary>
@@ -36,7 +34,7 @@ namespace PaintMV.Controls
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="g"></param>
-        public void MakeSelectionOfShape(Shape shape, Graphics g)
+        public void MakeSelectionOfShape(IShape shape, Graphics g)
         {
             Pen tempPen = new Pen(Color.Blue) { DashStyle = DashStyle.Dash };
             if (LineSelection)

@@ -16,21 +16,23 @@ namespace PaintMV.Controls
     /// </summary>
     public class SupportPoints
     {
-        private readonly MainForm _mainForm;
+
+#region Properties
+
         private readonly List<Rectangle> _rectangleList = new List<Rectangle>();
-        private readonly ShapeSelection _shapeSelection;
+        private readonly DrawHandlers _drawHandlers;
         private const int SizeNodeRect = 10;
-        public bool PolygonSelection;
+        public bool PolygonSelection { get; set; }
+
+#endregion
 
         /// <summary>
-        /// Class constructor
+        /// Create the instance of class <see cref="SupportPoints"/>
         /// </summary>
-        /// <param name="shapeSelection"></param>
-        /// <param name="mainForm"></param>
-        public SupportPoints(ShapeSelection shapeSelection, MainForm mainForm)
+        /// <param name="drawHandlers"></param>
+        public SupportPoints(DrawHandlers drawHandlers)
         {
-            _shapeSelection = shapeSelection;
-            _mainForm = mainForm;
+            _drawHandlers = drawHandlers;
         }
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace PaintMV.Controls
         /// <param name="value"></param>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public Rectangle GetRect(int value, Shape shape)
+        public Rectangle GetRect(int value, IShape shape)
         {
             int xValue = shape.StartOrigin.X;
             int yValue = shape.StartOrigin.Y;
@@ -93,7 +95,7 @@ namespace PaintMV.Controls
                 PolygonPoints();
                 foreach (var rect in _rectangleList.Where(rect => rect.Contains(p)))
                 {
-                    _mainForm.MoveResize.PolygonPoint = _rectangleList.IndexOf(rect);
+                    _drawHandlers.MoveResize.PolygonPoint = _rectangleList.IndexOf(rect);
                     return Positions.PolygonPoint;
                 }
                 _rectangleList.Clear();
@@ -176,8 +178,8 @@ namespace PaintMV.Controls
         /// <returns></returns>
         private Rectangle GetRectangle(Positions value)
         {
-            Debug.Assert(_shapeSelection.MainForm.IndexOfSelectedShape != null, "No selected figures!");
-            Shape tempShape = _shapeSelection.MainForm.Doc.AllShapes[_shapeSelection.MainForm.IndexOfSelectedShape.Value];
+            Debug.Assert(_drawHandlers.IndexOfSelectedShape != null, "No selected figures!");
+            IShape tempShape = _drawHandlers.ShapesList[_drawHandlers.IndexOfSelectedShape.Value];
             switch (value)
             {
                 case Positions.LeftUp:
@@ -224,8 +226,8 @@ namespace PaintMV.Controls
         /// </summary>
         private void PolygonPoints()
         {
-            if (_shapeSelection.MainForm.IndexOfSelectedShape == null) return;
-            var tempShape = _shapeSelection.MainForm.Doc.AllShapes[_shapeSelection.MainForm.IndexOfSelectedShape.Value];
+            if (_drawHandlers.IndexOfSelectedShape == null) return;
+            var tempShape = _drawHandlers.ShapesList[_drawHandlers.IndexOfSelectedShape.Value];
             if (tempShape.PointsArray != null)
             {
                 foreach (var point in tempShape.PointsArray)

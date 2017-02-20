@@ -8,17 +8,29 @@ namespace PaintMV.Shapes
     /// Class creates an triangle shape
     /// </summary>
     [Serializable]
-    internal class Triangle : Shape
+    internal class Triangle : IShape
     {
+        public Point StartOrigin { get; set; }
+        public Point EndOrigin { get; set; }
+        public Point[] PointsArray { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int ShapeSize { get; set; }
+        public Color ChosenColor { get; set; }
+        public Color FillColor { get; set; }
+        public bool IsSelected { get; set; }
+        public string ShapeName { get; set; }
+        public DashStyle PenStyle { get; set; }
+
         /// <summary>
-        /// class constructor
+        /// Create the instance of class <see cref="Triangle"/>
         /// </summary>
         /// <param name="startOrigin"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <param name="chosenColor"></param>
+        /// <param name="fillColor"></param>
         /// <param name="shapeSize"></param>
-        /// <param name="fillShape"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
         public Triangle(Point startOrigin, int width, int height, Color chosenColor, Color fillColor, int shapeSize, DashStyle penStyle, bool isSelected)
@@ -31,13 +43,14 @@ namespace PaintMV.Shapes
             ShapeSize = shapeSize;
             PenStyle = penStyle;
             IsSelected = isSelected;
+            ShapeName = "Triangle";
         }
 
         /// <summary>
         /// Drawing a triangle method
         /// </summary>
         /// <param name="g"></param>
-        public override void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
             Point[] trianglePoints = new Point[] {
                 new Point(StartOrigin.X + Width, StartOrigin.Y + Height), 
@@ -59,7 +72,7 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public override bool ContainsPoint(Point p)
+        public bool ContainsPoint(Point p)
         {
             Point[] trianglePoints = {
                 new Point(StartOrigin.X + Width + 7, StartOrigin.Y + Height + 7), 
@@ -82,9 +95,8 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
-        /// <param name="p"></param>
         /// <returns></returns>
-        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
+        public bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
@@ -131,7 +143,7 @@ namespace PaintMV.Shapes
         /// Set flag IsSelected 
         /// </summary>
         /// <param name="isSelected"></param>
-        public override void SetShapeIsSelected(bool isSelected)
+        public void SetShapeIsSelected(bool isSelected)
         {
             IsSelected = isSelected;
         }
@@ -140,7 +152,7 @@ namespace PaintMV.Shapes
         /// Get flag IsSelected
         /// </summary>
         /// <returns></returns>
-        public override bool GetShapeIsSelected()
+        public bool GetShapeIsSelected()
         {
             return IsSelected;
         }
@@ -149,7 +161,7 @@ namespace PaintMV.Shapes
         /// Copying the shape method
         /// </summary>
         /// <returns></returns>
-        public override Shape Clone()
+        public IShape Clone()
         {
             return new Triangle(StartOrigin, Width, Height, ChosenColor, FillColor, ShapeSize, PenStyle, IsSelected);
         }

@@ -5,34 +5,49 @@ using System.Drawing.Drawing2D;
 namespace PaintMV.Shapes
 {
     [Serializable]
-    internal class Polygon : Shape
+    internal class Polygon : IShape
     {
+        public bool DrawPolygon { get; set; }
+        public Point StartOrigin { get; set; }
+        public Point EndOrigin { get; set; }
+        public Point[] PointsArray { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int ShapeSize { get; set; }
+        public Color ChosenColor { get; set; }
+        public Color FillColor { get; set; }
+        public bool IsSelected { get; set; }
+        public string ShapeName { get; set; }
+        public DashStyle PenStyle { get; set; }
+
         /// <summary>
-        /// class constructor
+        /// Create the instance of class <see cref="Polygon"/>
         /// </summary>
         /// <param name="pointsArray"></param>
         /// <param name="chosenColor"></param>
+        /// <param name="fillColor"></param>
         /// <param name="shapeSize"></param>
         /// <param name="penStyle"></param>
         /// <param name="isSelected"></param>
-        /// <param name="isPolygon"></param>
-        public Polygon(Point[] pointsArray, Color chosenColor, int shapeSize, DashStyle penStyle, 
-            bool isSelected, bool isPolygon, bool drawPolygon)
+        /// <param name="drawPolygon"></param>
+        public Polygon(Point[] pointsArray, Color chosenColor, Color fillColor, int shapeSize, DashStyle penStyle, 
+            bool isSelected, bool drawPolygon)
         {
             PointsArray = pointsArray;
             ChosenColor = chosenColor;
+            FillColor = fillColor;
             ShapeSize = shapeSize;
             PenStyle = penStyle;
             IsSelected = isSelected;
-            IsPolygon = isPolygon;
             DrawPolygon = drawPolygon;
+            ShapeName = "Polygon";
         }
 
         /// <summary>
         /// Drawing a line method
         /// </summary>
         /// <param name="g"></param>
-        public override void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
             Pen pen = new Pen(ChosenColor, ShapeSize) {DashStyle = PenStyle};
             SolidBrush tempBrush = new SolidBrush(FillColor);
@@ -52,7 +67,7 @@ namespace PaintMV.Shapes
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public override bool ContainsPoint(Point p)
+        public bool ContainsPoint(Point p)
         {
             GraphicsPath myPath = new GraphicsPath();
             myPath.AddLines(PointsArray);
@@ -71,7 +86,7 @@ namespace PaintMV.Shapes
         /// <param name="startPoint"></param>
         /// <param name="endPoint"></param>
         /// <returns></returns>
-        public override bool ContainsSelectedFigure(Point startPoint, Point endPoint)
+        public bool ContainsSelectedFigure(Point startPoint, Point endPoint)
         {
             System.Drawing.Rectangle rect = new System.Drawing.Rectangle();
             if ((endPoint.Y > startPoint.Y) && (endPoint.X > startPoint.X))
@@ -123,7 +138,7 @@ namespace PaintMV.Shapes
         /// Set flag IsSelected 
         /// </summary>
         /// <param name="isSelected"></param>
-        public override void SetShapeIsSelected(bool isSelected)
+        public void SetShapeIsSelected(bool isSelected)
         {
             IsSelected = isSelected;
         }
@@ -132,7 +147,7 @@ namespace PaintMV.Shapes
         /// Get flag IsSelected
         /// </summary>
         /// <returns></returns>
-        public override bool GetShapeIsSelected()
+        public bool GetShapeIsSelected()
         {
             return IsSelected;
         }
@@ -141,9 +156,9 @@ namespace PaintMV.Shapes
         /// Copying the shape method
         /// </summary>
         /// <returns></returns>
-        public override Shape Clone()
+        public IShape Clone()
         {
-            return new Polygon(PointsArray, ChosenColor, ShapeSize, PenStyle, IsSelected, IsPolygon, DrawPolygon);
+            return new Polygon(PointsArray, ChosenColor, FillColor, ShapeSize, PenStyle, IsSelected, DrawPolygon);
         }
     }
 }

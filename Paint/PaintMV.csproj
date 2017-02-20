@@ -54,7 +54,6 @@
     <Compile Include="Controls\ShapeSelection.cs" />
     <Compile Include="Controls\SupportPoints.cs" />
     <Compile Include="Enumerations\PositionsEnum.cs" />
-    <Compile Include="Controls\LineStyleChose.cs" />
     <Compile Include="Controls\DrawShape.cs" />
     <Compile Include="Controls\Copy.cs" />
     <Compile Include="Controls\Cut.cs" />
@@ -62,6 +61,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enumerations\ShapesEnum.cs" />
+    <Compile Include="GUI\DrawHandlers.cs" />
     <Compile Include="GUI\NewFileForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,7 +71,6 @@
     <Compile Include="Controls\UpdateShape.cs" />
     <Compile Include="Controls\UnselectShapes.cs" />
     <Compile Include="Shapes\Polygon.cs" />
-    <Compile Include="Shapes\ShapesList.cs" />
     <Compile Include="GUI\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,7 +82,7 @@
     <Compile Include="Shapes\Ellipse.cs" />
     <Compile Include="Shapes\Line.cs" />
     <Compile Include="Shapes\Rectangle.cs" />
-    <Compile Include="Shapes\Shape.cs" />
+    <Compile Include="Shapes\IShape.cs" />
     <Compile Include="Shapes\Triangle.cs" />
     <EmbeddedResource Include="GUI\NewFileForm.resx">
       <DependentUpon>NewFileForm.cs</DependentUpon>
